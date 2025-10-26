@@ -213,7 +213,28 @@
                     </div>
                 </div>
             </div>
-            @endforeach            <!-- 2) City Tour -->
+            @endforeach
+            
+            <!-- 1) Helicopter Tour -->
+            <div class="col-md-6 col-lg-4">
+                <div class="tour-card">
+                    <div class="tour-image"><img src="assets/img/tours/helicopter1.jpg" alt="Helicopter Tour"></div>
+                    <div class="tour-overlay">
+                        <h3 class="tour-title">Helicopter Tour</h3>
+                        <p class="tour-subtitle">“Soar Above the Highlands”</p>
+                        <p class="tour-desc">
+                            Take to the skies on a <strong>15-minute</strong> helicopter ride and witness the magic
+                            of Nuwara Eliya from above.<br>
+                            <strong>Highlights:</strong> Lake Gregory, Nuwara Eliya City, Central Mountain Range,
+                            Adam’s Peak, Kotmale Reservoir & waterfalls.
+                        </p>
+                        <div class="tour-price">$110 <span>per pax</span></div>
+                        <p class="tour-note">Pre-booking Required | Conditions Apply</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2) City Tour -->
             <div class="col-md-6 col-lg-4">
                 <div class="tour-card">
                     <div class="tour-image"><img src="assets/img/tours/GregoryLake.jpg" alt="City Tour"></div>
