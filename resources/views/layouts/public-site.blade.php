@@ -14,6 +14,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
   <meta name="msapplication-TileColor" content="#ffffff" />
   <meta name="msapplication-TileImage" content="{{ asset('assets/img/logo.png') }}" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="shortcut icon" href="{{ asset('assets/img/logo.png') }}" type="image/x-icon">
   <meta property="og:image" content="{{ asset('assets/img/logo.png') }}" />
   <meta name="theme-color" content="#ffffff" />

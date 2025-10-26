@@ -66,7 +66,7 @@
         </div>
         <div class="swiper-slide">
           <div class="hero-inner">
-            <div class="th-hero-bg" data-bg-src="assets/img/drive-images-2-webp/kc21.webp"></div>
+            <div class="th-hero-bg" data-bg-src="{{ asset('assets/img/drive-images-2-webp/kc21.webp') }}"></div>
             <div class="container">
               <div class="hero-style1">
                 <div class="hero-logo" data-ani="slideinup" data-ani-delay="0.2s">
@@ -112,7 +112,7 @@
           </div>
           <div class="swiper-slide">
             <div class="box-img">
-              <img src="assets/img/drive-images-2-webp/kc21.webp" alt="Image" />
+              <img src="{{ asset('assets/img/drive-images-2-webp/kc21.webp') }}" alt="Image" />
               <span class="slider-number">03</span>
             </div>
           </div>

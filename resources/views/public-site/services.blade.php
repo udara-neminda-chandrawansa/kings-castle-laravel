@@ -10,7 +10,7 @@
 
 <!--breadcrumb-->
 <div class="breadcumb-banner">
-  <div class="breadcumb-wrapper" data-bg-src="assets/img/drive-images-2-webp/kc21.webp">
+  <div class="breadcumb-wrapper" data-bg-src="{{ asset('assets/img/drive-images-2-webp/kc21.webp') }}">
     <div
       style="position: absolute; width: 100%; height: 100%; left: 0%; top: 0%; background-color: black; opacity: .6;">
     </div>
@@ -40,7 +40,7 @@
               <a href="#">Double Room</a>
             </h3>
             <div class="mt-10">
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
+              <a href="{{ route('booking.create', ['room_type_id' => 1]) }}" class="th-btn2 style2">BOOK NOW</a>
             </div>
           </div>
           <div class="box-content">
@@ -203,48 +203,47 @@
     <div class="row gy-4 align-items-center">
       <div class="col-xl-5">
         <div class="me-xl-4 pe-xl-3 space">
-          <form action="#" method="POST" class="booking-form2 style3 ajax-contact">
+          <form action="{{ route('booking.check-availability') }}" method="POST" class="booking-form2 style3" id="availabilityForm">
             <div class="hero-wrap">
               <div class="title-area mb-40">
                 <span class="sub-title2 style1 mb-15">ROOMS RESERVATION</span>
                 <h2 class="sec-title text-white">Check availablility</h2>
               </div>
               <div class="row gx-24 align-items-center justify-content-between">
+                @csrf
                 <div class="form-group col-12">
                   <div class="form-item">
                     <label>Check In</label>
-                    <input type="date" class="form-control" name="date" id="date" value="2025-01-20" />
+                    <input type="date" class="form-control" name="check_in" id="check_in" min="{{ date('Y-m-d') }}" required />
                     <i class="fa-solid fa-calendar-days"></i>
                   </div>
                 </div>
                 <div class="form-group col-12">
                   <div class="form-item">
                     <label>CHECK - OUT</label>
-                    <input type="date" class="form-control" name="date" id="date2" value="2025-01-26" />
+                    <input type="date" class="form-control" name="check_out" id="check_out" required />
                     <i class="fa-solid fa-calendar-days"></i>
                   </div>
                 </div>
                 <div class="col-12 form-group">
                   <div class="form-item">
-                    <label>ADULT</label>
-                    <select name="subject" id="subject" class="form-select nice-select">
-                      <option value="Adults" selected="selected" disabled="disabled">
-                        Adult 01
-                      </option>
-                      <option value="2 Room">Adult 02</option>
-                      <option value="3 Room">Adult 03</option>
+                    <label>ADULTS</label>
+                    <select name="adults" id="adults" class="form-select nice-select" required>
+                      <option value="1">Adult 01</option>
+                      <option value="2">Adult 02</option>
+                      <option value="3">Adult 03</option>
+                      <option value="4">Adult 04</option>
                     </select>
                   </div>
                 </div>
                 <div class="col-12 form-group">
                   <div class="form-item">
                     <label>Children</label>
-                    <select name="subject" id="subject2" class="form-select nice-select">
-                      <option value="0" selected="selected" disabled="disabled">
-                        Children 0
-                      </option>
+                    <select name="children" id="children" class="form-select nice-select">
+                      <option value="0">Children 0</option>
                       <option value="1">Children 1</option>
                       <option value="2">Children 2</option>
+                      <option value="3">Children 3</option>
                     </select>
                   </div>
                 </div>
@@ -291,5 +290,55 @@
     </div>
   </div>
 </div>
+
+<script>
+document.getElementById('check_in').addEventListener('change', function() {
+  const checkIn = new Date(this.value);
+  checkIn.setDate(checkIn.getDate() + 1);
+  document.getElementById('check_out').min = checkIn.toISOString().split('T')[0];
+});
+
+document.getElementById('availabilityForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+  
+  submitBtn.innerHTML = 'Checking...';
+  submitBtn.disabled = true;
+  
+  fetch(this.action, {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.available_rooms && data.available_rooms.length > 0) {
+      // Redirect to booking form with dates
+      const params = new URLSearchParams({
+        check_in: data.check_in,
+        check_out: data.check_out,
+        adults: formData.get('adults'),
+        children: formData.get('children')
+      });
+      window.location.href = `/book-room?${params.toString()}`;
+    } else {
+      alert('No rooms available for the selected dates. Please try different dates.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error checking availability. Please try again.');
+  })
+  .finally(() => {
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
+  });
+});
+</script>
 
 @endsection
