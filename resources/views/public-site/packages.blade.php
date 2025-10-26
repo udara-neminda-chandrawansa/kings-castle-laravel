@@ -174,7 +174,7 @@
             <div class="breadcumb-content">
                 <h1 class="breadcumb-title">Kings Castle Tours</h1>
                 <ul class="breadcumb-menu">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="/">Home</a></li>
                     <li>Kings Castle Tours</li>
                 </ul>
             </div>

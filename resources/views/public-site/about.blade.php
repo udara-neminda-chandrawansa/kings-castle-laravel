@@ -19,7 +19,7 @@
       <div class="breadcumb-content">
         <h1 class="breadcumb-title">About Us</h1>
         <ul class="breadcumb-menu">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li>About Us</li>
         </ul>
       </div>
@@ -82,7 +82,7 @@
           <div class="divider"></div>
         </div>
         <div class="btn-group mt-60">
-          <a href="about.html" class="th-btn extra-btn th-radius">LEARN MORE</a>
+          <a href="/about" class="th-btn extra-btn th-radius">LEARN MORE</a>
           <div class="call-info style2">
             <div class="call-icon">
               <a href="tel:+94771200180"><i class="fa-sharp fa-light fa-phone-volume"></i></a>

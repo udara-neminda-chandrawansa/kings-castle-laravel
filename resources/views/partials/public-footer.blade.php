@@ -28,7 +28,7 @@
               <h3 class="widget_title">Useful Links</h3>
               <div class="menu-all-pages-container">
                 <ul class="menu">
-                  <li><a href="about.html">About Us</a></li>
+                  <li><a href="/about">About Us</a></li>
                   <li><a href="#">Featured Rooms</a></li>
                   <li><a href="#">Our Best Services</a></li>
                   <li><a href="#">Rquest a Booking</a></li>

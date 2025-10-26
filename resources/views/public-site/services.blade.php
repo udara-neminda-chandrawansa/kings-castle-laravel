@@ -18,7 +18,7 @@
       <div class="breadcumb-content">
         <h1 class="breadcumb-title">King's Castle rooms & suits</h1>
         <ul class="breadcumb-menu">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li>King's Castle rooms & suits</li>
         </ul>
       </div>

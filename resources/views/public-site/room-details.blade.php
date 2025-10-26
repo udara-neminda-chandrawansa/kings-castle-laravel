@@ -9,7 +9,7 @@
             <div class="breadcumb-content">
                 <h1 class="breadcumb-title">Room Details</h1>
                 <ul class="breadcumb-menu">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="/">Home</a></li>
                     <li>Room Details</li>
                 </ul>
             </div>

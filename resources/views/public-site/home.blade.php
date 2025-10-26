@@ -441,7 +441,7 @@
             between guests and leaving rooms vacant for at least 24 hours
             for safety
           </p>
-          <a href="room.html" class="th-btn2 style3">BOOK NOW</a>
+          <a href="/services" class="th-btn2 style3">BOOK NOW</a>
         </div>
       </div>
       <div class="col-lg-6 col-xl-4">
@@ -458,7 +458,7 @@
             book your stay with confidence with our 24 hour cancellation
             policy. Cancellations are available on bookings up to 24 hours
           </p>
-          <a href="room.html" class="th-btn2 style3">BOOK NOW</a>
+          <a href="/services" class="th-btn2 style3">BOOK NOW</a>
         </div>
       </div>
       <div class="col-lg-6 col-xl-4">
@@ -475,7 +475,7 @@
             independence. You’ll find a microwave, fridge freezer, kettle
             and teas and coffees in every room.
           </p>
-          <a href="room.html" class="th-btn2 style3">BOOK NOW</a>
+          <a href="/services" class="th-btn2 style3">BOOK NOW</a>
         </div>
       </div>
     </div>

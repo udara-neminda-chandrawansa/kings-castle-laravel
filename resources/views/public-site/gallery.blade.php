@@ -21,7 +21,7 @@
           A handful of guests have submitted their best memories
         </h1>
         <ul class="breadcumb-menu">
-          <li><a href="index.html">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li>Gallary</li>
         </ul>
       </div>
