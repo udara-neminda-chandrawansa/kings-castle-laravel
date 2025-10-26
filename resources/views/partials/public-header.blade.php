@@ -94,7 +94,7 @@
               </button>
             </div>
             <div class="col-auto d-none d-xl-block">
-              <a href="/services" class="th-btn2">CHECK IN NOW <img src="{{ asset('assets/img/icon/calender.svg') }}" alt="" /></a>
+              <a href="/services" class="th-btn2 border">CHECK IN NOW <img src="{{ asset('assets/img/icon/calender.svg') }}" alt="" /></a>
             </div>
           </div>
         </div>

@@ -6108,7 +6108,7 @@ ol.wp-block-rss {
   transition: 0.4s ease-in-out;
 }
 .main-menu > ul > li > a:hover {
-  color: var(--theme-color);
+  color: var(--white-color);
 }
 .main-menu > ul > li > a:hover:before {
   width: 100%;
@@ -6461,7 +6461,7 @@ ol.wp-block-rss {
 }
 .header-links li > i {
   margin-right: 6px;
-  color: var(--theme-color);
+  color: var(--white-color);
 }
 .header-links li .icon-btn {
   margin-right: 8px;
@@ -6488,7 +6488,7 @@ ol.wp-block-rss {
 }
 .header-top {
   padding: 10.5px 0;
-  background-color: #181a1e;
+  background-color: var(--theme-color);
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   --body-color: #d8dbdc;
 }
@@ -6580,7 +6580,7 @@ ol.wp-block-rss {
   padding: 16px 28px;
 }
 .header-layout1 .sticky-wrapper {
-  background-color: #181a1e;
+  background-color: var(--theme-color);
 }
 @media (max-width: 1299px) {
   .unittest-header .main-menu a {

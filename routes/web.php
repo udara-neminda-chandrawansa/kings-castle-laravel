@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +27,15 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        // $vehicles = Vehicle::orderBy('created_at', 'desc')->paginate(10);
+        return view('admin-dashboard.bookings'); // , compact('vehicles')
     })->name('dashboard');
+
+    Route::get('/account', function () {
+        return view('admin-dashboard.new-admin-account');
+    })->name('dashboard.account');
+
+    Route::put('/account/update', [UserController::class, 'update'])->name('account.update');
 });
