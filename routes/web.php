@@ -33,13 +33,28 @@ Route::get('/run-migrations', function () {
     }
 });
 
-Route::get('/', function () { return view('public-site.home'); });
-Route::get('/about', function () { return view('public-site.about'); });
-Route::get('/services', function () { return view('public-site.services'); });
-Route::get('/packages', function () { return view('public-site.packages'); });
-Route::get('/gallery', function () { return view('public-site.gallery'); });
-Route::get('/contact', function () { return view('public-site.contact'); });
-Route::get('/room-details/{id}', function ($id) { return view('public-site.room-details', ['id' => $id]); });
+Route::get('/', function () {
+    return view('public-site.home');
+});
+Route::get('/about', function () {
+    return view('public-site.about');
+});
+Route::get('/services', function () {
+    $roomTypes = App\Models\RoomType::all();
+    return view('public-site.services', compact('roomTypes'));
+});
+Route::get('/packages', function () {
+    return view('public-site.packages');
+});
+Route::get('/gallery', function () {
+    return view('public-site.gallery');
+});
+Route::get('/contact', function () {
+    return view('public-site.contact');
+});
+Route::get('/room-details/{id}', function ($id) {
+    return view('public-site.room-details', ['id' => $id]);
+});
 
 // Booking routes (public)
 Route::post('/check-availability', [App\Http\Controllers\BookingController::class, 'checkAvailability'])->name('booking.check-availability');
@@ -55,7 +70,7 @@ Route::middleware([
 ])->group(function () {
 
     Route::get('/dashboard', [App\Http\Controllers\BookingController::class, 'index'])->name('dashboard');
-    
+
     // Admin booking management
     Route::get('/booking/{booking}/edit', [App\Http\Controllers\BookingController::class, 'edit'])->name('booking.edit');
     Route::put('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'update'])->name('booking.update');

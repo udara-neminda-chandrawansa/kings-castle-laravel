@@ -11805,7 +11805,7 @@ ul.comment-list:has(> .th-comment-item ~ .th-comment-item):first-child
 }
 .booking-form .hero-wrap {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto;
   -webkit-box-align: end;
   -webkit-align-items: end;
   -ms-flex-align: end;

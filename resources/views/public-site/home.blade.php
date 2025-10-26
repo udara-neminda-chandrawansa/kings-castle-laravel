@@ -124,28 +124,38 @@
 <!--booking area (added from home-2.html)-->
 <div class="booking-area" style="z-index: 50; margin-top: 30px; margin-bottom: 30px;">
   <div class="container">
-    <form action="#" method="POST" class="booking-form ajax-contact">
+    <form action="{{ route('booking.check-availability') }}" method="POST" class="booking-form ajax-contact" id="availabilityForm">
+      @csrf
       <div class="hero-wrap">
-        <div class="form-group has-label">
-          <label class="text-white">Destination</label>
-          <input type="text" class="form-control" name="location" id="location"
-            placeholder="Click to choose city or hotel">
-          <i class="far fa-map-marker-alt text-white"></i>
+        <div class="form-group">
+          <label class="text-white">Check-in Date</label>
+          <input type="date" class="form-control" name="check_in" id="check_in" min="{{ date('Y-m-d') }}" value="2025-02-23">
         </div>
         <div class="form-group">
-          <label class="text-white">Dates</label>
-          <input type="date" class="form-control" name="date" id="date" value="2025-02-23">
+          <label class="text-white">Check-out Date</label>
+          <input type="date" class="form-control" name="check_out" id="check_out" value="2025-02-23">
         </div>
         <div class="form-group has-label">
-          <label class="text-white">guests &amp; rooms</label>
-          <select name="subject" id="subject" class="form-select">
+          <label class="text-white">Adults</label>
+          <select name="adults" id="adults" class="form-select">
             <option value="" disabled="disabled" selected="selected" hidden="">
-              Room &amp; guests per room
+              No of Adults guests
             </option>
-            <option value="option1">2 Adult Only</option>
-            <option value="option2">2 Adult 1 Child</option>
-            <option value="option3">2 Adult 2 Child</option>
-            <option value="option4">3 or 4+ Adult Only</option>
+            <option value="1">1 Adult Only</option>
+            <option value="2">2 Adults</option>
+            <option value="3">3 Adults</option>
+            <option value="4">4 Adults</option>
+          </select>
+          <i class="fa-light fa-users text-white"></i>
+        </div>
+        <div class="form-group has-label">
+          <label class="text-white">Children</label>
+          <select name="children" id="children" class="form-select">
+            <option value="" disabled="disabled" selected="selected" hidden="">
+              No of Child guests
+            </option>
+            <option value="1">1 Child Only</option>
+            <option value="2">2 Children</option>
           </select>
           <i class="fa-light fa-users text-white"></i>
         </div>
@@ -1018,5 +1028,55 @@
     </div>
   </div>
 </section>
+
+<script>
+document.getElementById('check_in').addEventListener('change', function() {
+  const checkIn = new Date(this.value);
+  checkIn.setDate(checkIn.getDate() + 1);
+  document.getElementById('check_out').min = checkIn.toISOString().split('T')[0];
+});
+
+document.getElementById('availabilityForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const formData = new FormData(this);
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const originalText = submitBtn.innerHTML;
+  
+  submitBtn.innerHTML = 'Checking...';
+  submitBtn.disabled = true;
+  
+  fetch(this.action, {
+    method: 'POST',
+    body: formData,
+    headers: {
+      'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.available_rooms && data.available_rooms.length > 0) {
+      // Redirect to booking form with dates
+      const params = new URLSearchParams({
+        check_in: data.check_in,
+        check_out: data.check_out,
+        adults: formData.get('adults'),
+        children: formData.get('children')
+      });
+      window.location.href = `/book-room?${params.toString()}`;
+    } else {
+      alert('No rooms available for the selected dates. Please try different dates.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Error checking availability. Please try again.');
+  })
+  .finally(() => {
+    submitBtn.innerHTML = originalText;
+    submitBtn.disabled = false;
+  });
+});
+</script>
 
 @endsection

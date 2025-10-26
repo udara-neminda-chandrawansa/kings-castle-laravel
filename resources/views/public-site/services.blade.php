@@ -28,172 +28,49 @@
 <section class="overflow-hidden space">
   <div class="container">
     <div class="row gy-4">
+      @foreach($roomTypes as $roomType)
       <div class="col-lg-6">
-        <div class="room-box">
+        <div
+          class="room-box">
           <div class="box-img">
-            <img src="assets/img/drive-images-2-webp/kc14.webp" alt="" style="height: 100%;" />
+            <img src="{{ asset($roomType->image_path) }}" alt="{{ $roomType->name }}" style="height: 100%;" />
           </div>
-          <span class="discount">Rs 30,000.00</span>
+          <span class="discount">{{ $roomType->formatted_price }} per night</span>
           <div class="box-title-area">
-            <div class="box-number">01</div>
+            <div class="box-number">{{ $roomType->id }}</div>
             <h3 class="box-title">
-              <a href="#">Double Room</a>
+              <a href="#">{{ $roomType->name }}</a>
             </h3>
-            <div class="mt-10">
-              <a href="{{ route('booking.create', ['room_type_id' => 1]) }}" class="th-btn2 style2">BOOK NOW</a>
-            </div>
           </div>
           <div class="box-content">
             <div class="box-wrapp">
-              <div class="box-number">01</div>
+              <div class="box-number">{{ $roomType->id }}</div>
               <h3 class="box-title">
-                <a href="#">Double Room</a>
+                <a href="#">{{ $roomType->name }}</a>
               </h3>
               <div class="box-review">
                 <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
                   class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
                   class="fa-sharp fa-solid fa-star"></i>
               </div>
+              @if($roomType->amenities)
               <div class="room-card-meta">
-                <span class="hidden"><img src="assets/img/icon/cat_2.svg" alt="icon" />2 King
-                  Beds</span>
-                <span class="hidden"><img src="assets/img/icon/cat_3.svg" alt="icon" />1500
-                  sqft/Room</span>
-                <span><img src="assets/img/icon/cat_4.svg" alt="icon" />2
-                  Person</span>
+                @foreach(array_slice($roomType->amenities, 0, 3) as $amenity)
+                <span>
+                  {{ $amenity }}
+                </span>
+                @endforeach
+                @if(count($roomType->amenities) > 3)
+                <span class="text-muted">+{{ count($roomType->amenities) - 3 }} more</span>
+                @endif
               </div>
-              <div class="mt-10">
-                <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-              </div>
+              @endif
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-6">
-        <div class="room-box">
-          <div class="box-img">
-            <img src="assets/img/drive-images-2-webp/kc1.webp" alt="" />
-          </div>
-          <span class="discount">Rs 37,000.00</span>
-          <div class="box-title-area">
-            <div class="box-number">02</div>
-            <h3 class="box-title">
-              <a href="#">Triple Room</a>
-            </h3>
-            <div class="mt-10">
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-            </div>
-          </div>
-          <div class="box-content">
-            <div class="box-wrapp">
-              <div class="box-number">02</div>
-              <h3 class="box-title">
-                <a href="#">Triple Room</a>
-              </h3>
-              <div class="box-review">
-                <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i>
-              </div>
-              <div class="room-card-meta">
-                <span class="hidden"><img src="assets/img/icon/cat_2.svg" alt="icon" />2 King
-                  Beds</span>
-                <span class="hidden"><img src="assets/img/icon/cat_3.svg" alt="icon" />1500
-                  sqft/Room</span>
-                <span><img src="assets/img/icon/cat_4.svg" alt="icon" />3
-                  Person</span>
-              </div>
-              <div class="mt-10">
-                <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="room-box">
-          <div class="box-img">
-            <img src="assets/img/drive-images-2-webp/kc32.webp" alt="" style="object-position: center;" />
-          </div>
-          <span class="discount">Rs 65,000.00</span>
-          <div class="box-title-area">
-            <div class="box-number">03</div>
-            <h3 class="box-title">
-              <a href="#">Sweet Double Room</a>
-            </h3>
-            <div class="mt-10">
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-            </div>
-          </div>
-          <div class="box-content">
-            <div class="box-wrapp">
-              <div class="box-number">03</div>
-              <h3 class="box-title">
-                <a href="#">Sweet Double Room</a>
-              </h3>
-              <div class="box-review">
-                <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i>
-              </div>
-              <div class="room-card-meta">
-                <span class="hidden"><img src="assets/img/icon/cat_2.svg" alt="icon" />King & Single
-                  Bed</span>
-                <span class="hidden"><img src="assets/img/icon/cat_3.svg" alt="icon" />1500
-                  sqft/Room</span>
-                <span><img src="assets/img/icon/cat_4.svg" alt="icon" />2
-                  Person</span>
-              </div>
-              <div class="mt-10">
-                <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="room-box">
-          <div class="box-img">
-            <img src="assets/img/drive-images-2-webp/kc31.webp" alt="" />
-          </div>
-          <span class="discount">Rs 75,000.00</span>
-          <div class="box-title-area">
-            <div class="box-number">04</div>
-            <h3 class="box-title">
-              <a href="#">Sweet Triple Room</a>
-            </h3>
-            <div class="mt-10">
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-            </div>
-          </div>
-          <div class="box-content">
-            <div class="box-wrapp">
-              <div class="box-number">04</div>
-              <h3 class="box-title">
-                <a href="#">Sweet Triple Room</a>
-              </h3>
-              <div class="box-review">
-                <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i>
-              </div>
-              <div class="room-card-meta">
-                <span class="hidden"><img src="assets/img/icon/cat_2.svg" alt="icon" />King
-                  Bed</span>
-                <span class="hidden"><img src="assets/img/icon/cat_3.svg" alt="icon" />1500
-                  sqft/Room</span>
-                <span><img src="assets/img/icon/cat_4.svg" alt="icon" />3
-                  Person</span>
-              </div>
-              <div class="mt-10">
-                <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
-
   </div>
 </section>
 <div style="height: 60px;"></div>
@@ -203,7 +80,8 @@
     <div class="row gy-4 align-items-center">
       <div class="col-xl-5">
         <div class="me-xl-4 pe-xl-3 space">
-          <form action="{{ route('booking.check-availability') }}" method="POST" class="booking-form2 style3" id="availabilityForm">
+          <form action="{{ route('booking.check-availability') }}" method="POST" class="booking-form2 style3"
+            id="availabilityForm">
             <div class="hero-wrap">
               <div class="title-area mb-40">
                 <span class="sub-title2 style1 mb-15">ROOMS RESERVATION</span>
@@ -214,7 +92,8 @@
                 <div class="form-group col-12">
                   <div class="form-item">
                     <label>Check In</label>
-                    <input type="date" class="form-control" name="check_in" id="check_in" min="{{ date('Y-m-d') }}" required />
+                    <input type="date" class="form-control" name="check_in" id="check_in" min="{{ date('Y-m-d') }}"
+                      required />
                     <i class="fa-solid fa-calendar-days"></i>
                   </div>
                 </div>
@@ -292,7 +171,7 @@
 </div>
 
 <script>
-document.getElementById('check_in').addEventListener('change', function() {
+  document.getElementById('check_in').addEventListener('change', function() {
   const checkIn = new Date(this.value);
   checkIn.setDate(checkIn.getDate() + 1);
   document.getElementById('check_out').min = checkIn.toISOString().split('T')[0];
