@@ -81,6 +81,10 @@ Route::middleware([
     Route::put('/booking/{booking}', [BookingController::class, 'update'])->name('booking.update');
     Route::delete('/booking/{booking}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
+    // Room type management
+    Route::resource('room-types', App\Http\Controllers\RoomTypeController::class);
+    Route::patch('/room-types/{roomType}/toggle-status', [App\Http\Controllers\RoomTypeController::class, 'toggleStatus'])->name('room-types.toggle-status');
+
     Route::get('/account', function () {
         return view('admin-dashboard.new-admin-account');
     })->name('dashboard.account');
