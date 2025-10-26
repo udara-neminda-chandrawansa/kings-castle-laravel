@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
@@ -57,11 +58,15 @@ Route::get('/room-details/{id}', function ($id) {
 });
 
 // Booking routes (public)
-Route::post('/check-availability', [App\Http\Controllers\BookingController::class, 'checkAvailability'])->name('booking.check-availability');
-Route::get('/book-room', [App\Http\Controllers\BookingController::class, 'create'])->name('booking.create');
-Route::post('/book-room', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
-Route::get('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'show'])->name('booking.show');
-Route::post('/booking/{booking}/payment', [App\Http\Controllers\BookingController::class, 'processPayment'])->name('booking.payment');
+Route::post('/check-availability', [BookingController::class, 'checkAvailability'])->name('booking.check-availability');
+Route::get('/book-room', [BookingController::class, 'create'])->name('booking.create');
+Route::post('/book-room', [BookingController::class, 'store'])->name('booking.store');
+Route::get('/booking/{booking}', [BookingController::class, 'show'])->name('booking.show');
+Route::post('/booking/{id}/payment', [BookingController::class, 'processPayment'])->name('booking.payment');
+Route::get('/booking/{id}/payment-redirect', [BookingController::class, 'paymentRedirect'])->name('payment.redirect');
+
+Route::get('/payment/return', [BookingController::class, 'handleReturn'])->name('payment.return');
+Route::get('/payment/cancel', [BookingController::class, 'handleCancel'])->name('payment.cancel');
 
 Route::middleware([
     'auth:sanctum',
@@ -69,12 +74,12 @@ Route::middleware([
     'verified',
 ])->group(function () {
 
-    Route::get('/dashboard', [App\Http\Controllers\BookingController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [BookingController::class, 'index'])->name('dashboard');
 
     // Admin booking management
-    Route::get('/booking/{booking}/edit', [App\Http\Controllers\BookingController::class, 'edit'])->name('booking.edit');
-    Route::put('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'update'])->name('booking.update');
-    Route::delete('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'destroy'])->name('booking.destroy');
+    Route::get('/booking/{booking}/edit', [BookingController::class, 'edit'])->name('booking.edit');
+    Route::put('/booking/{booking}', [BookingController::class, 'update'])->name('booking.update');
+    Route::delete('/booking/{booking}', [BookingController::class, 'destroy'])->name('booking.destroy');
 
     Route::get('/account', function () {
         return view('admin-dashboard.new-admin-account');

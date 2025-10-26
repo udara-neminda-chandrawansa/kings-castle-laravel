@@ -40,13 +40,17 @@
 
 <section class="overflow-hidden space font-serif">
     <div class="container">
-        <div class="confirmation-card">
+        <div class="confirmation-card" id="printableArea">
             @if(session('success'))
             <div class="alert alert-success text-center mb-4">
                 <i class="fas fa-check-circle fa-2x mb-2"></i>
                 <h4>{{ session('success') }}</h4>
             </div>
             @endif
+
+            <form id="payForm" action="/booking/{{ $booking->id }}/payment" method="POST">
+                @csrf
+            </form>
 
             <div class="card">
                 <div class="card-header text-center">
@@ -67,6 +71,12 @@
                                 <p class="mb-1"><strong>Name:</strong> {{ $booking->guest_name }}</p>
                                 <p class="mb-1"><strong>Email:</strong> {{ $booking->guest_email }}</p>
                                 <p class="mb-1"><strong>Phone:</strong> {{ $booking->guest_phone }}</p>
+                                @if($booking->guest_address)
+                                <p class="mb-1"><strong>Address:</strong> {{ $booking->guest_address }}</p>
+                                @endif
+                                @if($booking->guest_address_2)
+                                <p class="mb-1"><strong>Address 2:</strong> {{ $booking->guest_address_2 }}</p>
+                                @endif
                                 <p class="mb-0"><strong>Guests:</strong> {{ $booking->adults }} Adults
                                     @if($booking->children > 0), {{ $booking->children }} Children @endif
                                 </p>
@@ -144,7 +154,7 @@
                     <!-- Action Buttons -->
                     <div class="text-center">
                         @if($booking->payment_status === 'pending')
-                        <button class="btn btn-success btn-lg me-3" onclick="processPayment()">
+                        <button class="btn btn-success me-2" onclick="processPayment()">
                             <i class="fas fa-credit-card me-2"></i>Pay Now
                         </button>
                         @endif
@@ -153,7 +163,7 @@
                             <i class="fas fa-home me-2"></i>Back to Home
                         </a>
 
-                        <button class="btn btn-outline-secondary ms-2" onclick="window.print()">
+                        <button class="btn btn-outline-secondary ms-2" onclick="printInfo()">
                             <i class="fas fa-print me-2"></i>Print
                         </button>
                     </div>
@@ -186,7 +196,7 @@
                         <a href="tel:+94767799721">+94 76 779 9721</a>
                         <span class="mx-3">|</span>
                         <i class="fas fa-envelope me-2"></i>
-                        <a href="mailto:info@kingscastle.lk">info@kingscastle.lk</a>
+                        <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a>
                     </p>
                 </div>
             </div>
@@ -195,39 +205,26 @@
 </section>
 
 <script>
-    function processPayment() {
-  // Show loading state
-  const payButton = document.querySelector('.btn-success');
-  const originalText = payButton.innerHTML;
-  payButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
-  payButton.disabled = true;
+    function printInfo() {
+        var printContents = document.getElementById('printableArea').innerHTML;
+        var originalContents = document.body.innerHTML;
 
-  // Make payment request
-  fetch(`/booking/{{ $booking->id }}/payment`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
     }
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      // Reload page to show updated payment status
-      location.reload();
-    } else {
-      alert('Payment failed. Please try again.');
-      payButton.innerHTML = originalText;
-      payButton.disabled = false;
+
+    function processPayment() {
+        // Show loading state
+        const payButton = document.querySelector('.btn-success');
+        const originalText = payButton.innerHTML;
+        payButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+        payButton.disabled = true;
+
+        document.getElementById('payForm').submit();
     }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-    alert('Payment failed. Please try again.');
-    payButton.innerHTML = originalText;
-    payButton.disabled = false;
-  });
-}
 </script>
 
 @endsection

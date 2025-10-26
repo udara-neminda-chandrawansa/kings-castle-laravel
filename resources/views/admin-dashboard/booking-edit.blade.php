@@ -77,6 +77,12 @@
                                             <p><strong>Name:</strong> {{ $booking->guest_name }}</p>
                                             <p><strong>Email:</strong> {{ $booking->guest_email }}</p>
                                             <p><strong>Phone:</strong> {{ $booking->guest_phone }}</p>
+                                            @if($booking->guest_address)
+                                                <p><strong>Address:</strong> {{ $booking->guest_address }}</p>
+                                            @endif
+                                            @if($booking->guest_address_2)
+                                                <p><strong>Address 2:</strong> {{ $booking->guest_address_2 }}</p>
+                                            @endif
                                             <p><strong>Guests:</strong> {{ $booking->adults }} Adults
                                                 @if($booking->children > 0), {{ $booking->children }} Children @endif
                                             </p>

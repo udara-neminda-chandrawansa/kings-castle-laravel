@@ -184,6 +184,20 @@
                                     @error('guest_phone')<small class="text-danger">{{ $message }}</small>@enderror
                                 </div>
 
+                                <div class="col-md-6 mb-3">
+                                    <label for="guest_address" class="form-label">Address 1*</label>
+                                    <input type="text" name="guest_address" id="guest_address" class="form-control"
+                                        value="{{ old('guest_address') }}" required>
+                                    @error('guest_address')<small class="text-danger">{{ $message }}</small>@enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="guest_address_2" class="form-label">Address 2</label>
+                                    <input type="text" name="guest_address_2" id="guest_address_2" class="form-control"
+                                        value="{{ old('guest_address_2') }}">
+                                    @error('guest_address_2')<small class="text-danger">{{ $message }}</small>@enderror
+                                </div>
+
                                 <!-- Stay Details -->
                                 <div class="col-12 mt-4">
                                     <h5 class="mb-3">Stay Details</h5>

@@ -94,7 +94,7 @@
 
                         @if($bookings->count() > 0)
                             <div class="table-responsive">
-                                <table class="table table-responsive-md">
+                                <table class="table table-striped table-responsive-md border mb-0" style="border-radius: 8px;">
                                     <thead>
                                         <tr>
                                             <th><strong>Booking Ref</strong></th>
@@ -175,11 +175,9 @@
 
                             <!-- Pagination -->
                             <div class="d-flex justify-content-between">
-                                <div class="dataTables_info">
-                                    Showing {{ $bookings->firstItem() }} to {{ $bookings->lastItem() }} of {{ $bookings->total() }} entries
-                                </div>
-                                <div class="dataTables_paginate">
+                                <div class="dataTables_paginate w-100">
                                     {{ $bookings->links() }}
+
                                 </div>
                             </div>
                         @else

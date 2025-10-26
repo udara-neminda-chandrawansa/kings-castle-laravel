@@ -8,6 +8,8 @@ use App\Models\RoomType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class BookingController extends Controller
 {
@@ -96,6 +98,8 @@ class BookingController extends Controller
             'guest_name' => 'required|string|max:255',
             'guest_email' => 'required|email|max:255',
             'guest_phone' => 'required|string|max:20',
+            'guest_address' => 'required|string|max:255',
+            'guest_address_2' => 'nullable|string|max:255',
             'adults' => 'required|integer|min:1',
             'children' => 'nullable|integer|min:0',
             'check_in_date' => 'required|date|after_or_equal:today',
@@ -119,6 +123,8 @@ class BookingController extends Controller
                 'guest_name' => $validated['guest_name'],
                 'guest_email' => $validated['guest_email'],
                 'guest_phone' => $validated['guest_phone'],
+                'guest_address' => $validated['guest_address'],
+                'guest_address_2' => $validated['guest_address_2'] ?? null,
                 'adults' => $validated['adults'],
                 'children' => $validated['children'] ?? 0,
                 'check_in_date' => $checkIn,
@@ -203,20 +209,106 @@ class BookingController extends Controller
     /**
      * Process payment (PayHere integration placeholder)
      */
-    public function processPayment(Request $request, Booking $booking)
+    public function processPayment($id)
     {
-        // This is where PayHere integration will go
-        // For now, we'll just mark as paid for testing
+        $booking = Booking::findOrFail($id);
+        $fullTotal = $booking->total_amount;
+
+        // Initialize payment gateway
+        $merchant_id = env('PAYHERE_MERCHANT_ID');
+        $merchant_secret = env('PAYHERE_MERCHANT_SECRET');
+
+        $paymentData = [
+            "merchant_id" => $merchant_id,
+            "return_url" => route('payment.return'), // Route for handling return URL
+            "cancel_url" => route('payment.cancel'), // Route for handling cancel URL
+            "notify_url" => route('payment.api.notify'), // Route for handling notify URL
+            "order_id" => $id,
+            "items" => "KC Booking",
+            "currency" => "LKR",
+            "amount" => number_format((float) $fullTotal, 2, '.', ''),
+            "first_name" => $booking->guest_name,
+            "last_name" => $booking->guest_name,
+            "email" => $booking->guest_email,
+            "phone" => $booking->guest_phone,
+            "address" => $booking->guest_address ?? 'N/A',
+            "city" => $booking->guest_address_2 ?? 'N/A',
+            "country" => "Sri Lanka",
+        ];
+
+        // Generate the hash signature
+        $paymentData['hash'] = strtoupper(md5(
+            $merchant_id . $paymentData['order_id'] . $paymentData['amount'] . $paymentData['currency'] . strtoupper(md5($merchant_secret))
+        ));
 
         $booking->update([
-            'payment_status' => 'paid',
+            'payment_status' => 'pending',
             'payment_reference' => 'PH' . time(),
             'status' => 'confirmed'
         ]);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Payment processed successfully!'
-        ]);
+        return view('public-site.payhere-redirect', compact('paymentData'));
+
+        // Return JSON response with payment data
+        // return response()->json([
+        //     'success' => true,
+        //     'message' => 'Payment initialized successfully',
+        //     'paymentData' => $paymentData,
+        // ]);
+    }
+
+    public function handleNotify(Request $request)
+    {
+        // Verify the payment
+
+        $merchant_secret = env('PAYHERE_MERCHANT_SECRET');
+        $generatedHash = strtoupper(md5(
+            $request->merchant_id .
+            $request->order_id .
+            $request->payhere_amount .
+            $request->payhere_currency .
+            $request->status_code .
+            strtoupper(md5($merchant_secret))
+        ));
+
+        if ($generatedHash == $request->md5sig && $request->status_code == 2) {
+            // Payment is successful
+            $booking = Booking::find($request->order_id);
+            $booking->update([
+                'payment_status' => "paid", // Update to successful status
+            ]);
+
+            // Send email to customer
+            // $customer = $payment->customer;
+            // $orderDetails = $payment->orders->map(function ($order) {
+            //     return [
+            //         'product_name' => $order->product->name,
+            //         'quantity' => $order->qty,
+            //         'price' => $order->product->discounted_price,
+            //     ];
+            // });
+
+            // Mail::to($customer->email)->send(new OrderConfirmation($orderDetails, $customer, $payment->total));
+
+            return response('Payment successful', 200);
+        } else {
+            // Payment failed or invalid
+            return response('Payment verification failed', 400);
+        }
+    }
+
+    public function handleReturn(Request $request)
+    {
+        //  dd($request->order_id);
+
+        $booking = Booking::find($request->order_id);
+        return view('public-site.services', compact('booking'));
+    }
+
+    public function handleCancel(Request $request)
+    {
+
+        $booking = Booking::find($request->order_id);
+        return view('public-site.services', compact('booking'));
     }
 }
