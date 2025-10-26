@@ -191,26 +191,29 @@
         </div>
         <div class="row gy-2">
 
-            <!-- 1) Helicopter Tour -->
+            @foreach($tourPackages as $package)
             <div class="col-md-6 col-lg-4">
                 <div class="tour-card">
-                    <div class="tour-image"><img src="assets/img/tours/helicopter1.jpg" alt="Helicopter Tour"></div>
+                    <div class="tour-image"><img src="{{ asset($package->image_path) }}" alt="{{ $package->name }}"></div>
                     <div class="tour-overlay">
-                        <h3 class="tour-title">Helicopter Tour</h3>
-                        <p class="tour-subtitle">“Soar Above the Highlands”</p>
+                        <h3 class="tour-title">{{ $package->name }}</h3>
+                        <p class="tour-subtitle">"{{ $package->subtitle }}"</p>
                         <p class="tour-desc">
-                            Take to the skies on a <strong>15-minute</strong> helicopter ride and witness the magic
-                            of Nuwara Eliya from above.<br>
-                            <strong>Highlights:</strong> Lake Gregory, Nuwara Eliya City, Central Mountain Range,
-                            Adam’s Peak, Kotmale Reservoir & waterfalls.
+                            {{ $package->description }}
+                            @if($package->includes && count($package->includes) > 0)
+                                <br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 3)) }}{{ count($package->includes) > 3 ? ' & more' : '' }}.
+                            @endif
                         </p>
-                        <div class="tour-price">$110 <span>per pax</span></div>
-                        <p class="tour-note">Pre-booking Required | Conditions Apply</p>
+                        @if($package->price)
+                            <div class="tour-price">${{ number_format($package->price) }} <span>{{ $package->price_unit }}</span></div>
+                        @endif
+                        @if($package->notes)
+                            <p class="tour-note">{{ $package->notes }}</p>
+                        @endif
                     </div>
                 </div>
             </div>
-
-            <!-- 2) City Tour -->
+            @endforeach            <!-- 2) City Tour -->
             <div class="col-md-6 col-lg-4">
                 <div class="tour-card">
                     <div class="tour-image"><img src="assets/img/tours/GregoryLake.jpg" alt="City Tour"></div>

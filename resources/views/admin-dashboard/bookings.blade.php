@@ -33,7 +33,7 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-0 text-uppercase text-muted">
-                                    <small><b>Pending</b></small>
+                                    <small><b>Pending (within this page)</b></small>
                                 </p>
                                 <h2 class="mb-0">{{ $bookings->where('status', 'pending')->count() }}</h2>
                             </div>
@@ -50,7 +50,7 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-0 text-uppercase text-muted">
-                                    <small><b>Confirmed</b></small>
+                                    <small><b>Confirmed (within this page)</b></small>
                                 </p>
                                 <h2 class="mb-0">{{ $bookings->where('status', 'confirmed')->count() }}</h2>
                             </div>
@@ -67,7 +67,7 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-0 text-uppercase text-muted">
-                                    <small><b>Revenue (Paid)</b></small>
+                                    <small><b>Revenue (within this page)</b></small>
                                 </p>
                                 <h2 class="mb-0">Rs {{ number_format($bookings->where('payment_status', 'paid')->sum('total_amount'), 0) }}</h2>
                             </div>

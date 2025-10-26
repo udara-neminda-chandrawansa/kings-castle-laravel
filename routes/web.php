@@ -45,7 +45,8 @@ Route::get('/services', function () {
     return view('public-site.services', compact('roomTypes'));
 });
 Route::get('/packages', function () {
-    return view('public-site.packages');
+    $tourPackages = App\Models\TourPackage::where('is_active', true)->get();
+    return view('public-site.packages', compact('tourPackages'));
 });
 Route::get('/gallery', function () {
     return view('public-site.gallery');
@@ -84,6 +85,10 @@ Route::middleware([
     // Room type management
     Route::resource('room-types', App\Http\Controllers\RoomTypeController::class);
     Route::patch('/room-types/{roomType}/toggle-status', [App\Http\Controllers\RoomTypeController::class, 'toggleStatus'])->name('room-types.toggle-status');
+
+    // Tour package management
+    Route::resource('tour-packages', App\Http\Controllers\TourPackageController::class);
+    Route::patch('/tour-packages/{tourPackage}/toggle-status', [App\Http\Controllers\TourPackageController::class, 'toggleStatus'])->name('tour-packages.toggle-status');
 
     Route::get('/account', function () {
         return view('admin-dashboard.new-admin-account');
