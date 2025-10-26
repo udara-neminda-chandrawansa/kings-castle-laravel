@@ -3,7 +3,7 @@
     <div class="th-menu-area text-center">
       <button class="th-menu-toggle"><i class="fal fa-times"></i></button>
       <div class="mobile-logo">
-        <a href="/"><img src="assets/img/logo.png" alt="King's Castle" style="width: 100px;" /></a>
+        <a href="/"><img src="{{ asset('assets/img/logo.png') }}" alt="King's Castle" style="width: 100px;" /></a>
       </div>
       <div class="th-mobile-menu">
         <ul>
@@ -63,7 +63,7 @@
           <div class="row align-items-center justify-content-between">
             <div class="col-auto">
               <div class="header-logo">
-                <a href="/"><img src="assets/img/logo.png" alt="King's Castle" style="width: 100px;" /></a>
+                <a href="/"><img src="{{ asset('assets/img/logo.png') }}" alt="King's Castle" style="width: 100px;" /></a>
               </div>
             </div>
             <div class="col-auto">
@@ -94,7 +94,7 @@
               </button>
             </div>
             <div class="col-auto d-none d-xl-block">
-              <a href="/services" class="th-btn2">CHECK IN NOW <img src="assets/img/icon/calender.svg" alt="" /></a>
+              <a href="/services" class="th-btn2">CHECK IN NOW <img src="{{ asset('assets/img/icon/calender.svg') }}" alt="" /></a>
             </div>
           </div>
         </div>

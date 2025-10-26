@@ -19,6 +19,7 @@ Route::get('/services', function () { return view('public-site.services'); });
 Route::get('/packages', function () { return view('public-site.packages'); });
 Route::get('/gallery', function () { return view('public-site.gallery'); });
 Route::get('/contact', function () { return view('public-site.contact'); });
+Route::get('/room-details/{id}', function ($id) { return view('public-site.room-details', ['id' => $id]); });
 
 Route::middleware([
     'auth:sanctum',

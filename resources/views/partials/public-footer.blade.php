@@ -1,6 +1,6 @@
   <!--footer-->
   <footer class="footer-wrapper footer-layout1">
-    <div class="footer-logo"><img src="assets/img/logo.png" alt="" style="width: 100px;" /></div>
+    <div class="footer-logo"><img src="{{ asset('assets/img/logo.png') }}" alt="" style="width: 100px;" /></div>
     <div class="widget-area">
       <div class="container">
         <div class="row justify-content-between">
@@ -16,10 +16,10 @@
                 </button>
               </form>
               <div class="th-social">
-                <a href="#"><img src="assets/img/travel-plat/booking.svg" alt=""></a>
-                <a href="#"><img src="assets/img/travel-plat/trip-advisior-new.png" alt=""></a>
-                <a href="#"><img src="assets/img/travel-plat/agoda.png" alt=""></i></a>
-                <a href="#"><img src="assets/img/travel-plat/expedia.png" alt=""></a>
+                <a href="#"><img src="{{ asset('assets/img/travel-plat/booking.svg') }}" alt=""></a>
+                <a href="#"><img src="{{ asset('assets/img/travel-plat/trip-advisior-new.png') }}" alt=""></a>
+                <a href="#"><img src="{{ asset('assets/img/travel-plat/agoda.png') }}" alt=""></i></a>
+                <a href="#"><img src="{{ asset('assets/img/travel-plat/expedia.png') }}" alt=""></a>
               </div>
             </div>
           </div>
