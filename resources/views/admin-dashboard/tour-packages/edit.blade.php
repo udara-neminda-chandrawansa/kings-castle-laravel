@@ -19,7 +19,7 @@
                         @endif
 
                         <form action="{{ route('tour-packages.update', $tourPackage) }}" method="POST"
-                            id="tourPackageForm">
+                            id="tourPackageForm" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
@@ -98,15 +98,15 @@
                                                 </div>
 
                                                 <div class="col-md-6 mb-3">
-                                                    <label for="image_path" class="form-label">Image Path</label>
-                                                    <input type="text" name="image_path" id="image_path"
-                                                        class="form-control"
-                                                        value="{{ old('image_path', $tourPackage->image_path) }}"
-                                                        placeholder="assets/img/tours/helicopter1.jpg">
-                                                    @error('image_path')<small class="text-danger">{{ $message
-                                                        }}</small>@enderror
-                                                    <small class="text-muted">Relative path from public
-                                                        directory</small>
+                                                    <label for="image_file" class="form-label">Package Image</label>
+                                                    <input type="file" name="image_file" id="image_file" class="form-control" accept="image/*">
+                                                    @error('image_file')<small class="text-danger">{{ $message }}</small>@enderror
+                                                    <small class="text-muted">Upload JPG, PNG, GIF (Max: 2MB) - Leave empty to keep current image</small>
+                                                    @if($tourPackage->image_path)
+                                                        <div class="mt-2">
+                                                            <small class="text-info">Current: {{ basename($tourPackage->image_path) }}</small>
+                                                        </div>
+                                                    @endif
                                                 </div>
 
                                                 <div class="col-md-6 mb-3">
@@ -361,8 +361,6 @@
         const duration = document.getElementById('duration').value || '{{ $tourPackage->duration }}';
         const difficulty = document.getElementById('difficulty_level').value || 'easy';
         const description = document.getElementById('description').value || '{{ $tourPackage->description }}';
-        const imagePath = document.getElementById('image_path').value || '{{ $tourPackage->image_path }}';
-
         document.getElementById('preview-name').textContent = name;
         document.getElementById('preview-subtitle').textContent = subtitle;
         
@@ -382,11 +380,22 @@
         document.getElementById('preview-difficulty').innerHTML = `<small><span class="badge ${difficultyClasses[difficulty]}">${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)}</span></small>`;
         
         document.getElementById('preview-description').textContent = description.length > 100 ? description.substring(0, 100) + '...' : description;
-        document.getElementById('preview-image').src = `{{ asset('') }}${imagePath}`;
     }
 
+    // Handle image file preview
+    document.getElementById('image_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview-image').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     // Add event listeners for live preview
-    ['name', 'subtitle', 'price', 'price_unit', 'duration', 'difficulty_level', 'description', 'image_path'].forEach(id => {
+    ['name', 'subtitle', 'price', 'price_unit', 'duration', 'difficulty_level', 'description'].forEach(id => {
         const element = document.getElementById(id);
         if (element) {
             element.addEventListener('input', updatePreview);

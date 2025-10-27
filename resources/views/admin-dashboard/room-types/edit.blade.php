@@ -18,7 +18,7 @@
                             <div class="alert alert-danger">{{ session('error') }}</div>
                         @endif
 
-                        <form action="{{ route('room-types.update', $roomType) }}" method="POST" id="roomTypeForm">
+                        <form action="{{ route('room-types.update', $roomType) }}" method="POST" id="roomTypeForm" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             
@@ -59,12 +59,15 @@
                                                 </div>
 
                                                 <div class="col-md-6 mb-3">
-                                                    <label for="image_path" class="form-label">Image Path</label>
-                                                    <input type="text" name="image_path" id="image_path" class="form-control" 
-                                                           value="{{ old('image_path', $roomType->image_path) }}" 
-                                                           placeholder="assets/img/drive-images-2-webp/kc1.webp">
-                                                    @error('image_path')<small class="text-danger">{{ $message }}</small>@enderror
-                                                    <small class="text-muted">Relative path from public directory</small>
+                                                    <label for="image_file" class="form-label">Room Image</label>
+                                                    <input type="file" name="image_file" id="image_file" class="form-control" accept="image/*">
+                                                    @error('image_file')<small class="text-danger">{{ $message }}</small>@enderror
+                                                    <small class="text-muted">Upload JPG, PNG, GIF (Max: 2MB) - Leave empty to keep current image</small>
+                                                    @if($roomType->image_path)
+                                                        <div class="mt-2">
+                                                            <small class="text-info">Current: {{ basename($roomType->image_path) }}</small>
+                                                        </div>
+                                                    @endif
                                                 </div>
 
                                                 <div class="col-12 mb-3">
@@ -232,21 +235,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Live preview functionality
     function updatePreview() {
-        const name = document.getElementById('name').value || 'Room Type Name';
-        const price = document.getElementById('price_per_night').value || '0';
-        const occupancy = document.getElementById('max_occupancy').value || '0';
-        const description = document.getElementById('description').value || 'Description will appear here...';
-        const imagePath = document.getElementById('image_path').value || 'assets/img/drive-images-2-webp/kc1.webp';
+        const name = document.getElementById('name').value || '{{ $roomType->name }}';
+        const price = document.getElementById('price_per_night').value || '{{ $roomType->price_per_night }}';
+        const occupancy = document.getElementById('max_occupancy').value || '{{ $roomType->max_occupancy }}';
+        const description = document.getElementById('description').value || '{{ $roomType->description }}';
 
         document.getElementById('preview-name').textContent = name;
         document.getElementById('preview-price').innerHTML = `<strong>Rs ${parseFloat(price).toLocaleString()}/night</strong>`;
         document.getElementById('preview-occupancy').innerHTML = `<small>Max ${occupancy} ${occupancy == 1 ? 'guest' : 'guests'}</small>`;
         document.getElementById('preview-description').textContent = description.length > 100 ? description.substring(0, 100) + '...' : description;
-        document.getElementById('preview-image').src = `{{ asset('') }}${imagePath}`;
     }
 
+    // Handle image file preview
+    document.getElementById('image_file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('preview-image').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     // Add event listeners for live preview
-    ['name', 'price_per_night', 'max_occupancy', 'description', 'image_path'].forEach(id => {
+    ['name', 'price_per_night', 'max_occupancy', 'description'].forEach(id => {
         document.getElementById(id).addEventListener('input', updatePreview);
         document.getElementById(id).addEventListener('change', updatePreview);
     });

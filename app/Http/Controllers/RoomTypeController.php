@@ -38,7 +38,7 @@ class RoomTypeController extends Controller
             'max_occupancy' => 'required|integer|min:1|max:20',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:100',
-            'image_path' => 'nullable|string|max:500',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean'
         ]);
 
@@ -51,13 +51,22 @@ class RoomTypeController extends Controller
                 return !empty(trim($amenity));
             });
 
+            // Handle image upload
+            $imagePath = 'assets/img/drive-images-2-webp/kc1.webp'; // Default image
+            if ($request->hasFile('image_file')) {
+                $image = $request->file('image_file');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('upload/rooms'), $imageName);
+                $imagePath = 'upload/rooms/' . $imageName;
+            }
+
             $roomType = RoomType::create([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'price_per_night' => $validated['price_per_night'],
                 'max_occupancy' => $validated['max_occupancy'],
                 'amenities' => $amenities,
-                'image_path' => $validated['image_path'] ?? 'assets/img/drive-images-2-webp/kc1.webp',
+                'image_path' => $imagePath,
                 'is_active' => $validated['is_active'] ?? true
             ]);
 
@@ -103,7 +112,7 @@ class RoomTypeController extends Controller
             'max_occupancy' => 'required|integer|min:1|max:20',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:100',
-            'image_path' => 'nullable|string|max:500',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'is_active' => 'boolean'
         ]);
 
@@ -116,13 +125,31 @@ class RoomTypeController extends Controller
                 return !empty(trim($amenity));
             });
 
+            // Handle image upload
+            $imagePath = $roomType->image_path; // Keep existing image by default
+            if ($request->hasFile('image_file')) {
+                // Delete old image if it's in upload directory
+                if ($roomType->image_path && str_starts_with($roomType->image_path, 'upload/rooms/')) {
+                    $oldImagePath = public_path($roomType->image_path);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                
+                // Upload new image
+                $image = $request->file('image_file');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('upload/rooms'), $imageName);
+                $imagePath = 'upload/rooms/' . $imageName;
+            }
+
             $roomType->update([
                 'name' => $validated['name'],
                 'description' => $validated['description'],
                 'price_per_night' => $validated['price_per_night'],
                 'max_occupancy' => $validated['max_occupancy'],
                 'amenities' => $amenities,
-                'image_path' => $validated['image_path'] ?? $roomType->image_path,
+                'image_path' => $imagePath,
                 'is_active' => $validated['is_active'] ?? true
             ]);
 
@@ -148,6 +175,14 @@ class RoomTypeController extends Controller
             // Check if room type has bookings
             if ($roomType->bookings()->count() > 0) {
                 return back()->with('error', 'Cannot delete room type with existing bookings. Set it as inactive instead.');
+            }
+
+            // Delete uploaded image if it exists
+            if ($roomType->image_path && str_starts_with($roomType->image_path, 'upload/rooms/')) {
+                $imagePath = public_path($roomType->image_path);
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
 
             $roomType->delete();

@@ -39,7 +39,7 @@ class TourPackageController extends Controller
             'duration' => 'nullable|string|max:100',
             'includes' => 'nullable|array',
             'includes.*' => 'string|max:200',
-            'image_path' => 'nullable|string|max:500',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'notes' => 'nullable|string',
             'difficulty_level' => 'required|in:easy,moderate,challenging',
             'min_participants' => 'required|integer|min:1',
@@ -56,6 +56,15 @@ class TourPackageController extends Controller
                 return !empty(trim($include));
             });
 
+            // Handle image upload
+            $imagePath = 'assets/img/tours/helicopter1.jpg'; // Default image
+            if ($request->hasFile('image_file')) {
+                $image = $request->file('image_file');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('upload/tours'), $imageName);
+                $imagePath = 'upload/tours/' . $imageName;
+            }
+
             $tourPackage = TourPackage::create([
                 'name' => $validated['name'],
                 'subtitle' => $validated['subtitle'],
@@ -64,7 +73,7 @@ class TourPackageController extends Controller
                 'price_unit' => $validated['price_unit'],
                 'duration' => $validated['duration'],
                 'includes' => $includes,
-                'image_path' => $validated['image_path'] ?? 'assets/img/tours/helicopter1.jpg',
+                'image_path' => $imagePath,
                 'notes' => $validated['notes'],
                 'difficulty_level' => $validated['difficulty_level'],
                 'min_participants' => $validated['min_participants'],
@@ -115,7 +124,7 @@ class TourPackageController extends Controller
             'duration' => 'nullable|string|max:100',
             'includes' => 'nullable|array',
             'includes.*' => 'string|max:200',
-            'image_path' => 'nullable|string|max:500',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'notes' => 'nullable|string',
             'difficulty_level' => 'required|in:easy,moderate,challenging',
             'min_participants' => 'required|integer|min:1',
@@ -132,6 +141,24 @@ class TourPackageController extends Controller
                 return !empty(trim($include));
             });
 
+            // Handle image upload
+            $imagePath = $tourPackage->image_path; // Keep existing image by default
+            if ($request->hasFile('image_file')) {
+                // Delete old image if it's in upload directory
+                if ($tourPackage->image_path && str_starts_with($tourPackage->image_path, 'upload/tours/')) {
+                    $oldImagePath = public_path($tourPackage->image_path);
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                
+                // Upload new image
+                $image = $request->file('image_file');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('upload/tours'), $imageName);
+                $imagePath = 'upload/tours/' . $imageName;
+            }
+
             $tourPackage->update([
                 'name' => $validated['name'],
                 'subtitle' => $validated['subtitle'],
@@ -140,7 +167,7 @@ class TourPackageController extends Controller
                 'price_unit' => $validated['price_unit'],
                 'duration' => $validated['duration'],
                 'includes' => $includes,
-                'image_path' => $validated['image_path'] ?? $tourPackage->image_path,
+                'image_path' => $imagePath,
                 'notes' => $validated['notes'],
                 'difficulty_level' => $validated['difficulty_level'],
                 'min_participants' => $validated['min_participants'],
