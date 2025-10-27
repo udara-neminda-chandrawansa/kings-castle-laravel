@@ -367,8 +367,10 @@ class BookingController extends Controller
     {
         //  dd($request->order_id);
 
+        $roomTypes = RoomType::where('is_active', true)->get();
+
         $booking = Booking::find($request->order_id);
-        return view('public-site.services', compact('booking'));
+        return view('public-site.services', compact('booking', 'roomTypes'));
     }
 
     public function handleCancel(Request $request)
