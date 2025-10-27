@@ -300,7 +300,7 @@
             <div style="text-align: center; margin-top: 30px; padding: 20px; background: #f1f3f4; border-radius: 8px;">
                 <p>If you have any questions or concerns, please don't hesitate to contact us:</p>
                 <p><strong>Email:</strong> <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a><br>
-                <strong>Phone:</strong> <a href="tel:+94123456789">+94 123 456 789</a></p>
+                <strong>Phone:</strong> <a href="tel:+94123456789">+94 76 779 9721</a></p>
             </div>
         </div>
 
@@ -308,9 +308,9 @@
             <p>&copy; {{ date('Y') }} Kings Castle Hotel. All rights reserved.</p>
             <p>
                 <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> | 
-                <a href="tel:+94123456789">+94 123 456 789</a>
+                <a href="tel:+94123456789">+94 76 779 9721</a>
             </p>
-            <p>123 Castle Road, Colombo, Sri Lanka</p>
+            <p>No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</p>
         </div>
     </div>
 </body>
