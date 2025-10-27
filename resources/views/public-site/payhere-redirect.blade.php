@@ -6,7 +6,7 @@
 <body onload="document.forms['payhereForm'].submit();">
     <h3>Redirecting to PayHere...</h3>
 
-    <form name="payhereForm" method="POST" action="https://sandbox.payhere.lk/pay/checkout">
+    <form name="payhereForm" method="POST" action="{{ env('PAYHERE_FORM_ADDRESS') }}">
         @foreach ($paymentData as $key => $value)
             <input type="hidden" name="{{ $key }}" value="{{ $value }}">
         @endforeach
