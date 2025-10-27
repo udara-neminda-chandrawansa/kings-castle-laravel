@@ -13,7 +13,6 @@ class Booking extends Model
     protected $fillable = [
         'booking_reference',
         'user_id',
-        'room_type_id',
         'guest_name',
         'guest_email',
         'guest_phone',
@@ -38,9 +37,14 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function roomType()
+    public function roomTypes()
     {
-        return $this->belongsTo(RoomType::class);
+        return $this->belongsToMany(RoomType::class, 'booking_rooms');
+    }
+
+    public function bookingRooms()
+    {
+        return $this->hasMany(BookingRoom::class);
     }
 
     public function payment()
@@ -78,5 +82,21 @@ class Booking extends Model
     public function calculateNights()
     {
         return Carbon::parse($this->check_out_date)->diffInDays(Carbon::parse($this->check_in_date));
+    }
+
+    /**
+     * Calculate total rooms price for this booking
+     */
+    public function calculateRoomsTotal()
+    {
+        return $this->roomTypes->sum('price_per_night') * $this->nights;
+    }
+
+    /**
+     * Get comma separated room type names
+     */
+    public function getRoomTypeNamesAttribute()
+    {
+        return $this->roomTypes->pluck('name')->join(', ');
     }
 }

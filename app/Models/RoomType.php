@@ -27,7 +27,12 @@ class RoomType extends Model
 
     public function bookings()
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsToMany(Booking::class, 'booking_rooms');
+    }
+
+    public function bookingRooms()
+    {
+        return $this->hasMany(BookingRoom::class);
     }
 
     public function getFormattedPriceAttribute()

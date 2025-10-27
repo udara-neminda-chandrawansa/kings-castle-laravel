@@ -87,7 +87,13 @@
                         <div class="col-md-6 mb-4">
                             <h5><i class="fas fa-bed me-2"></i>Room Details</h5>
                             <div class="ps-3">
-                                <p class="mb-1"><strong>Room Type:</strong> {{ $booking->roomType->name }}</p>
+                                <p class="mb-1"><strong>Room Types:</strong> 
+                                    @if($booking->roomTypes->count() > 0)
+                                        {{ $booking->room_type_names }}
+                                    @else
+                                        No rooms selected
+                                    @endif
+                                </p>
                                 <p class="mb-1"><strong>Check-in:</strong> {{ $booking->check_in_date->format('M d, Y')
                                     }}</p>
                                 <p class="mb-1"><strong>Check-out:</strong> {{ $booking->check_out_date->format('M d,
@@ -130,8 +136,16 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <h5 class="mb-0">Total Amount</h5>
-                                        <small>{{ $booking->roomType->formatted_price }} × {{ $booking->nights }}
-                                            nights</small>
+                                        <small>
+                                            @if($booking->roomTypes->count() > 0)
+                                                @foreach($booking->roomTypes as $roomType)
+                                                    {{ $roomType->formatted_price }}@if(!$loop->last) + @endif
+                                                @endforeach
+                                                × {{ $booking->nights }} nights
+                                            @else
+                                                No rooms selected
+                                            @endif
+                                        </small>
                                     </div>
                                     <h3 class="mb-0 text-success">{{ $booking->formatted_total }}</h3>
                                 </div>

@@ -69,7 +69,7 @@
                                 <p class="mb-0 text-uppercase text-muted">
                                     <small><b>Revenue (within this page)</b></small>
                                 </p>
-                                <h2 class="mb-0">Rs {{ number_format($bookings->where('payment_status', 'paid')->sum('total_amount'), 0) }}</h2>
+                                <h2 class="mb-0">Rs {{ number_format($bookings->filter(function($booking) { return $booking->payment && $booking->payment->payment_status == 'paid'; })->sum(function($booking) { return $booking->payment->total_amount; }), 0) }}</h2>
                             </div>
                         </div>
                     </div>
@@ -122,8 +122,15 @@
                                                 </td>
                                                 <td>
                                                     <div>
-                                                        <p class="mb-0">{{ $booking->roomType->name }}</p>
-                                                        <small class="text-muted">{{ $booking->roomType->formatted_price }}/night</small>
+                                                        @if($booking->roomTypes->count() > 0)
+                                                            @foreach($booking->roomTypes as $roomType)
+                                                                <p class="mb-0">{{ $roomType->name }}</p>
+                                                                <small class="text-muted">{{ $roomType->formatted_price }}/night</small>
+                                                                @if(!$loop->last)<br>@endif
+                                                            @endforeach
+                                                        @else
+                                                            <p class="mb-0 text-muted">No rooms selected</p>
+                                                        @endif
                                                     </div>
                                                 </td>
                                                 <td>
@@ -148,8 +155,8 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <span class="badge badge-{{ $booking->payment_status === 'paid' ? 'success' : ($booking->payment_status === 'failed' ? 'danger' : 'warning') }}">
-                                                        {{ ucfirst($booking->payment_status) }}
+                                                    <span class="badge badge-{{ $booking->payment->payment_status === 'paid' ? 'success' : ($booking->payment->payment_status === 'failed' ? 'danger' : 'warning') }}">
+                                                        {{ ucfirst($booking->payment->payment_status) }}
                                                     </span>
                                                 </td>
                                                 <td>

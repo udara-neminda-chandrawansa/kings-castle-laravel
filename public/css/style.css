@@ -66,7 +66,7 @@
 @import url("../icons/flaticon/flaticon.css");
 @import url("../icons/flaticon_1/flaticon_1.css");
 @import url("../icons/bootstrap-icons/font/bootstrap-icons.css");
-@import url(../vendor/metismenu/css/metisMenu.min.css);
+/* @import url(../vendor/metismenu/css/metisMenu.min.css); */
 @use "sass:math";
 :root {
   --primary: #452B90;
