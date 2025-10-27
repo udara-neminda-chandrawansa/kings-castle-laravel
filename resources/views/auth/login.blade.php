@@ -34,9 +34,9 @@
                                             <button type="submit" class="btn btn-primary btn-block">Sign In</button>
                                         </div>
                                     </form>
-                                    <div class="mt-3 new-account">
+                                    {{-- <div class="mt-3 new-account">
                                         <p>Don't have an account? <a class="text-primary" href="/register">Sign Up</a></p>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
                         </div>
