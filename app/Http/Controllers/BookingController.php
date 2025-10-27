@@ -19,8 +19,8 @@ class BookingController extends Controller
     public function index()
     {
         $bookings = Booking::with(['user', 'roomType'])
-                    ->orderBy('created_at', 'desc')
-                    ->paginate(10);
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
 
         return view('admin-dashboard.bookings', compact('bookings'));
     }
@@ -41,36 +41,55 @@ class BookingController extends Controller
         $checkOut = Carbon::parse($request->check_out);
         $nights = $checkOut->diffInDays($checkIn);
 
-        $availableRooms = RoomType::where('is_active', true)
-                                 ->where('max_occupancy', '>=', $request->adults)
-                                 ->get();
+        // Get active room types meeting occupancy
+        $suitableRoomTypes = RoomType::where('is_active', true)
+            ->where('max_occupancy', '>=', $request->adults)
+            ->get();
+
+        // Get booked room types during that period
+        $bookedRoomTypeIds = Booking::where(function ($query) use ($checkIn, $checkOut) {
+            $query->where('check_in_date', '<', $checkOut)
+                ->where('check_out_date', '>', $checkIn);
+        })
+            ->whereIn('status', ['confirmed', 'checked_in', 'pending'])
+            ->pluck('room_type_id')
+            ->toArray();
+
+        // Remove booked ones
+        $availableRooms = $suitableRoomTypes->reject(
+            fn($roomType) =>
+            in_array($roomType->id, $bookedRoomTypeIds)
+        );
 
         return response()->json([
-            'available_rooms' => $availableRooms,
+            'available_rooms' => $availableRooms->values(),
             'nights' => $nights,
             'check_in' => $checkIn->format('Y-m-d'),
-            'check_out' => $checkOut->format('Y-m-d')
+            'check_out' => $checkOut->format('Y-m-d'),
+            'total_rooms_found' => $suitableRoomTypes->count(),
+            'booked_rooms_count' => count($bookedRoomTypeIds)
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+    public function create1(Request $request)
     {
         // Get available room types based on guest count if provided
         $adults = $request->get('adults', 1);
         $children = $request->get('children', 0);
-        
+
         $roomTypesQuery = RoomType::where('is_active', true);
-        
+
         // Filter by occupancy if adults parameter is provided
         if ($request->has('adults')) {
             $roomTypesQuery->where('max_occupancy', '>=', $adults);
         }
-        
+
         $roomTypes = $roomTypesQuery->get();
-        
+
         // If coming from availability check
         $selectedRoom = null;
         if ($request->has('room_type_id')) {
@@ -87,6 +106,54 @@ class BookingController extends Controller
 
         return view('public-site.booking-form', compact('roomTypes', 'selectedRoom', 'bookingData'));
     }
+
+    public function create(Request $request)
+    {
+        $adults = $request->get('adults', 1);
+        $children = $request->get('children', 0);
+        $checkIn = $request->get('check_in');
+        $checkOut = $request->get('check_out');
+
+        $roomTypesQuery = RoomType::where('is_active', true)
+            ->where('max_occupancy', '>=', $adults);
+
+        // If check-in/out are provided, filter unavailable rooms
+        if ($checkIn && $checkOut) {
+            $checkInDate = Carbon::parse($checkIn);
+            $checkOutDate = Carbon::parse($checkOut);
+
+            // Find booked room types in that date range
+            $bookedRoomTypeIds = Booking::where(function ($query) use ($checkInDate, $checkOutDate) {
+                $query->where('check_in_date', '<', $checkOutDate)
+                    ->where('check_out_date', '>', $checkInDate);
+            })
+                ->whereIn('status', ['confirmed', 'checked_in', 'pending'])
+                ->pluck('room_type_id')
+                ->toArray();
+
+            // Exclude those booked ones
+            $roomTypesQuery->whereNotIn('id', $bookedRoomTypeIds);
+        }
+
+        $roomTypes = $roomTypesQuery->get();
+
+        // If coming from availability check
+        $selectedRoom = null;
+        if ($request->has('room_type_id')) {
+            $selectedRoom = RoomType::find($request->room_type_id);
+        }
+
+        // Pass booking parameters to view
+        $bookingData = [
+            'check_in' => $checkIn ?? date('Y-m-d'),
+            'check_out' => $checkOut ?? date('Y-m-d', strtotime('+1 day')),
+            'adults' => $adults,
+            'children' => $children
+        ];
+
+        return view('public-site.booking-form', compact('roomTypes', 'selectedRoom', 'bookingData'));
+    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -146,11 +213,10 @@ class BookingController extends Controller
             }
 
             return redirect()->route('booking.show', $booking->id)
-                           ->with('success', 'Booking created successfully!');
-
+                ->with('success', 'Booking created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
-            
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
@@ -159,7 +225,7 @@ class BookingController extends Controller
             }
 
             return back()->withInput()
-                         ->with('error', 'Failed to create booking. Please try again.');
+                ->with('error', 'Failed to create booking. Please try again.');
         }
     }
 
@@ -264,11 +330,11 @@ class BookingController extends Controller
         $merchant_secret = env('PAYHERE_MERCHANT_SECRET');
         $generatedHash = strtoupper(md5(
             $request->merchant_id .
-            $request->order_id .
-            $request->payhere_amount .
-            $request->payhere_currency .
-            $request->status_code .
-            strtoupper(md5($merchant_secret))
+                $request->order_id .
+                $request->payhere_amount .
+                $request->payhere_currency .
+                $request->status_code .
+                strtoupper(md5($merchant_secret))
         ));
 
         if ($generatedHash == $request->md5sig && $request->status_code == 2) {
