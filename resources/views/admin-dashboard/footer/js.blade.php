@@ -5,7 +5,7 @@
 <script src="{{asset('vendor/global/global.min.js')}}"></script>
 <script src="{{asset('vendor/chart-js/chart.bundle.min.js')}}"></script>
 <script src="{{asset('vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
-<!--<script src="{{asset('vendor/apexchart/apexchart.js')}}"></script>-->
+{{-- <script src="{{asset('vendor/apexchart/apexchart.js')}}"></script> --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <!-- Dashboard 1 -->

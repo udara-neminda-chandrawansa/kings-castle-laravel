@@ -1,4 +1,4 @@
-@extends('layouts.admin-dashboard')
+@extends('admin-dashboard.layouts.admin-dash-layout')
 
 @section('content')
 
@@ -177,11 +177,10 @@
                                                         </form>
                                                         
                                                         @if($roomType->bookings_count == 0)
-                                                            <form action="{{ route('room-types.destroy', $roomType) }}" method="POST" class="d-inline" 
-                                                                  onsubmit="return confirm('Are you sure you want to delete this room type?')">
+                                                            <form action="{{ route('room-types.destroy', $roomType) }}" method="POST" class="d-inline delete-form">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <button class="btn btn-danger shadow btn-xs sharp">
+                                                                <button type="button" class="btn btn-danger shadow btn-xs sharp delete-btn">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </form>
@@ -223,5 +222,33 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete confirmation with SweetAlert2
+    document.querySelectorAll('.delete-btn').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const form = this.closest('.delete-form');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete this room type? This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
 
 @endsection

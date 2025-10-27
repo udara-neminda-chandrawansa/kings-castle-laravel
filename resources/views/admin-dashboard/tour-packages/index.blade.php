@@ -1,4 +1,4 @@
-@extends('layouts.admin-dashboard')
+@extends('admin-dashboard.layouts.admin-dash-layout')
 
 @section('content')
 
@@ -173,11 +173,10 @@
                                                             </button>
                                                         </form>
                                                         
-                                                        <form action="{{ route('tour-packages.destroy', $package) }}" method="POST" class="d-inline" 
-                                                              onsubmit="return confirm('Are you sure you want to delete this tour package?')">
+                                                        <form action="{{ route('tour-packages.destroy', $package) }}" method="POST" class="d-inline delete-form">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button class="btn btn-danger shadow btn-xs sharp">
+                                                            <button type="button" class="btn btn-danger shadow btn-xs sharp delete-btn">
                                                                 <i class="fa fa-trash"></i>
                                                             </button>
                                                         </form>
@@ -213,5 +212,33 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle delete confirmation with SweetAlert2
+    document.querySelectorAll('.delete-btn').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const form = this.closest('.delete-form');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete this tour package? This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
 
 @endsection

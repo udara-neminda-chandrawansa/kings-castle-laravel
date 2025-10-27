@@ -90,7 +90,7 @@
                                             </div>
                                         </div>
                                         <div class="px-0 py-2 card-body">
-                                            <a href="/account" class="dropdown-item ai-icon ">
+                                            <a href="{{ route('dashboard.account') }}" class="dropdown-item ai-icon ">
                                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
                                                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -107,7 +107,7 @@
                                             </a>
                                         </div>
                                         <div class="px-0 py-2 card-footer">
-                                            <a href="/login">
+                                            <span>
                                                 @auth
                                                 <form method="POST" action="{{ route('logout') }}"
                                                     class="p-0 dropdown-item ai-icon">
@@ -127,7 +127,7 @@
                                                     </button>
                                                 </form>
                                                 @endauth
-                                            </a>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
         <ul class="metismenu" id="menu">
             <li class="menu-title">Kings Castle</li>
             <li>
-                <a href="/dashboard" class="" aria-expanded="false">
+                <a href="{{ route('dashboard') }}" class="" aria-expanded="false">
                     <div class="menu-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-ui-radios" viewBox="0 0 16 16">
@@ -185,7 +185,7 @@
                 </a>
             </li>
             <li>
-                <a href="/account" class="" aria-expanded="false">
+                <a href="{{ route('dashboard.account') }}" class="" aria-expanded="false">
                     <div class="menu-icon">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                             class="bi bi-person-circle" viewBox="0 0 16 16">
