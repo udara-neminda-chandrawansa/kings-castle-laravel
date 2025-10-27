@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\BookingConfirmation;
+use App\Mail\PaymentConfirmation;
+use App\Mail\BookingStatusUpdate;
 
 class BookingController extends Controller
 {
@@ -226,6 +229,20 @@ class BookingController extends Controller
 
             DB::commit();
 
+            // Send booking confirmation email
+            try {
+                // Load relationships for email
+                $booking->load(['roomTypes', 'payment']);
+                Mail::to($booking->guest_email)->send(new BookingConfirmation($booking));
+                Log::info('Booking confirmation email sent', ['booking_id' => $booking->id, 'email' => $booking->guest_email]);
+            } catch (\Exception $emailException) {
+                Log::error('Failed to send booking confirmation email', [
+                    'booking_id' => $booking->id,
+                    'email' => $booking->guest_email,
+                    'error' => $emailException->getMessage()
+                ]);
+            }
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
@@ -280,6 +297,10 @@ class BookingController extends Controller
             'special_requests' => 'nullable|string'
         ]);
 
+        // Store original status to check if it changed
+        $originalStatus = $booking->status;
+        $originalPaymentStatus = $booking->payment ? $booking->payment->payment_status : null;
+
         // Update booking status and special requests
         $booking->update([
             'status' => $validated['status'],
@@ -290,6 +311,39 @@ class BookingController extends Controller
         if ($booking->payment) {
             $booking->payment->update([
                 'payment_status' => $validated['payment_status']
+            ]);
+        }
+
+        // Send email notifications for status changes
+        try {
+            // Load relationships for email
+            $booking->load(['roomTypes', 'payment']);
+
+            // Send status update email if status changed
+            if ($originalStatus !== $validated['status']) {
+                Mail::to($booking->guest_email)->send(new BookingStatusUpdate($booking, $validated['status']));
+                Log::info('Booking status update email sent', [
+                    'booking_id' => $booking->id,
+                    'email' => $booking->guest_email,
+                    'old_status' => $originalStatus,
+                    'new_status' => $validated['status']
+                ]);
+            }
+
+            // Send payment confirmation email if payment status changed to paid
+            if ($originalPaymentStatus !== 'paid' && $validated['payment_status'] === 'paid') {
+                Mail::to($booking->guest_email)->send(new PaymentConfirmation($booking));
+                Log::info('Payment confirmation email sent via status update', [
+                    'booking_id' => $booking->id,
+                    'email' => $booking->guest_email
+                ]);
+            }
+
+        } catch (\Exception $emailException) {
+            Log::error('Failed to send status update email', [
+                'booking_id' => $booking->id,
+                'email' => $booking->guest_email,
+                'error' => $emailException->getMessage()
             ]);
         }
 
@@ -381,7 +435,7 @@ class BookingController extends Controller
 
         if ($generatedHash == $request->md5sig && $request->status_code == 2) {
             // Payment is successful
-            $booking = Booking::with('payment')->find($request->order_id);
+            $booking = Booking::with(['payment', 'roomTypes'])->find($request->order_id);
             
             if ($booking && $booking->payment) {
                 $booking->payment->update([
@@ -395,6 +449,21 @@ class BookingController extends Controller
                         'processed_at' => now()
                     ]
                 ]);
+
+                // Update booking status to confirmed
+                $booking->update(['status' => 'confirmed']);
+
+                // Send payment confirmation email
+                try {
+                    Mail::to($booking->guest_email)->send(new PaymentConfirmation($booking));
+                    Log::info('Payment confirmation email sent', ['booking_id' => $booking->id, 'email' => $booking->guest_email]);
+                } catch (\Exception $emailException) {
+                    Log::error('Failed to send payment confirmation email', [
+                        'booking_id' => $booking->id,
+                        'email' => $booking->guest_email,
+                        'error' => $emailException->getMessage()
+                    ]);
+                }
             }
 
             // Send email to customer
@@ -444,5 +513,91 @@ class BookingController extends Controller
 
         $booking = Booking::find($request->order_id);
         return view('public-site.services', compact('booking'));
+    }
+
+    /**
+     * Send booking confirmation email manually (Admin)
+     */
+    public function sendBookingConfirmation($id)
+    {
+        try {
+            $booking = Booking::with(['roomTypes', 'payment'])->findOrFail($id);
+            
+            Mail::to($booking->guest_email)->send(new BookingConfirmation($booking));
+            
+            Log::info('Manual booking confirmation email sent', [
+                'booking_id' => $booking->id,
+                'email' => $booking->guest_email,
+                'sent_by' => Auth::user()->name ?? 'Admin'
+            ]);
+
+            return back()->with('success', 'Booking confirmation email sent successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send manual booking confirmation email', [
+                'booking_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
+    }
+
+    /**
+     * Send payment confirmation email manually (Admin)
+     */
+    public function sendPaymentConfirmation($id)
+    {
+        try {
+            $booking = Booking::with(['roomTypes', 'payment'])->findOrFail($id);
+            
+            if (!$booking->payment || $booking->payment->payment_status !== 'paid') {
+                return back()->with('error', 'Payment must be completed before sending payment confirmation.');
+            }
+            
+            Mail::to($booking->guest_email)->send(new PaymentConfirmation($booking));
+            
+            Log::info('Manual payment confirmation email sent', [
+                'booking_id' => $booking->id,
+                'email' => $booking->guest_email,
+                'sent_by' => Auth::user()->name ?? 'Admin'
+            ]);
+
+            return back()->with('success', 'Payment confirmation email sent successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send manual payment confirmation email', [
+                'booking_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
+    }
+
+    /**
+     * Send status update email manually (Admin)
+     */
+    public function sendStatusUpdate($id)
+    {
+        try {
+            $booking = Booking::with(['roomTypes', 'payment'])->findOrFail($id);
+            
+            Mail::to($booking->guest_email)->send(new BookingStatusUpdate($booking, $booking->status));
+            
+            Log::info('Manual status update email sent', [
+                'booking_id' => $booking->id,
+                'email' => $booking->guest_email,
+                'status' => $booking->status,
+                'sent_by' => Auth::user()->name ?? 'Admin'
+            ]);
+
+            return back()->with('success', 'Status update email sent successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send manual status update email', [
+                'booking_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
     }
 }
