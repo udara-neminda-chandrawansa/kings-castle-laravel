@@ -19,11 +19,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/run-migrations', function () {
     try {
         Artisan::call('migrate', ['--force' => true]);
-        Artisan::call('db:seed', ['--force' => true]);
+        // Artisan::call('db:seed', ['--force' => true]);
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Migrations and seeders ran successfully.',
+            'message' => 'Migrations ran successfully.',
             'output' => Artisan::output()
         ]);
     } catch (\Exception $e) {

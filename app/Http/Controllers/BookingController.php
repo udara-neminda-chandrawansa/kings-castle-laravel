@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\BookingRoom;
 use App\Models\Payment;
 use App\Models\RoomType;
 use Carbon\Carbon;
@@ -19,7 +20,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with(['user', 'roomType', 'payment'])
+        $bookings = Booking::with(['user', 'roomTypes', 'payment'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -48,12 +49,13 @@ class BookingController extends Controller
             ->get();
 
         // Get booked room types during that period
-        $bookedRoomTypeIds = Booking::where(function ($query) use ($checkIn, $checkOut) {
+        $bookedRoomTypeIds = BookingRoom::whereHas('booking', function ($query) use ($checkIn, $checkOut) {
             $query->where('check_in_date', '<', $checkOut)
-                ->where('check_out_date', '>', $checkIn);
+                ->where('check_out_date', '>', $checkIn)
+                ->whereIn('status', ['confirmed', 'checked_in', 'pending']);
         })
-            ->whereIn('status', ['confirmed', 'checked_in', 'pending'])
             ->pluck('room_type_id')
+            ->unique()
             ->toArray();
 
         // Remove booked ones
@@ -124,12 +126,13 @@ class BookingController extends Controller
             $checkOutDate = Carbon::parse($checkOut);
 
             // Find booked room types in that date range
-            $bookedRoomTypeIds = Booking::where(function ($query) use ($checkInDate, $checkOutDate) {
+            $bookedRoomTypeIds = BookingRoom::whereHas('booking', function ($query) use ($checkInDate, $checkOutDate) {
                 $query->where('check_in_date', '<', $checkOutDate)
-                    ->where('check_out_date', '>', $checkInDate);
+                    ->where('check_out_date', '>', $checkInDate)
+                    ->whereIn('status', ['confirmed', 'checked_in', 'pending']);
             })
-                ->whereIn('status', ['confirmed', 'checked_in', 'pending'])
                 ->pluck('room_type_id')
+                ->unique()
                 ->toArray();
 
             // Exclude those booked ones
@@ -162,7 +165,8 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'room_type_id' => 'required|exists:room_types,id',
+            'room_type_ids' => 'required|array|min:1',
+            'room_type_ids.*' => 'required|exists:room_types,id',
             'guest_name' => 'required|string|max:255',
             'guest_email' => 'required|email|max:255',
             'guest_phone' => 'required|string|max:20',
@@ -175,11 +179,13 @@ class BookingController extends Controller
             'special_requests' => 'nullable|string'
         ]);
 
-        $roomType = RoomType::findOrFail($validated['room_type_id']);
+        $roomTypes = RoomType::whereIn('id', $validated['room_type_ids'])->get();
         $checkIn = Carbon::parse($validated['check_in_date']);
         $checkOut = Carbon::parse($validated['check_out_date']);
         $nights = $checkOut->diffInDays($checkIn);
-        $totalAmount = $roomType->price_per_night * $nights;
+        
+        // Calculate total amount for all selected rooms
+        $totalAmount = $roomTypes->sum('price_per_night') * $nights;
 
         try {
             DB::beginTransaction();
@@ -187,7 +193,6 @@ class BookingController extends Controller
             $booking = Booking::create([
                 'booking_reference' => Booking::generateBookingReference(),
                 'user_id' => Auth::id(),
-                'room_type_id' => $validated['room_type_id'],
                 'guest_name' => $validated['guest_name'],
                 'guest_email' => $validated['guest_email'],
                 'guest_phone' => $validated['guest_phone'],
@@ -201,6 +206,14 @@ class BookingController extends Controller
                 'special_requests' => $validated['special_requests'],
                 'status' => 'pending'
             ]);
+
+            // Create booking room relationships
+            foreach ($validated['room_type_ids'] as $roomTypeId) {
+                BookingRoom::create([
+                    'booking_id' => $booking->id,
+                    'room_type_id' => $roomTypeId
+                ]);
+            }
 
             // Create payment record
             Payment::create([
@@ -243,7 +256,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        $booking->load(['user', 'roomType'])->with('payment');
+        $booking->load(['user', 'roomTypes', 'payment']);
         return view('public-site.booking-confirmation', compact('booking'));
     }
 
@@ -267,7 +280,18 @@ class BookingController extends Controller
             'special_requests' => 'nullable|string'
         ]);
 
-        $booking->update($validated);
+        // Update booking status and special requests
+        $booking->update([
+            'status' => $validated['status'],
+            'special_requests' => $validated['special_requests']
+        ]);
+
+        // Update payment status if payment exists
+        if ($booking->payment) {
+            $booking->payment->update([
+                'payment_status' => $validated['payment_status']
+            ]);
+        }
 
         return back()->with('success', 'Booking updated successfully!');
     }

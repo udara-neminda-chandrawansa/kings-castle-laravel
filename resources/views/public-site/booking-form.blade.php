@@ -99,7 +99,7 @@
             @foreach($roomTypes as $roomType)
             <div class="col-lg-6">
                 <div class="room-box room-card card h-100 {{ $selectedRoom && $selectedRoom->id == $roomType->id ? 'selected' : '' }}"
-                    onclick="selectRoom({{ $roomType->id }})" data-room-id="{{ $roomType->id }}">
+                    onclick="toggleRoom({{ $roomType->id }})" data-room-id="{{ $roomType->id }}">
                     <div class="box-img">
                         <img src="{{ asset($roomType->image_path) }}" alt="{{ $roomType->name }}" style="height: 100%;" />
                     </div>
@@ -154,8 +154,11 @@
 
                         <form action="{{ route('booking.store') }}" method="POST" id="bookingForm">
                             @csrf
-                            <input type="hidden" name="room_type_id" id="selectedRoomType"
-                                value="{{ $selectedRoom->id ?? '' }}">
+                            <div id="selectedRooms">
+                                @if($selectedRoom)
+                                    <input type="hidden" name="room_type_ids[]" value="{{ $selectedRoom->id }}">
+                                @endif
+                            </div>
 
                             <div class="row font-serif">
                                 <!-- Guest Information -->
@@ -273,32 +276,57 @@
 </section>
 
 <script>
-    let selectedRoom = null;
+
+let selectedRooms = [];
 const roomTypes = @json($roomTypes);
 
-function selectRoom(roomId) {
-  // Remove previous selection
-  document.querySelectorAll('.room-card').forEach(card => {
-    card.classList.remove('selected');
-  });
-  
-  // Add selection to clicked room
+// Initialize selectedRooms array with any pre-selected room
+@if($selectedRoom)
+  selectedRooms = [{{ $selectedRoom->id }}];
+@endif
+
+function toggleRoom(roomId) {
   const selectedCard = document.querySelector(`[data-room-id="${roomId}"]`);
-  selectedCard.classList.add('selected');
+  const selectedRoomsContainer = document.getElementById('selectedRooms');
   
-  // Set the hidden input value
-  document.getElementById('selectedRoomType').value = roomId;
+  // Convert roomId to integer to ensure proper comparison
+  roomId = parseInt(roomId);
   
-  // Store selected room data
-  selectedRoom = roomTypes.find(room => room.id === roomId);
+  if (selectedRooms.includes(roomId)) {
+    // Remove room from selection
+    selectedRooms = selectedRooms.filter(id => parseInt(id) !== roomId);
+    selectedCard.classList.remove('selected');
+    
+    // Remove hidden input - be more specific with selector
+    const existingInput = document.querySelector(`input[name="room_type_ids[]"][value="${roomId}"]`);
+    if (existingInput) {
+      existingInput.remove();
+    }
+  } else {
+    // Add room to selection
+    selectedRooms.push(roomId);
+    selectedCard.classList.add('selected');
+    
+    // Add hidden input
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'room_type_ids[]';
+    hiddenInput.value = roomId;
+    selectedRoomsContainer.appendChild(hiddenInput);
+  }
   
-  // Enable form submission
+  console.log('Selected rooms:', selectedRooms); // Debug log
+  
+  // Update booking summary and form state
   updateBookingSummary();
-  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('submitBtn').disabled = selectedRooms.length === 0;
 }
 
 function updateBookingSummary() {
-  if (!selectedRoom) return;
+  if (selectedRooms.length === 0) {
+    document.getElementById('bookingSummary').style.display = 'none';
+    return;
+  }
   
   const checkIn = document.getElementById('check_in_date').value;
   const checkOut = document.getElementById('check_out_date').value;
@@ -309,17 +337,35 @@ function updateBookingSummary() {
     const nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
     
     if (nights > 0) {
-      const total = selectedRoom.price_per_night * nights;
+      const selectedRoomDetails = selectedRooms.map(roomId => 
+        roomTypes.find(room => room.id === parseInt(roomId))
+      ).filter(room => room !== undefined); // Filter out any undefined rooms
+      
+      // Calculate total per night (sum of all room prices for one night)
+      const totalPerNight = selectedRoomDetails.reduce((sum, room) => {
+        return sum + parseFloat(room.price_per_night);
+      }, 0);
+      
+      // Calculate grand total (total per night × number of nights)
+      const grandTotal = totalPerNight * nights;
+      
+      const roomsHtml = selectedRoomDetails.map(room => 
+        `<strong>${room.name}</strong> - Rs ${parseFloat(room.price_per_night).toLocaleString()}/night`
+      ).join('<br>');
       
       document.getElementById('summaryText').innerHTML = `
-        <strong>${selectedRoom.name}</strong><br>
+        <strong>Selected Rooms:</strong><br>
+        ${roomsHtml}<br><br>
+        <strong>Stay Details:</strong><br>
         Check-in: ${checkInDate.toLocaleDateString()}<br>
         Check-out: ${checkOutDate.toLocaleDateString()}<br>
-        Nights: ${nights}<br>
-        Rate: Rs ${selectedRoom.price_per_night.toLocaleString()} per night
+        Nights: ${nights}<br><br>
+        <strong>Pricing:</strong><br>
+        Total per night: Rs ${totalPerNight.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}<br>
+        ${nights} nights × Rs ${totalPerNight.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
       `;
       
-      document.getElementById('totalAmount').innerHTML = `Total: Rs ${total.toLocaleString()}`;
+      document.getElementById('totalAmount').innerHTML = `<strong>Grand Total: Rs ${grandTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>`;
       document.getElementById('bookingSummary').style.display = 'block';
     }
   }
@@ -338,7 +384,7 @@ document.getElementById('check_out_date').addEventListener('change', updateBooki
 
 // Auto-select room if passed from URL
 @if($selectedRoom)
-  selectRoom({{ $selectedRoom->id }});
+  toggleRoom({{ $selectedRoom->id }});
 @endif
 
 // Initialize form with URL parameters if available
@@ -346,12 +392,11 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update summary on page load if dates are pre-filled
   updateBookingSummary();
   
-  // If room is already selected and dates are filled, enable submit button
-  const roomSelected = document.getElementById('selectedRoomType').value;
+  // Enable submit button if rooms are selected and dates are filled
   const checkIn = document.getElementById('check_in_date').value;
   const checkOut = document.getElementById('check_out_date').value;
   
-  if (roomSelected && checkIn && checkOut) {
+  if (selectedRooms.length > 0 && checkIn && checkOut) {
     document.getElementById('submitBtn').disabled = false;
   }
 });
