@@ -24,19 +24,13 @@ class Booking extends Model
         'check_in_date',
         'check_out_date',
         'nights',
-        'total_amount',
         'status',
-        'payment_status',
-        'payment_reference',
-        'payment_details',
         'special_requests'
     ];
 
     protected $casts = [
         'check_in_date' => 'date',
-        'check_out_date' => 'date',
-        'total_amount' => 'decimal:2',
-        'payment_details' => 'array'
+        'check_out_date' => 'date'
     ];
 
     public function user()
@@ -49,9 +43,14 @@ class Booking extends Model
         return $this->belongsTo(RoomType::class);
     }
 
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
     public function getFormattedTotalAttribute()
     {
-        return 'Rs ' . number_format($this->total_amount, 2);
+        return $this->payment ? $this->payment->formatted_total : 'Rs 0.00';
     }
 
     public function getStatusBadgeAttribute()

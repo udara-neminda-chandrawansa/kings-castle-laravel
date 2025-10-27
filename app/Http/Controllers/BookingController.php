@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Booking;
+use App\Models\Payment;
 use App\Models\RoomType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $bookings = Booking::with(['user', 'roomType'])
+        $bookings = Booking::with(['user', 'roomType', 'payment'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -197,9 +198,17 @@ class BookingController extends Controller
                 'check_in_date' => $checkIn,
                 'check_out_date' => $checkOut,
                 'nights' => $nights,
-                'total_amount' => $totalAmount,
                 'special_requests' => $validated['special_requests'],
                 'status' => 'pending'
+            ]);
+
+            // Create payment record
+            Payment::create([
+                'booking_id' => $booking->id,
+                'total_amount' => $totalAmount,
+                'payment_status' => 'pending',
+                'payment_reference' => null,
+                'payment_details' => null
             ]);
 
             DB::commit();
@@ -234,7 +243,7 @@ class BookingController extends Controller
      */
     public function show(Booking $booking)
     {
-        $booking->load(['user', 'roomType']);
+        $booking->load(['user', 'roomType'])->with('payment');
         return view('public-site.booking-confirmation', compact('booking'));
     }
 
@@ -277,8 +286,14 @@ class BookingController extends Controller
      */
     public function processPayment($id)
     {
-        $booking = Booking::findOrFail($id);
-        $fullTotal = $booking->total_amount;
+        $booking = Booking::with('payment')->findOrFail($id);
+        $payment = $booking->payment;
+        
+        if (!$payment) {
+            return back()->with('error', 'Payment record not found for this booking.');
+        }
+
+        $fullTotal = $payment->total_amount;
 
         // Initialize payment gateway
         $merchant_id = env('PAYHERE_MERCHANT_ID');
@@ -307,11 +322,14 @@ class BookingController extends Controller
             $merchant_id . $paymentData['order_id'] . $paymentData['amount'] . $paymentData['currency'] . strtoupper(md5($merchant_secret))
         ));
 
-        $booking->update([
+        // Update payment record
+        $payment->update([
             'payment_status' => 'pending',
-            'payment_reference' => 'PH' . time(),
-            'status' => 'confirmed'
+            'payment_reference' => Payment::generatePaymentReference()
         ]);
+
+        // Update booking status
+        $booking->update(['status' => 'confirmed']);
 
         return view('public-site.payhere-redirect', compact('paymentData'));
 
@@ -339,10 +357,21 @@ class BookingController extends Controller
 
         if ($generatedHash == $request->md5sig && $request->status_code == 2) {
             // Payment is successful
-            $booking = Booking::find($request->order_id);
-            $booking->update([
-                'payment_status' => "paid", // Update to successful status
-            ]);
+            $booking = Booking::with('payment')->find($request->order_id);
+            
+            if ($booking && $booking->payment) {
+                $booking->payment->update([
+                    'payment_status' => 'paid',
+                    'payment_details' => [
+                        'payhere_amount' => $request->payhere_amount,
+                        'payhere_currency' => $request->payhere_currency,
+                        'status_code' => $request->status_code,
+                        'md5sig' => $request->md5sig,
+                        'payment_id' => $request->payment_id ?? null,
+                        'processed_at' => now()
+                    ]
+                ]);
+            }
 
             // Send email to customer
             // $customer = $payment->customer;
@@ -359,6 +388,19 @@ class BookingController extends Controller
             return response('Payment successful', 200);
         } else {
             // Payment failed or invalid
+            $booking = Booking::with('payment')->find($request->order_id);
+            
+            if ($booking && $booking->payment) {
+                $booking->payment->update([
+                    'payment_status' => 'failed',
+                    'payment_details' => [
+                        'error_code' => $request->status_code ?? null,
+                        'error_message' => 'Payment verification failed',
+                        'failed_at' => now()
+                    ]
+                ]);
+            }
+            
             return response('Payment verification failed', 400);
         }
     }

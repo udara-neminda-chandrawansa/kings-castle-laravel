@@ -112,12 +112,12 @@
                             <div class="ps-3">
                                 <p class="mb-2">
                                     <span
-                                        class="p-1 text-white bg-{{ $booking->payment_status === 'paid' ? 'success' : ($booking->payment_status === 'failed' ? 'danger' : 'warning') }}">
-                                        {{ ucfirst($booking->payment_status) }}
+                                        class="p-1 text-white bg-{{ $booking->payment->payment_status === 'paid' ? 'success' : ($booking->payment->payment_status === 'failed' ? 'danger' : 'warning') }}">
+                                        {{ ucfirst($booking->payment->payment_status) }}
                                     </span>
                                 </p>
-                                @if($booking->payment_reference)
-                                <small class="text-muted">Ref: {{ $booking->payment_reference }}</small>
+                                @if($booking->payment->payment_reference)
+                                <small class="text-muted">Ref: {{ $booking->payment->payment_reference }}</small>
                                 @endif
                             </div>
                         </div>
@@ -153,7 +153,7 @@
 
                     <!-- Action Buttons -->
                     <div class="text-center">
-                        @if($booking->payment_status === 'pending')
+                        @if($booking->payment->payment_status === 'pending')
                         <button class="btn btn-success me-2" onclick="processPayment()">
                             <i class="fas fa-credit-card me-2"></i>Pay Now
                         </button>
