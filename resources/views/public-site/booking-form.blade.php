@@ -263,7 +263,7 @@
                             </div>
 
                             <div class="text-center mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" disabled>
+                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
                                     <i class="fas fa-calendar-check me-2"></i>Book Now
                                 </button>
                             </div>
@@ -274,6 +274,8 @@
         </div>
     </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 
@@ -319,7 +321,8 @@ function toggleRoom(roomId) {
   
   // Update booking summary and form state
   updateBookingSummary();
-  document.getElementById('submitBtn').disabled = selectedRooms.length === 0;
+  // Remove the disabled attribute - we'll handle validation on submit
+  document.getElementById('submitBtn').disabled = false;
 }
 
 function updateBookingSummary() {
@@ -392,13 +395,22 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update summary on page load if dates are pre-filled
   updateBookingSummary();
   
-  // Enable submit button if rooms are selected and dates are filled
-  const checkIn = document.getElementById('check_in_date').value;
-  const checkOut = document.getElementById('check_out_date').value;
-  
-  if (selectedRooms.length > 0 && checkIn && checkOut) {
-    document.getElementById('submitBtn').disabled = false;
-  }
+  // Handle form submission with SweetAlert validation
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    if (selectedRooms.length === 0) {
+      e.preventDefault(); // Prevent form submission
+      
+      Swal.fire({
+        icon: 'warning',
+        title: 'Room Selection Required',
+        text: 'Please select a room type!',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#007bff'
+      });
+      
+      return false;
+    }
+  });
 });
 </script>
 

@@ -81,6 +81,11 @@ Route::middleware([
     Route::get('/booking/{booking}/edit', [BookingController::class, 'edit'])->name('booking.edit');
     Route::put('/booking/{booking}', [BookingController::class, 'update'])->name('booking.update');
     Route::delete('/booking/{booking}', [BookingController::class, 'destroy'])->name('booking.destroy');
+    
+    // Email management routes
+    Route::post('/booking/{id}/send-confirmation', [BookingController::class, 'sendBookingConfirmation'])->name('booking.send-confirmation');
+    Route::post('/booking/{id}/send-payment-confirmation', [BookingController::class, 'sendPaymentConfirmation'])->name('booking.send-payment-confirmation');
+    Route::post('/booking/{id}/send-status-update', [BookingController::class, 'sendStatusUpdate'])->name('booking.send-status-update');
 
     // Room type management
     Route::resource('room-types', App\Http\Controllers\RoomTypeController::class);

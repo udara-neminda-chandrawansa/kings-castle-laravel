@@ -171,15 +171,54 @@
                                         <td>
                                             <div class="d-flex">
                                                 <a href="{{ route('booking.edit', $booking) }}"
-                                                    class="btn btn-primary shadow btn-xs sharp me-1">
+                                                    class="btn btn-primary shadow btn-xs sharp me-1"
+                                                    title="Edit Booking">
                                                     <i class="fas fa-pencil-alt"></i>
                                                 </a>
+                                                
+                                                <!-- Email Actions Dropdown -->
+                                                {{-- <div class="dropdown me-1">
+                                                    <button class="btn btn-info shadow btn-xs sharp" type="button" 
+                                                            data-bs-toggle="dropdown" aria-expanded="false" title="Send Emails">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <form action="{{ route('booking.send-confirmation', $booking->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item email-btn">
+                                                                    <i class="fas fa-calendar-check me-2"></i>Booking Confirmation
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        @if($booking->payment && $booking->payment->payment_status === 'paid')
+                                                        <li>
+                                                            <form action="{{ route('booking.send-payment-confirmation', $booking->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item email-btn">
+                                                                    <i class="fas fa-credit-card me-2"></i>Payment Confirmation
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                        @endif
+                                                        <li>
+                                                            <form action="{{ route('booking.send-status-update', $booking->id) }}" method="POST" class="d-inline">
+                                                                @csrf
+                                                                <button type="submit" class="dropdown-item email-btn">
+                                                                    <i class="fas fa-bell me-2"></i>Status Update
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div> --}}
+
                                                 <form action="{{ route('booking.destroy', $booking) }}" method="POST"
                                                     class="d-inline delete-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="button"
-                                                        class="btn btn-danger shadow btn-xs sharp delete-btn">
+                                                        class="btn btn-danger shadow btn-xs sharp delete-btn"
+                                                        title="Delete Booking">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -239,6 +278,27 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    // Handle email button clicks with loading state
+    // document.querySelectorAll('.email-btn').forEach(function(button) {
+    //     button.addEventListener('click', function(e) {
+    //         // Show loading state
+    //         const originalContent = this.innerHTML;
+    //         this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+    //         this.disabled = true;
+            
+    //         // Submit the form
+    //         const form = this.closest('form');
+            
+    //         // Reset button state after a delay (in case of redirect)
+    //         setTimeout(() => {
+    //             if (this) {
+    //                 this.innerHTML = originalContent;
+    //                 this.disabled = false;
+    //             }
+    //         }, 3000);
+    //     });
+    // });
 });
 </script>
 
