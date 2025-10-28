@@ -422,4 +422,21 @@ class TourPackageController extends Controller
         $tourPayment = \App\Models\TourPayment::find($request->order_id);
         return view('public-site.packages')->with('booking', $tourPayment);
     }
+
+    /**
+     * Delete a tour booking (Admin)
+     */
+    public function destroyBooking($id)
+    {
+        try {
+            $tourPayment = \App\Models\TourPayment::findOrFail($id);
+            $tourPayment->delete();
+
+            return redirect()->route('dashboard')
+                           ->with('success', 'Tour booking deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')
+                           ->with('error', 'Failed to delete tour booking.');
+        }
+    }
 }

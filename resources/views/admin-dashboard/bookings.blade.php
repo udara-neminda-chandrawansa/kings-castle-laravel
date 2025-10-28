@@ -79,6 +79,78 @@
             </div>
         </div>
 
+        <!-- Tour Booking Statistics Row -->
+        <div class="row">
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="badge badge-secondary p-3 me-3">
+                                <i class="fas fa-route"></i>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-0 text-uppercase text-muted">
+                                    <small><b>Total Tour Bookings</b></small>
+                                </p>
+                                <h2 class="mb-0">{{ $tourStats['total'] }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="badge badge-warning p-3 me-3">
+                                <i class="fas fa-hourglass-half"></i>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-0 text-uppercase text-muted">
+                                    <small><b>Pending Tours</b></small>
+                                </p>
+                                <h2 class="mb-0">{{ $tourStats['pending'] }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="badge badge-success p-3 me-3">
+                                <i class="fas fa-check-double"></i>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-0 text-uppercase text-muted">
+                                    <small><b>Paid Tours</b></small>
+                                </p>
+                                <h2 class="mb-0">{{ $tourStats['paid'] }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="media">
+                            <span class="badge badge-info p-3 me-3">
+                                <i class="fas fa-coins"></i>
+                            </span>
+                            <div class="media-body">
+                                <p class="mb-0 text-uppercase text-muted">
+                                    <small><b>Tour Revenue</b></small>
+                                </p>
+                                <h2 class="mb-0">Rs {{ number_format($tourStats['revenue'], 0) }}</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Bookings Table -->
         <div class="row">
             <div class="col-12">
@@ -250,6 +322,118 @@
                 </div>
             </div>
         </div>
+
+        <!-- Tour Bookings Section -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Tour Package Bookings</h4>
+                        <div class="d-flex align-items-center">
+                            <span class="badge badge-secondary me-2">Total: {{ $tourBookings->total() }}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        @if($tourBookings->count() > 0)
+                        <div class="table-responsive">
+                            <table class="table table-striped table-responsive-md border mb-0" style="border-radius: 8px;">
+                                <thead>
+                                    <tr>
+                                        <th><strong>Payment Ref</strong></th>
+                                        <th><strong>Guest</strong></th>
+                                        <th><strong>Tour Package</strong></th>
+                                        <th><strong>Date</strong></th>
+                                        <th><strong>Participants</strong></th>
+                                        <th><strong>Total</strong></th>
+                                        <th><strong>Payment Status</strong></th>
+                                        <th><strong>Actions</strong></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($tourBookings as $tourBooking)
+                                    <tr>
+                                        <td><strong class="text-secondary">#{{ $tourBooking->payment_reference }}</strong></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="ms-2">
+                                                    <p class="mb-0 font-w600">{{ $tourBooking->guest_name }}</p>
+                                                    <p class="mb-0 text-muted">{{ $tourBooking->guest_email }}</p>
+                                                    <small class="text-muted">{{ $tourBooking->guest_phone }}</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                @if($tourBooking->tourPackage)
+                                                <p class="mb-0">{{ $tourBooking->tourPackage->name }}</p>
+                                                <small class="text-muted">${{ number_format($tourBooking->tourPackage->price) }} per person</small>
+                                                @else
+                                                <p class="mb-0 text-muted">Package not found</p>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <p class="mb-0">{{ $tourBooking->tour_date->format('M d, Y') }}</p>
+                                                <small class="text-muted">{{ $tourBooking->created_at->format('H:i A') }}</small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-outline-secondary">
+                                                {{ $tourBooking->participants }} Participants
+                                            </span>
+                                        </td>
+                                        <td><strong class="text-success">${{ number_format($tourBooking->total_amount) }}</strong></td>
+                                        <td>
+                                            <span class="badge badge-{{ $tourBooking->payment_status === 'paid' ? 'success' : ($tourBooking->payment_status === 'failed' ? 'danger' : 'warning') }}">
+                                                {{ ucfirst($tourBooking->payment_status) }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex">
+                                                <button class="btn btn-info shadow btn-xs sharp me-1" 
+                                                        onclick="viewTourBooking({{ $tourBooking->id }})" 
+                                                        title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                
+                                                <form action="{{ route('tour-bookings.destroy', $tourBooking->id) }}" method="POST"
+                                                    class="d-inline delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button"
+                                                        class="btn btn-danger shadow btn-xs sharp delete-btn"
+                                                        title="Delete Booking">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination for Tour Bookings -->
+                        <div class="d-flex justify-content-between mt-3">
+                            <div class="dataTables_paginate w-100">
+                                {{ $tourBookings->links() }}
+                            </div>
+                        </div>
+                        @else
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="fas fa-route fa-3x text-muted"></i>
+                            </div>
+                            <h4>No Tour Bookings Found</h4>
+                            <p class="text-muted">There are no tour package bookings in the system yet.</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -300,6 +484,21 @@ document.addEventListener('DOMContentLoaded', function() {
     //     });
     // });
 });
+
+// Function to view tour booking details
+function viewTourBooking(id) {
+    // You can implement a modal or redirect to a details page
+    // For now, we'll show a simple alert
+    Swal.fire({
+        title: 'Tour Booking Details',
+        text: 'Tour booking ID: ' + id,
+        icon: 'info',
+        confirmButtonText: 'Close'
+    });
+    
+    // TODO: Implement proper tour booking details view
+    // window.location.href = '/admin/tour-bookings/' + id;
+}
 </script>
 
 @endsection

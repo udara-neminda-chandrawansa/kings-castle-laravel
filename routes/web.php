@@ -116,6 +116,9 @@ Route::middleware([
     Route::post('/booking/{id}/send-confirmation', [BookingController::class, 'sendBookingConfirmation'])->name('booking.send-confirmation');
     Route::post('/booking/{id}/send-payment-confirmation', [BookingController::class, 'sendPaymentConfirmation'])->name('booking.send-payment-confirmation');
     Route::post('/booking/{id}/send-status-update', [BookingController::class, 'sendStatusUpdate'])->name('booking.send-status-update');
+    
+    // Tour booking management
+    Route::delete('/tour-bookings/{id}', [TourPackageController::class, 'destroyBooking'])->name('tour-bookings.destroy');
 
     // Room type management
     Route::resource('room-types', RoomTypeController::class);
