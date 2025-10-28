@@ -38,7 +38,7 @@ class RoomTypeController extends Controller
             'max_occupancy' => 'required|integer|min:1|max:20',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:100',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:10240', // 10MB max (will be compressed)
             'is_active' => 'boolean'
         ]);
 
@@ -54,10 +54,22 @@ class RoomTypeController extends Controller
             // Handle image upload
             $imagePath = 'assets/img/drive-images-2-webp/kc1.webp'; // Default image
             if ($request->hasFile('image_file')) {
-                $image = $request->file('image_file');
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move(public_path('upload/rooms'), $imageName);
-                $imagePath = 'upload/rooms/' . $imageName;
+                // Generate unique filename - prefer WebP but fallback to JPG
+                $webpSupported = function_exists('imagewebp');
+                $extension = $webpSupported ? '.webp' : '.jpg';
+                $imageName = time() . '_' . uniqid() . $extension;
+                $fullImagePath = public_path('upload/rooms/' . $imageName);
+                
+                // Ensure directory exists
+                if (!file_exists(public_path('upload/rooms'))) {
+                    mkdir(public_path('upload/rooms'), 0755, true);
+                }
+                
+                // Convert and compress image
+                $actualOutputPath = $this->convertToWebP($request->file('image_file'), $fullImagePath);
+                
+                // Update imagePath with actual saved file path
+                $imagePath = str_replace(public_path() . '/', '', $actualOutputPath);
             }
 
             $roomType = RoomType::create([
@@ -112,7 +124,7 @@ class RoomTypeController extends Controller
             'max_occupancy' => 'required|integer|min:1|max:20',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:100',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:10240', // 10MB max (will be compressed)
             'is_active' => 'boolean'
         ]);
 
@@ -136,11 +148,22 @@ class RoomTypeController extends Controller
                     }
                 }
                 
-                // Upload new image
-                $image = $request->file('image_file');
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move(public_path('upload/rooms'), $imageName);
-                $imagePath = 'upload/rooms/' . $imageName;
+                // Generate unique filename - prefer WebP but fallback to JPG
+                $webpSupported = function_exists('imagewebp');
+                $extension = $webpSupported ? '.webp' : '.jpg';
+                $imageName = time() . '_' . uniqid() . $extension;
+                $fullImagePath = public_path('upload/rooms/' . $imageName);
+                
+                // Ensure directory exists
+                if (!file_exists(public_path('upload/rooms'))) {
+                    mkdir(public_path('upload/rooms'), 0755, true);
+                }
+                
+                // Convert and compress image
+                $actualOutputPath = $this->convertToWebP($request->file('image_file'), $fullImagePath);
+                
+                // Update imagePath with actual saved file path
+                $imagePath = str_replace(public_path() . '/', '', $actualOutputPath);
             }
 
             $roomType->update([
@@ -220,5 +243,112 @@ class RoomTypeController extends Controller
         
         $status = $roomType->is_active ? 'activated' : 'deactivated';
         return back()->with('success', "Room type {$status} successfully!");
+    }
+
+    /**
+     * Convert uploaded image to WebP format with compression (with fallback to JPEG)
+     */
+    private function convertToWebP($uploadedFile, $outputPath, $quality = 80)
+    {
+        // Check if WebP support is available
+        $webpSupported = function_exists('imagewebp');
+        
+        // If WebP not supported, change output to JPEG
+        if (!$webpSupported) {
+            $outputPath = str_replace('.webp', '.jpg', $outputPath);
+        }
+        
+        // Get the mime type of the uploaded file
+        $mimeType = $uploadedFile->getMimeType();
+        
+        // Create image resource based on file type
+        switch ($mimeType) {
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($uploadedFile->getPathname());
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($uploadedFile->getPathname());
+                // Preserve transparency for PNG
+                imagealphablending($image, false);
+                imagesavealpha($image, true);
+                break;
+            case 'image/gif':
+                $image = imagecreatefromgif($uploadedFile->getPathname());
+                break;
+            case 'image/webp':
+                if (function_exists('imagecreatefromwebp')) {
+                    $image = imagecreatefromwebp($uploadedFile->getPathname());
+                } else {
+                    throw new \Exception('WebP format not supported by this server');
+                }
+                break;
+            default:
+                throw new \Exception('Unsupported image format: ' . $mimeType);
+        }
+
+        if (!$image) {
+            throw new \Exception('Failed to create image resource from uploaded file');
+        }
+
+        // Get original dimensions
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // Calculate new dimensions (max width/height: 1920px)
+        $maxDimension = 1920;
+        if ($originalWidth > $maxDimension || $originalHeight > $maxDimension) {
+            if ($originalWidth > $originalHeight) {
+                $newWidth = $maxDimension;
+                $newHeight = intval(($originalHeight / $originalWidth) * $maxDimension);
+            } else {
+                $newHeight = $maxDimension;
+                $newWidth = intval(($originalWidth / $originalHeight) * $maxDimension);
+            }
+        } else {
+            $newWidth = $originalWidth;
+            $newHeight = $originalHeight;
+        }
+
+        // Create new image with calculated dimensions
+        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+        
+        // Preserve transparency for PNG/GIF (only if saving as WebP or PNG)
+        if (($mimeType === 'image/png' || $mimeType === 'image/gif') && $webpSupported) {
+            imagealphablending($resizedImage, false);
+            imagesavealpha($resizedImage, true);
+            $transparent = imagecolorallocatealpha($resizedImage, 255, 255, 255, 127);
+            imagefill($resizedImage, 0, 0, $transparent);
+        } elseif (!$webpSupported) {
+            // For JPEG fallback, fill with white background
+            $white = imagecolorallocate($resizedImage, 255, 255, 255);
+            imagefill($resizedImage, 0, 0, $white);
+        }
+
+        // Resize the image
+        imagecopyresampled(
+            $resizedImage, $image, 
+            0, 0, 0, 0, 
+            $newWidth, $newHeight, 
+            $originalWidth, $originalHeight
+        );
+
+        // Save in the best available format
+        if ($webpSupported) {
+            $result = imagewebp($resizedImage, $outputPath, $quality);
+        } else {
+            // Fallback to JPEG with high quality
+            $result = imagejpeg($resizedImage, $outputPath, $quality);
+        }
+
+        // Clean up memory
+        imagedestroy($image);
+        imagedestroy($resizedImage);
+
+        if (!$result) {
+            $format = $webpSupported ? 'WebP' : 'JPEG';
+            throw new \Exception("Failed to save {$format} image");
+        }
+
+        return $outputPath;
     }
 }
