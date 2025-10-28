@@ -95,7 +95,6 @@ Route::get('/tour-booking/{tourPayment}', [TourPackageController::class, 'showBo
 Route::post('/tour-booking/{id}/payment', [TourPackageController::class, 'processPayment'])->name('tour-booking.payment');
 
 // Tour payment handling routes
-Route::post('/tour-payment/notify', [TourPackageController::class, 'handlePaymentNotify'])->name('tour-payment.notify');
 Route::get('/tour-payment/return', [TourPackageController::class, 'handlePaymentReturn'])->name('tour-payment.return');
 Route::get('/tour-payment/cancel', [TourPackageController::class, 'handlePaymentCancel'])->name('tour-payment.cancel');
 
