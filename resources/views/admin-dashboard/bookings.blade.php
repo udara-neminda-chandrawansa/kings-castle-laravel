@@ -151,6 +151,10 @@
             </div>
         </div>
 
+        @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
         <!-- Bookings Table -->
         <div class="row">
             <div class="col-12">
@@ -162,10 +166,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                        @endif
-
                         @if($bookings->count() > 0)
                         <div class="table-responsive">
                             <table class="table table-striped table-responsive-md border mb-0"
@@ -324,7 +324,7 @@
         </div>
 
         <!-- Tour Bookings Section -->
-        <div class="row mt-4">
+        <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
