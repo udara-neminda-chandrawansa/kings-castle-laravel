@@ -23900,7 +23900,7 @@ span.select2-selection.select2-selection--single:focus {
 }
 .room-page-single .panoramaSlide1 {
   height: 650px;
-  margin-bottom: 24px;
+  margin-bottom: 3px;
 }
 @media (max-width: 1199px) {
   .room-page-single .panoramaSlide1 {

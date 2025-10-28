@@ -25,54 +25,7 @@
     </div>
   </div>
 </div>
-<section class="overflow-hidden space">
-  <div class="container">
-    <div class="row gy-4">
-      @foreach($roomTypes as $roomType)
-      <div class="col-lg-6">
-        <div
-          class="room-box">
-          <div class="box-img">
-            <img src="{{ asset($roomType->image_path) }}" alt="{{ $roomType->name }}" style="height: 100%;" />
-          </div>
-          <span class="discount">{{ $roomType->formatted_price }} per night</span>
-          <div class="box-title-area">
-            <div class="box-number">{{ $roomType->id }}</div>
-            <h3 class="box-title">
-              <a href="#">{{ $roomType->name }}</a>
-            </h3>
-          </div>
-          <div class="box-content">
-            <div class="box-wrapp">
-              <div class="box-number">{{ $roomType->id }}</div>
-              <h3 class="box-title">
-                <a href="#">{{ $roomType->name }}</a>
-              </h3>
-              <div class="box-review">
-                <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                  class="fa-sharp fa-solid fa-star"></i>
-              </div>
-              @if($roomType->amenities)
-              <div class="room-card-meta">
-                @foreach(array_slice($roomType->amenities, 0, 3) as $amenity)
-                <span>
-                  {{ $amenity }}
-                </span>
-                @endforeach
-                @if(count($roomType->amenities) > 3)
-                <span class="text-muted">+{{ count($roomType->amenities) - 3 }} more</span>
-                @endif
-              </div>
-              @endif
-            </div>
-          </div>
-        </div>
-      </div>
-      @endforeach
-    </div>
-  </div>
-</section>
+<x-room-grid :roomTypes="$roomTypes" title="All Rooms & Suites" subtitle="ACCOMMODATION OPTIONS" />
 <div style="height: 60px;"></div>
 <!--form-->
 <div class="booking-area2 position-relative bg-fixed" data-bg-src="assets/img/drive-images-2-webp/kc3.webp">

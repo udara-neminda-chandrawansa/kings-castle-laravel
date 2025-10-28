@@ -42,7 +42,8 @@ Route::get('/', function () {
     return view('public-site.home', compact('roomTypes'));
 });
 Route::get('/about', function () {
-    return view('public-site.about');
+    $roomTypes = App\Models\RoomType::where('is_active', true)->get();
+    return view('public-site.about', compact('roomTypes'));
 });
 Route::get('/services', function () {
     $roomTypes = App\Models\RoomType::where('is_active', true)->get();
@@ -61,7 +62,7 @@ Route::get('/contact', function () {
 Route::get('/room-details/{id}', function ($id) {
     $roomType = App\Models\RoomType::with('roomImages')->findOrFail($id);
     return view('public-site.room-details', compact('roomType'));
-});
+})->name('room-details');
 
 Route::get('/privacy-policy', function () {
     return view('public-site.policies.privacy-policy');
