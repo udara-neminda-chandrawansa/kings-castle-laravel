@@ -48,4 +48,12 @@ class TourPackage extends Model
             default => 'secondary'
         };
     }
+
+    /**
+     * Get all tour payments for this package.
+     */
+    public function tourPayments()
+    {
+        return $this->hasMany(TourPayment::class);
+    }
 }

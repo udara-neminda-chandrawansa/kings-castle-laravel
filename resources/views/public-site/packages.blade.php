@@ -193,22 +193,32 @@
 
             @foreach($tourPackages as $package)
             <div class="col-md-6 col-lg-4">
-                <div class="tour-card">
+                <div class="tour-card" style="cursor: pointer;" onclick="window.location.href='{{ route('view-package', $package) }}'">
                     <div class="tour-image"><img src="{{ asset($package->image_path) }}" alt="{{ $package->name }}"></div>
                     <div class="tour-overlay">
                         <h3 class="tour-title">{{ $package->name }}</h3>
                         <p class="tour-subtitle">"{{ $package->subtitle }}"</p>
                         <p class="tour-desc">
-                            {{ $package->description }}
+                            {{ Str::limit($package->description, 100) }}
                             @if($package->includes && count($package->includes) > 0)
-                                <br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 3)) }}{{ count($package->includes) > 3 ? ' & more' : '' }}.
+                                <br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 2)) }}{{ count($package->includes) > 2 ? ' & more' : '' }}.
                             @endif
                         </p>
                         @if($package->price)
                             <div class="tour-price">${{ number_format($package->price) }} <span>{{ $package->price_unit }}</span></div>
                         @endif
+                        <div class="tour-actions mt-3">
+                            <a href="{{ route('view-package', $package) }}" class="btn btn-primary btn-sm me-2" onclick="event.stopPropagation();">
+                                View Details
+                            </a>
+                            @if($package->is_active)
+                                <span class="badge bg-success">Available</span>
+                            @else
+                                <span class="badge bg-secondary">Not Available</span>
+                            @endif
+                        </div>
                         @if($package->notes)
-                            <p class="tour-note">{{ $package->notes }}</p>
+                            <p class="tour-note mt-2">{{ Str::limit($package->notes, 80) }}</p>
                         @endif
                     </div>
                 </div>
