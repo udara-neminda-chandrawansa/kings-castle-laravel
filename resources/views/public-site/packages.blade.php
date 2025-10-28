@@ -221,7 +221,7 @@
             </div>
             @endforeach
             
-            <!-- 1) Helicopter Tour -->
+            {{-- <!-- 1) Helicopter Tour -->
             <div class="col-md-6 col-lg-4">
                 <div class="tour-card">
                     <div class="tour-image"><img src="assets/img/tours/helicopter1.jpg" alt="Helicopter Tour"></div>
@@ -397,7 +397,7 @@
                         <p class="tour-note">Pre-booking Essential | Conditions Apply</p>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
 
