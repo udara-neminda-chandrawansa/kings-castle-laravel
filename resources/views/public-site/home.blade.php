@@ -304,134 +304,73 @@
           <img src="assets/img/theme-img/title_icon.svg" alt="Icon" />
         </div>
       </div>
+
+      @foreach($roomTypes as $roomType)
       <div class="col-xxl-6 room-card_wrapp">
         <div class="room-card style-flex">
           <div class="box-content">
-            <div class="box-number">01</div>
-            <h3 class="box-title">
-              <a href="#">Double Room</a>
-            </h3>
-            <div class="box-review">
-              <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i>
+            <div class="box-number text-white">
+              {{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}
             </div>
+            <h3 class="box-title"><a href="#">{{ $roomType->name }}</a></h3>
+
+            <!-- Alternate star style for odd/even cards -->
+            <div class="box-review text-white">
+              <i class="fa-sharp fa-solid fa-star"></i>
+              <i class="fa-sharp fa-solid fa-star"></i>
+              <i class="fa-sharp fa-solid fa-star"></i>
+              <i class="fa-sharp fa-solid fa-star"></i>
+              <i class="fa-sharp fa-solid fa-star"></i>
+            </div>
+
             <p class="box-text">
-              We have best rooms for only Rs 30,000.00
+              We have the best rooms starting from {{ $roomType->formatted_price }} per night
               with King size bed.
             </p>
-            <div class="room-card-meta">
-              <span><img src="assets/img/icon/cat_2.svg" alt="icon" />King
-                Bed</span>
-              <span><img src="assets/img/icon/cat_4.svg" alt="icon" />2 Person</span>
-            </div>
+
+            @if($roomType->amenities)
+              <div class="room-card-meta">
+                @foreach(array_slice($roomType->amenities, 0, 2) as $amenity)
+                <span>
+                  <small>
+                  {{ $amenity }}
+                  </small>
+                </span>
+                @endforeach
+                @if(count($roomType->amenities) > 2)
+                <small class="text-white">+{{ count($roomType->amenities) - 2 }} more</small>
+                @endif
+              </div>
+              @endif
+
             <div>
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
+              <!-- Alternate button style for odd/even -->
+              <a href="#"
+                 class="th-btn2 border">
+                VIEW DETAILS
+              </a>
             </div>
           </div>
+
           <div class="box-img global-img">
-            <img src="assets/img/drive-images-2-webp/kc14.webp" alt="" style="aspect-ratio: 1/1; height: 468px;" />
-            <span class="discount">Rs 30,000.00</span>
+            <img src="{{ asset($roomType->image_path ?? 'assets/img/drive-images-2-webp/default.webp') }}"
+                 alt="{{ $roomType->name }}"
+                 style="aspect-ratio: 1/1; height: 468px;" />
+            <span class="discount">{{ $roomType->formatted_price }} per night</span>
           </div>
         </div>
       </div>
-      <div class="col-xxl-6 room-card_wrapp">
-        <div class="room-card style-flex">
-          <div class="box-content">
-            <div class="box-number">02</div>
-            <h3 class="box-title"><a href="#">Triple Room</a></h3>
-            <div class="box-review">
-              <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i>
-            </div>
-            <p class="box-text">
-              We have best rooms for only Rs 37,000.00
-              with King size bed.
-            </p>
-            <div class="room-card-meta">
-              <span><img src="assets/img/icon/cat_2.svg" alt="icon" />King
-                Bed</span>
-              <span><img src="assets/img/icon/cat_4.svg" alt="icon" />3 Person</span>
-            </div>
-            <div>
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-            </div>
-          </div>
-          <div class="box-img global-img">
-            <img src="assets/img/drive-images-2-webp/kc1.webp" alt="" style="aspect-ratio: 1/1; height: 468px;" />
-            <span class="discount">Rs 37,000.00</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-xxl-6 room-card_wrapp">
-        <div class="room-card style-flex">
-          <div class="box-content">
-            <div class="box-number">03</div>
-            <h3 class="box-title">
-              <a href="#">Sweet Double Room</a>
-            </h3>
-            <div class="box-review">
-              <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i>
-            </div>
-            <p class="box-text">
-              We have best rooms for only Rs 65,000.00
-              with King size bed.
-            </p>
-            <div class="room-card-meta">
-              <span><img src="assets/img/icon/cat_2.svg" alt="icon" />King
-                Bed</span>
-              <span><img src="assets/img/icon/cat_4.svg" alt="icon" />2 Person</span>
-            </div>
-            <div>
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-            </div>
-          </div>
-          <div class="box-img global-img">
-            <img src="assets/img/drive-images-2-webp/kc32.webp" alt="" style="aspect-ratio: 1/1; height: 468px;" />
-            <span class="discount">Rs Rs 65,000.00</span>
-          </div>
-        </div>
-      </div>
-      <div class="col-xxl-6 room-card_wrapp">
-        <div class="room-card style-flex">
-          <div class="box-content">
-            <div class="box-number">04</div>
-            <h3 class="box-title"><a href="#">Sweet Triple Room</a></h3>
-            <div class="box-review">
-              <i class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i><i class="fa-sharp fa-solid fa-star"></i><i
-                class="fa-sharp fa-solid fa-star"></i>
-            </div>
-            <p class="box-text">
-              We have best rooms for only Rs 75,000.00
-              with King size bed.
-            </p>
-            <div class="room-card-meta">
-              <span><img src="assets/img/icon/cat_2.svg" alt="icon" />King
-                Bed</span>
-              <span><img src="assets/img/icon/cat_4.svg" alt="icon" />3 Person</span>
-            </div>
-            <div>
-              <a href="#" class="th-btn2 style2">VIEW DETAILS</a>
-            </div>
-          </div>
-          <div class="box-img global-img">
-            <img src="assets/img/drive-images-2-webp/kc31.webp" alt="" style="aspect-ratio: 1/1; height: 468px;" />
-            <span class="discount">Rs 75,000.00</span>
-          </div>
-        </div>
-      </div>
+      @endforeach
+
       <div class="col-xxl-6 align-self-center">
         <div class="room-btn text-center">
-          <a href="#" class="th-btn2 style3 th-icon">EXPLORE ALL</a>
+          <a href="/services" class="th-btn th-icon">EXPLORE ALL</a>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 <!--3 cards-->
 <section class="space-top overflow-hidden bg-shape">
   <div class="container">

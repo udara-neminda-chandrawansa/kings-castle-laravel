@@ -22194,7 +22194,7 @@ span.select2-selection.select2-selection--single:focus {
   }
 }
 .room-card {
-  background-color: #181a1e;
+  background-color: var(--theme-color);
 }
 .room-card.style-flex {
   display: -webkit-box;
@@ -22673,7 +22673,7 @@ span.select2-selection.select2-selection--single:focus {
   margin: 2px 0;
 }
 .room-card .box-title:after {
-  background-color: var(--theme-color);
+  background-color: var(--white-color);
   height: 1px;
   width: 40px;
   -webkit-animation: sectionShape 8s linear infinite;
@@ -22743,7 +22743,7 @@ span.select2-selection.select2-selection--single:focus {
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
   display: inline-flex;
-  border-bottom: 1px solid #333333;
+  border-bottom: 1px solid #fff;
   padding-bottom: 14px;
 }
 @media (max-width: 1499px) {
@@ -22757,7 +22757,7 @@ span.select2-selection.select2-selection--single:focus {
   }
 }
 .room-card .room-card-meta span:not(:last-child) {
-  border-right: 1px solid #333333;
+  border-right: 1px solid #fff;
   margin-right: 30px;
   padding-right: 30px;
 }
@@ -22783,16 +22783,16 @@ span.select2-selection.select2-selection--single:focus {
   background-color: var(--white-color);
 }
 .room-btn {
-  margin: 174px 0;
+  margin: 50px 0 0 0;
 }
 @media (max-width: 1500px) {
   .room-btn {
-    margin: 149px 0;
+    margin: 50px 0 0 0;
   }
 }
 @media (max-width: 1499px) {
   .room-btn {
-    margin: 100px 0;
+    margin: 50px 0 0 0;
   }
 }
 @media (max-width: 1399px) {

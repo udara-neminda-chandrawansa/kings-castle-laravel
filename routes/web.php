@@ -35,13 +35,14 @@ Route::get('/run-migrations', function () {
 });
 
 Route::get('/', function () {
-    return view('public-site.home');
+    $roomTypes = App\Models\RoomType::where('is_active', true)->get();
+    return view('public-site.home', compact('roomTypes'));
 });
 Route::get('/about', function () {
     return view('public-site.about');
 });
 Route::get('/services', function () {
-    $roomTypes = App\Models\RoomType::all();
+    $roomTypes = App\Models\RoomType::where('is_active', true)->get();
     return view('public-site.services', compact('roomTypes'));
 });
 Route::get('/packages', function () {
