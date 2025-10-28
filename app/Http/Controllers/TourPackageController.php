@@ -261,10 +261,7 @@ class TourPackageController extends Controller
                 }
             }
 
-            $tourPackages = TourPackage::paginate(10);
-            return view('admin-dashboard.tour-packages.index', compact('tourPackages'));
-
-            // return response('Payment successful', 200);
+            return response('Payment successful', 200);
         } else {
             // Payment failed or invalid
             $tourPayment = \App\Models\TourPayment::find($request->order_id);
@@ -272,11 +269,8 @@ class TourPackageController extends Controller
             if ($tourPayment) {
                 $tourPayment->update(['payment_status' => 'failed']);
             }
-
-            $tourPackages = TourPackage::paginate(10);
-            return view('admin-dashboard.tour-packages.index', compact('tourPackages'));
             
-            // return response('Payment verification failed', 400);
+            return response('Payment verification failed', 400);
         }
     }
 
@@ -285,8 +279,9 @@ class TourPackageController extends Controller
      */
     public function handlePaymentReturn(Request $request)
     {
+        $tourPackages = TourPackage::paginate(10);
         $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
-        return view('public-site.packages')->with('booking', $tourPayment->tourBooking ?? null);
+        return view('public-site.packages', compact('tourPackages'))->with('booking', $tourPayment->tourBooking ?? null);
     }
 
     /**
@@ -294,7 +289,8 @@ class TourPackageController extends Controller
      */
     public function handlePaymentCancel(Request $request)
     {
+        $tourPackages = TourPackage::paginate(10);
         $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
-        return view('public-site.packages')->with('booking', $tourPayment->tourBooking ?? null);
+        return view('public-site.packages', compact('tourPackages'))->with('booking', $tourPayment->tourBooking ?? null);
     }
 }

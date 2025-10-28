@@ -589,7 +589,6 @@ function viewTourBooking(id) {
                     showCloseButton: true,
                     showConfirmButton: true,
                     confirmButtonText: '<i class="fas fa-times me-2"></i>Close',
-                    confirmButtonClass: 'btn btn-secondary',
                     customClass: {
                         popup: 'text-left'
                     }
