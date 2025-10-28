@@ -11,7 +11,7 @@
               </h3>
               <form class="newsletter-form style2">
                 <input class="form-control" type="email" placeholder="Enter Email" required="" />
-                <button type="submit" class="th-btn2 style1">
+                <button type="submit" class="th-btn2 border style2">
                   SUBSCRIBE
                 </button>
               </form>
