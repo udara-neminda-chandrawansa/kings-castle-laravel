@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoomTypeController;
 use App\Http\Controllers\RoomImageController;
 use App\Http\Controllers\TourPackageController;
+use App\Http\Controllers\TourBookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,12 +91,11 @@ Route::get('/payment/cancel', [BookingController::class, 'handleCancel'])->name(
 
 // Tour booking routes (public)
 Route::get('/package/{tourPackage}', [TourPackageController::class, 'viewPackage'])->name('view-package');
-Route::post('/tour-booking', [TourPackageController::class, 'storeBooking'])->name('tour-booking.store');
-Route::get('/tour-booking/{tourPayment}', [TourPackageController::class, 'showBooking'])->name('tour-booking.show');
-Route::post('/tour-booking/{id}/payment', [TourPackageController::class, 'processPayment'])->name('tour-booking.payment');
+Route::post('/tour-booking', [TourBookingController::class, 'store'])->name('tour-booking.store');
+Route::get('/tour-booking/{tourBooking}', [TourBookingController::class, 'show'])->name('tour-booking.show');
+Route::post('/tour-booking/{id}/payment', [TourBookingController::class, 'processPayment'])->name('tour-booking.payment');
 
 // Tour payment handling routes
-Route::post('/tour-payment/notify', [TourPackageController::class, 'handlePaymentNotify'])->name('tour-payment.notify');
 Route::get('/tour-payment/return', [TourPackageController::class, 'handlePaymentReturn'])->name('tour-payment.return');
 Route::get('/tour-payment/cancel', [TourPackageController::class, 'handlePaymentCancel'])->name('tour-payment.cancel');
 
@@ -118,7 +118,8 @@ Route::middleware([
     Route::post('/booking/{id}/send-status-update', [BookingController::class, 'sendStatusUpdate'])->name('booking.send-status-update');
     
     // Tour booking management
-    Route::delete('/tour-bookings/{id}', [TourPackageController::class, 'destroyBooking'])->name('tour-bookings.destroy');
+    Route::get('/tour-bookings/{id}/details', [TourBookingController::class, 'getDetails'])->name('tour-bookings.details');
+    Route::delete('/tour-bookings/{id}', [TourBookingController::class, 'destroy'])->name('tour-bookings.destroy');
 
     // Room type management
     Route::resource('room-types', RoomTypeController::class);

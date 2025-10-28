@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookingController;
+use App\Http\Controllers\TourPackageController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/payment/notify', [BookingController::class, 'handleNotify'])->name('payment.api.notify');
+Route::post('/tour-payment/notify', [TourPackageController::class, 'handlePaymentNotify'])->name('tour-payment.notify');

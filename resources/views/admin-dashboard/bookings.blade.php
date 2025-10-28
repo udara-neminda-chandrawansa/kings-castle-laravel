@@ -2,6 +2,25 @@
 
 @section('content')
 
+<style>
+.tour-booking-details .table td {
+    padding: 0.5rem 0.75rem;
+    border-top: 1px solid #dee2e6;
+}
+.tour-booking-details .table td:first-child {
+    width: 35%;
+    font-weight: 500;
+    color: #6c757d;
+}
+.tour-booking-details .card {
+    border: 1px solid #e3e6f0;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+.swal2-popup {
+    border-radius: 10px !important;
+}
+</style>
+
 <div class="content-body">
     <div class="container-fluid">
 
@@ -124,9 +143,9 @@
                             </span>
                             <div class="media-body">
                                 <p class="mb-0 text-uppercase text-muted">
-                                    <small><b>Paid Tours</b></small>
+                                    <small><b>Confirmed Tours</b></small>
                                 </p>
-                                <h2 class="mb-0">{{ $tourStats['paid'] }}</h2>
+                                <h2 class="mb-0">{{ $tourStats['confirmed'] }}</h2>
                             </div>
                         </div>
                     </div>
@@ -339,7 +358,7 @@
                             <table class="table table-striped table-responsive-md border mb-0" style="border-radius: 8px;">
                                 <thead>
                                     <tr>
-                                        <th><strong>Payment Ref</strong></th>
+                                        <th><strong>Booking Ref</strong></th>
                                         <th><strong>Guest</strong></th>
                                         <th><strong>Tour Package</strong></th>
                                         <th><strong>Date</strong></th>
@@ -352,7 +371,7 @@
                                 <tbody>
                                     @foreach($tourBookings as $tourBooking)
                                     <tr>
-                                        <td><strong class="text-secondary">#{{ $tourBooking->payment_reference }}</strong></td>
+                                        <td><strong class="text-secondary">#{{ $tourBooking->booking_reference }}</strong></td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="ms-2">
@@ -383,11 +402,21 @@
                                                 {{ $tourBooking->participants }} Participants
                                             </span>
                                         </td>
-                                        <td><strong class="text-success">${{ number_format($tourBooking->total_amount) }}</strong></td>
+                                        <td><strong class="text-success">
+                                            @if($tourBooking->tourPayment)
+                                                ${{ number_format($tourBooking->tourPayment->total_amount) }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </strong></td>
                                         <td>
-                                            <span class="badge badge-{{ $tourBooking->payment_status === 'paid' ? 'success' : ($tourBooking->payment_status === 'failed' ? 'danger' : 'warning') }}">
-                                                {{ ucfirst($tourBooking->payment_status) }}
-                                            </span>
+                                            @if($tourBooking->tourPayment)
+                                                <span class="badge badge-{{ $tourBooking->tourPayment->payment_status === 'paid' ? 'success' : ($tourBooking->tourPayment->payment_status === 'failed' ? 'danger' : 'warning') }}">
+                                                    {{ ucfirst($tourBooking->tourPayment->payment_status) }}
+                                                </span>
+                                            @else
+                                                <span class="badge badge-secondary">No Payment</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="d-flex">
@@ -487,17 +516,102 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Function to view tour booking details
 function viewTourBooking(id) {
-    // You can implement a modal or redirect to a details page
-    // For now, we'll show a simple alert
-    Swal.fire({
-        title: 'Tour Booking Details',
-        text: 'Tour booking ID: ' + id,
-        icon: 'info',
-        confirmButtonText: 'Close'
-    });
-    
-    // TODO: Implement proper tour booking details view
-    // window.location.href = '/admin/tour-bookings/' + id;
+    // Fetch tour booking details via AJAX
+    fetch(`/admin/tour-bookings/${id}/details`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const booking = data.booking;
+                const tourPackage = booking.tour_package;
+                const tourPayment = booking.tour_payment;
+                
+                // Format the payment status badge
+                const paymentStatusBadge = tourPayment ? 
+                    `<span class="badge badge-${tourPayment.payment_status === 'paid' ? 'success' : (tourPayment.payment_status === 'failed' ? 'danger' : 'warning')}">${tourPayment.payment_status ? tourPayment.payment_status.charAt(0).toUpperCase() + tourPayment.payment_status.slice(1) : 'N/A'}</span>` :
+                    '<span class="badge badge-secondary">No Payment</span>';
+                
+                // Format the booking status badge
+                const bookingStatusBadge = `<span class="badge badge-${booking.status === 'confirmed' ? 'success' : (booking.status === 'cancelled' ? 'danger' : 'warning')}">${booking.status ? booking.status.charAt(0).toUpperCase() + booking.status.slice(1) : 'N/A'}</span>`;
+                
+                const htmlContent = `
+                    <div class="tour-booking-details">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h5 class="mb-3"><i class="fas fa-user text-primary me-2"></i>Guest Information</h5>
+                                <table class="table table-sm">
+                                    <tr><td class="text-start"><strong>Name:</strong></td><td>${booking.guest_name}</td></tr>
+                                    <tr><td class="text-start"><strong>Email:</strong></td><td>${booking.guest_email}</td></tr>
+                                    <tr><td class="text-start"><strong>Phone:</strong></td><td>${booking.guest_phone}</td></tr>
+                                    <tr><td class="text-start"><strong>Address:</strong></td><td>${booking.guest_address}</td></tr>
+                                    ${booking.guest_address_2 ? `<tr><td><strong>Address 2:</strong></td><td>${booking.guest_address_2}</td></tr>` : ''}
+                                </table>
+                                
+                                <h5 class="mb-3 mt-4"><i class="fas fa-calendar-alt text-info me-2"></i>Booking Details</h5>
+                                <table class="table table-sm">
+                                    <tr><td class="text-start"><strong>Booking Ref:</strong></td><td>#${booking.booking_reference}</td></tr>
+                                    <tr><td class="text-start"><strong>Tour Date:</strong></td><td>${new Date(booking.tour_date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</td></tr>
+                                    <tr><td class="text-start"><strong>Participants:</strong></td><td>${booking.participants} ${booking.participants === 1 ? 'Person' : 'People'}</td></tr>
+                                    <tr><td class="text-start"><strong>Status:</strong></td><td>${bookingStatusBadge}</td></tr>
+                                    <tr><td class="text-start"><strong>Booked On:</strong></td><td>${new Date(booking.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</td></tr>
+                                </table>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <h5 class="mb-3 mt-4"><i class="fas fa-credit-card text-warning me-2"></i>Payment Information</h5>
+                                <table class="table table-sm">
+                                    ${tourPayment ? `
+                                    <tr><td class="text-start"><strong>Payment Ref:</strong></td><td>#${tourPayment.payment_reference || 'N/A'}</td></tr>
+                                    <tr><td class="text-start"><strong>Total Amount:</strong></td><td><strong class="text-success">$${tourPayment.total_amount ? new Intl.NumberFormat().format(tourPayment.total_amount) : 'N/A'}</strong></td></tr>
+                                    <tr><td class="text-start"><strong>Payment Status:</strong></td><td>${paymentStatusBadge}</td></tr>
+                                    ${tourPayment.payment_details && tourPayment.payment_details.payment_id ? `<tr><td><strong>Payment ID:</strong></td><td>${tourPayment.payment_details.payment_id}</td></tr>` : ''}
+                                    ` : '<tr><td colspan="2" class="text-center text-muted">No payment record found</td></tr>'}
+                                </table>
+                            </div>
+                        </div>
+                        
+                        ${booking.special_requests ? `
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="mb-3"><i class="fas fa-comment-alt text-secondary me-2"></i>Special Requests</h5>
+                                <div class="alert alert-light">
+                                    ${booking.special_requests}
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+                
+                Swal.fire({
+                    title: `<i class="fas fa-info-circle text-primary me-2"></i>Tour Booking Details`,
+                    html: htmlContent,
+                    width: '800px',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: '<i class="fas fa-times me-2"></i>Close',
+                    confirmButtonClass: 'btn btn-secondary',
+                    customClass: {
+                        popup: 'text-left'
+                    }
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to load tour booking details.',
+                    icon: 'error',
+                    confirmButtonText: 'Close'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to fetch tour booking details. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'Close'
+            });
+        });
 }
 </script>
 

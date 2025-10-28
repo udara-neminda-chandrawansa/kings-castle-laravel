@@ -222,140 +222,7 @@ class TourPackageController extends Controller
         return view('public-site.view-package', compact('tourPackage'));
     }
 
-    /**
-     * Store tour booking
-     */
-    public function storeBooking(Request $request)
-    {
-        $validated = $request->validate([
-            'tour_package_id' => 'required|exists:tour_packages,id',
-            'guest_name' => 'required|string|max:255',
-            'guest_email' => 'required|email|max:255',
-            'guest_phone' => 'required|string|max:20',
-            'guest_address' => 'required|string',
-            'tour_date' => 'required|date|after_or_equal:today',
-            'participants' => 'required|integer|min:1',
-            'special_requests' => 'nullable|string'
-        ]);
 
-        $tourPackage = TourPackage::findOrFail($validated['tour_package_id']);
-
-        // Validate participant count
-        if ($validated['participants'] < $tourPackage->min_participants) {
-            return back()->withInput()
-                         ->withErrors(['participants' => 'Minimum ' . $tourPackage->min_participants . ' participants required.']);
-        }
-
-        if ($tourPackage->max_participants && $validated['participants'] > $tourPackage->max_participants) {
-            return back()->withInput()
-                         ->withErrors(['participants' => 'Maximum ' . $tourPackage->max_participants . ' participants allowed.']);
-        }
-
-        // Calculate total amount
-        $totalAmount = $tourPackage->price ? ($tourPackage->price * $validated['participants']) : 0;
-
-        try {
-            DB::beginTransaction();
-
-            $tourPayment = \App\Models\TourPayment::create([
-                'tour_package_id' => $validated['tour_package_id'],
-                'guest_name' => $validated['guest_name'],
-                'guest_email' => $validated['guest_email'],
-                'guest_phone' => $validated['guest_phone'],
-                'guest_address' => $validated['guest_address'],
-                'participants' => $validated['participants'],
-                'tour_date' => $validated['tour_date'],
-                'special_requests' => $validated['special_requests'],
-                'total_amount' => $totalAmount,
-                'payment_status' => 'pending',
-                'status' => 'pending'
-            ]);
-
-            DB::commit();
-
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Tour booking created successfully!',
-                    'booking_id' => $tourPayment->id
-                ]);
-            }
-
-            return redirect()->route('tour-booking.show', $tourPayment->id)
-                           ->with('success', 'Tour booking created successfully!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            if ($request->expectsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Failed to create booking. Please try again.'
-                ], 500);
-            }
-
-            return back()->withInput()
-                         ->with('error', 'Failed to create booking. Please try again.');
-        }
-    }
-
-    /**
-     * Show tour booking confirmation
-     */
-    public function showBooking(\App\Models\TourPayment $tourPayment)
-    {
-        $tourPayment->load('tourPackage');
-        return view('public-site.tour-booking-confirmation', compact('tourPayment'));
-    }
-
-    /**
-     * Process tour payment
-     */
-    public function processPayment($id)
-    {
-        $tourPayment = \App\Models\TourPayment::with('tourPackage')->findOrFail($id);
-        
-        if (!$tourPayment->tourPackage->is_active) {
-            return back()->with('error', 'This tour package is no longer available.');
-        }
-
-        $fullTotal = $tourPayment->total_amount;
-
-        // Initialize payment gateway
-        $merchant_id = env('PAYHERE_MERCHANT_ID');
-        $merchant_secret = env('PAYHERE_MERCHANT_SECRET');
-
-        $paymentData = [
-            "merchant_id" => $merchant_id,
-            "return_url" => route('tour-payment.return'),
-            "cancel_url" => route('tour-payment.cancel'),
-            "notify_url" => route('tour-payment.notify'),
-            "order_id" => $id,
-            "items" => "Tour: " . $tourPayment->tourPackage->name,
-            "currency" => "LKR",
-            "amount" => number_format((float) $fullTotal, 2, '.', ''),
-            "first_name" => $tourPayment->guest_name,
-            "last_name" => "",
-            "email" => $tourPayment->guest_email,
-            "phone" => $tourPayment->guest_phone,
-            "address" => $tourPayment->guest_address,
-            "city" => "Nuwara Eliya",
-            "country" => "Sri Lanka",
-        ];
-
-        // Generate the hash signature
-        $paymentData['hash'] = strtoupper(md5(
-            $merchant_id . $paymentData['order_id'] . $paymentData['amount'] . $paymentData['currency'] . strtoupper(md5($merchant_secret))
-        ));
-
-        // Update payment record
-        $tourPayment->update([
-            'payment_reference' => \App\Models\TourPayment::generatePaymentReference(),
-            'status' => 'confirmed'
-        ]);
-
-        return view('public-site.payhere-redirect', compact('paymentData'));
-    }
 
     /**
      * Handle tour payment notification
@@ -374,12 +241,11 @@ class TourPackageController extends Controller
 
         if ($generatedHash == $request->md5sig && $request->status_code == 2) {
             // Payment is successful
-            $tourPayment = \App\Models\TourPayment::with('tourPackage')->find($request->order_id);
+            $tourPayment = \App\Models\TourPayment::with(['tourBooking.tourPackage'])->find($request->order_id);
             
             if ($tourPayment) {
                 $tourPayment->update([
                     'payment_status' => 'paid',
-                    'status' => 'confirmed',
                     'payment_details' => [
                         'payment_id' => $request->payment_id,
                         'payhere_amount' => $request->payhere_amount,
@@ -388,6 +254,11 @@ class TourPackageController extends Controller
                         'card_no' => $request->card_no ?? null,
                     ]
                 ]);
+
+                // Update booking status
+                if ($tourPayment->tourBooking) {
+                    $tourPayment->tourBooking->update(['status' => 'confirmed']);
+                }
             }
 
             return response('Payment successful', 200);
@@ -396,9 +267,7 @@ class TourPackageController extends Controller
             $tourPayment = \App\Models\TourPayment::find($request->order_id);
             
             if ($tourPayment) {
-                $tourPayment->update([
-                    'payment_status' => 'failed'
-                ]);
+                $tourPayment->update(['payment_status' => 'failed']);
             }
             
             return response('Payment verification failed', 400);
@@ -410,8 +279,8 @@ class TourPackageController extends Controller
      */
     public function handlePaymentReturn(Request $request)
     {
-        $tourPayment = \App\Models\TourPayment::find($request->order_id);
-        return view('public-site.packages')->with('booking', $tourPayment);
+        $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
+        return view('public-site.packages')->with('booking', $tourPayment->tourBooking ?? null);
     }
 
     /**
@@ -419,24 +288,7 @@ class TourPackageController extends Controller
      */
     public function handlePaymentCancel(Request $request)
     {
-        $tourPayment = \App\Models\TourPayment::find($request->order_id);
-        return view('public-site.packages')->with('booking', $tourPayment);
-    }
-
-    /**
-     * Delete a tour booking (Admin)
-     */
-    public function destroyBooking($id)
-    {
-        try {
-            $tourPayment = \App\Models\TourPayment::findOrFail($id);
-            $tourPayment->delete();
-
-            return redirect()->route('dashboard')
-                           ->with('success', 'Tour booking deleted successfully.');
-        } catch (\Exception $e) {
-            return redirect()->route('dashboard')
-                           ->with('error', 'Failed to delete tour booking.');
-        }
+        $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
+        return view('public-site.packages')->with('booking', $tourPayment->tourBooking ?? null);
     }
 }
