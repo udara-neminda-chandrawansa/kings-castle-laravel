@@ -62,15 +62,28 @@ class RoomType extends Model
             ]);
         }
         
-        // Add gallery images
-        $this->roomImages->each(function($image) use ($images) {
-            $images->push((object)[
-                'id' => $image->id,
-                'image_path' => $image->image_path,
-                'alt_text' => $image->alt_text ?: $this->name,
-                'is_main' => false
-            ]);
-        });
+        // Add gallery images - check if relationship is loaded
+        if ($this->relationLoaded('roomImages')) {
+            $this->roomImages->each(function($image) use ($images) {
+                $images->push((object)[
+                    'id' => $image->id,
+                    'image_path' => $image->image_path,
+                    'alt_text' => $image->alt_text ?: $this->name,
+                    'is_main' => false
+                ]);
+            });
+        } else {
+            // If relationship is not loaded, load it
+            $this->load('roomImages');
+            $this->roomImages->each(function($image) use ($images) {
+                $images->push((object)[
+                    'id' => $image->id,
+                    'image_path' => $image->image_path,
+                    'alt_text' => $image->alt_text ?: $this->name,
+                    'is_main' => false
+                ]);
+            });
+        }
         
         return $images;
     }
@@ -80,7 +93,8 @@ class RoomType extends Model
      */
     public function getDisplayImagesAttribute()
     {
-        return $this->getAllImages->take(5); // Limit to 5 images for display
+        $allImages = $this->getAllImages;
+        return $allImages ? $allImages->take(5) : collect(); // Limit to 5 images for display
     }
 
     /**

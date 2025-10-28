@@ -27,20 +27,32 @@
   <link rel="stylesheet" href="{{ asset('assets/css/app.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" />
+  <link rel="stylesheet" href="{{ asset('css/room-grid-component.css') }}" />
   <style>
-    *{
+    * {
       font-family: "Cinzel", sans-serif;
     }
-    .gallery-row .col-md-6{
+
+    .gallery-row .col-md-6 {
       padding: 0px 3px;
       margin: 0px;
       margin-bottom: 6px;
     }
+
     .row.gy-4 .col-lg-6 {
       padding: 0px 3px;
       margin-top: 6px;
       aspect-ratio: 16/9;
-      div div img{object-fit: cover;}
+
+      div div img {
+        object-fit: cover;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .row.gy-4 .col-lg-6 {
+        aspect-ratio: 1/1;
+      }
     }
   </style>
 </head>
@@ -51,11 +63,11 @@
   </div>
 
   @include('partials.public-header')
-  
+
   @yield('content')
-  
+
   @include('partials.public-footer')
-  
+
   <!--scroll to top-->
   <div class="scroll-top">
     <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
