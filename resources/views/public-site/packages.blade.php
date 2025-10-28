@@ -207,19 +207,15 @@
                         @if($package->price)
                             <div class="tour-price">${{ number_format($package->price) }} <span>{{ $package->price_unit }}</span></div>
                         @endif
-                        <div class="tour-actions mt-3">
-                            <a href="{{ route('view-package', $package) }}" class="btn btn-primary btn-sm me-2" onclick="event.stopPropagation();">
-                                View Details
-                            </a>
-                            @if($package->is_active)
-                                <span class="badge bg-success">Available</span>
-                            @else
-                                <span class="badge bg-secondary">Not Available</span>
-                            @endif
-                        </div>
+
                         @if($package->notes)
                             <p class="tour-note mt-2">{{ Str::limit($package->notes, 80) }}</p>
                         @endif
+                        <div class="tour-actions">
+                            <a href="{{ route('view-package', $package) }}" class="th-btn2 border btn-sm me-2" onclick="event.stopPropagation();">
+                                View Details
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

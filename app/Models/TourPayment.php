@@ -10,34 +10,32 @@ class TourPayment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tour_package_id',
-        'guest_name',
-        'guest_email',
-        'guest_phone',
-        'guest_address',
-        'guest_address_2',
-        'participants',
-        'tour_date',
-        'special_requests',
+        'tour_booking_id',
         'total_amount',
         'payment_status',
         'payment_reference',
-        'payment_details',
-        'status'
+        'payment_details'
     ];
 
     protected $casts = [
         'payment_details' => 'array',
-        'total_amount' => 'decimal:2',
-        'tour_date' => 'date'
+        'total_amount' => 'decimal:2'
     ];
 
     /**
-     * Get the tour package that owns the payment.
+     * Get the tour booking that owns the payment.
+     */
+    public function tourBooking()
+    {
+        return $this->belongsTo(TourBooking::class);
+    }
+
+    /**
+     * Get the tour package through the booking.
      */
     public function tourPackage()
     {
-        return $this->belongsTo(TourPackage::class);
+        return $this->hasOneThrough(TourPackage::class, TourBooking::class, 'id', 'id', 'tour_booking_id', 'tour_package_id');
     }
 
     /**

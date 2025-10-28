@@ -50,10 +50,18 @@ class TourPackage extends Model
     }
 
     /**
-     * Get all tour payments for this package.
+     * Get all tour bookings for this package.
+     */
+    public function tourBookings()
+    {
+        return $this->hasMany(TourBooking::class);
+    }
+
+    /**
+     * Get all tour payments for this package through bookings.
      */
     public function tourPayments()
     {
-        return $this->hasMany(TourPayment::class);
+        return $this->hasManyThrough(TourPayment::class, TourBooking::class);
     }
 }

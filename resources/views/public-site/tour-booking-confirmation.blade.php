@@ -49,23 +49,28 @@
                                 <div class="detail-card">
                                     <h4 class="box-title mb-20">Booking Information</h4>
                                     <ul class="booking-info-list" style="line-height: 2.5;">
-                                        <li><strong>Booking ID:</strong> #{{ $tourPayment->id }}</li>
-                                        <li><strong>Tour Package:</strong> {{ $tourPayment->tourPackage->name }}</li>
-                                        <li><strong>Tour Date:</strong> {{ $tourPayment->tour_date->format('F j, Y') }}
+                                        <li><strong>Booking Ref:</strong> #{{ $tourBooking->booking_reference }}</li>
+                                        <li><strong>Tour Package:</strong> {{ $tourBooking->tourPackage->name }}</li>
+                                        <li><strong>Tour Date:</strong> {{ $tourBooking->tour_date->format('F j, Y') }}
                                         </li>
-                                        <li><strong>Participants:</strong> {{ $tourPayment->participants }}</li>
-                                        <li><strong>Total Amount:</strong> <span class="text-theme">{{
-                                                $tourPayment->formatted_total }}</span></li>
+                                        <li><strong>Participants:</strong> {{ $tourBooking->participants }}</li>
+                                        <li><strong>Total Amount:</strong> <span class="text-theme">
+                                            @if($tourBooking->tourPayment)
+                                                ${{ number_format($tourBooking->tourPayment->total_amount) }}
+                                            @else
+                                                N/A
+                                            @endif
+                                        </span></li>
                                         <li><strong>Status:</strong>
                                             <span
-                                                class="ms-1 p-1 text-white bg-{{ $tourPayment->status == 'confirmed' ? 'success' : 'warning' }}">
-                                                {{ ucfirst($tourPayment->status) }}
+                                                class="ms-1 p-1 text-white bg-{{ $tourBooking->status == 'confirmed' ? 'success' : 'warning' }}">
+                                                {{ ucfirst($tourBooking->status) }}
                                             </span>
                                         </li>
                                         <li><strong>Payment Status:</strong>
                                             <span
-                                                class="ms-1 p-1 text-white bg-{{ $tourPayment->payment_status == 'paid' ? 'success' : 'warning' }}">
-                                                {{ ucfirst($tourPayment->payment_status) }}
+                                                class="ms-1 p-1 text-white bg-{{ $tourBooking->tourPayment && $tourBooking->tourPayment->payment_status == 'paid' ? 'success' : 'warning' }}">
+                                                {{ $tourBooking->tourPayment ? ucfirst($tourBooking->tourPayment->payment_status) : 'No Payment' }}
                                             </span>
                                         </li>
                                     </ul>
@@ -75,21 +80,21 @@
                                 <div class="detail-card">
                                     <h4 class="box-title mb-20">Guest Information</h4>
                                     <ul class="booking-info-list" style="line-height: 2.5;">
-                                        <li><strong>Name:</strong> {{ $tourPayment->guest_name }}</li>
-                                        <li><strong>Email:</strong> {{ $tourPayment->guest_email }}</li>
-                                        <li><strong>Phone:</strong> {{ $tourPayment->guest_phone }}</li>
-                                        <li><strong>Address:</strong> {{ $tourPayment->guest_address }}</li>
+                                        <li><strong>Name:</strong> {{ $tourBooking->guest_name }}</li>
+                                        <li><strong>Email:</strong> {{ $tourBooking->guest_email }}</li>
+                                        <li><strong>Phone:</strong> {{ $tourBooking->guest_phone }}</li>
+                                        <li><strong>Address:</strong> {{ $tourBooking->guest_address }}</li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
 
-                        @if($tourPayment->special_requests)
+                        @if($tourBooking->special_requests)
                         <div class="row mt-30">
                             <div class="col-12">
                                 <div class="detail-card">
                                     <h4 class="box-title mb-20">Special Requests</h4>
-                                    <p class="box-text">{{ $tourPayment->special_requests }}</p>
+                                    <p class="box-text">{{ $tourBooking->special_requests }}</p>
                                 </div>
                             </div>
                         </div>
@@ -101,22 +106,22 @@
                                     <h4 class="box-title mb-20">Tour Package Details</h4>
                                     <div class="row">
                                         <div class="col-md-4">
-                                            <img src="{{ asset($tourPayment->tourPackage->image_path) }}"
-                                                alt="{{ $tourPayment->tourPackage->name }}" class="img-fluid rounded">
+                                            <img src="{{ asset($tourBooking->tourPackage->image_path) }}"
+                                                alt="{{ $tourBooking->tourPackage->name }}" class="img-fluid rounded">
                                         </div>
-                                        <div class="col-md-8">
-                                            <h5 class="box-title">{{ $tourPayment->tourPackage->name }}</h5>
-                                            @if($tourPayment->tourPackage->subtitle)
-                                            <p class="text-theme">{{ $tourPayment->tourPackage->subtitle }}</p>
+                                        <div class="col-md-8 mt-3 mt-md-0">
+                                            <h5 class="box-title">{{ $tourBooking->tourPackage->name }}</h5>
+                                            @if($tourBooking->tourPackage->subtitle)
+                                            <p class="text-theme">{{ $tourBooking->tourPackage->subtitle }}</p>
                                             @endif
-                                            <p class="box-text">{{ $tourPayment->tourPackage->description }}</p>
-                                            @if($tourPayment->tourPackage->duration)
-                                            <p><strong>Duration:</strong> {{ $tourPayment->tourPackage->duration }}</p>
+                                            <p class="box-text mb-3">{{ $tourBooking->tourPackage->description }}</p>
+                                            @if($tourBooking->tourPackage->duration)
+                                            <p><strong>Duration:</strong> {{ $tourBooking->tourPackage->duration }}</p>
                                             @endif
                                             <p><strong>Difficulty:</strong>
                                                 <span
-                                                    class="ms-1 p-1 text-white bg-{{ $tourPayment->tourPackage->difficulty_badge }}">
-                                                    {{ ucfirst($tourPayment->tourPackage->difficulty_level) }}
+                                                    class="ms-1 p-1 text-white bg-{{ $tourBooking->tourPackage->difficulty_badge }}">
+                                                    {{ ucfirst($tourBooking->tourPackage->difficulty_level) }}
                                                 </span>
                                             </p>
                                         </div>
@@ -125,15 +130,15 @@
                             </div>
                         </div>
 
-                        @if($tourPayment->payment_status == 'pending')
-                        <div class="row mt-40">
+                        @if($tourBooking->tourPayment && $tourBooking->tourPayment->payment_status == 'pending')
+                        <div class="row mt-4">
                             <div class="col-12 text-center">
                                 <div class="alert alert-warning">
                                     <h5>Complete Your Payment</h5>
                                     <p>Your booking is confirmed but payment is still pending. Please complete your
                                         payment to secure your tour.</p>
                                 </div>
-                                <form action="{{ route('tour-booking.payment', $tourPayment->id) }}" method="POST">
+                                <form action="{{ route('tour-booking.payment', $tourBooking->id) }}" method="POST">
                                     @csrf
                                     <button type="submit" class="th-btn">
                                         Complete Payment
@@ -143,33 +148,32 @@
                         </div>
                         @endif
 
-                        <div class="row mt-40">
+                        <div class="row mt-4">
                             <div class="col-12 text-center">
-                                <a href="/packages" class="th-btn style4 me-3">Browse More Tours</a>
-                                <a href="/" class="th-btn">Back to Home</a>
+                                <a href="/packages" class="th-btn">Browse More Tours</a>
                             </div>
                         </div>
 
                         <div class="contact-info-card mt-40">
                             <h4 class="box-title mb-20 text-center">Need Help?</h4>
                             <div class="row text-center">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="contact-item">
                                         <i class="fas fa-phone text-theme mb-10" style="font-size: 1.5rem;"></i>
                                         <p><strong>Call Us</strong><br>+94 76 779 9721</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="contact-item">
                                         <i class="fas fa-envelope text-theme mb-10" style="font-size: 1.5rem;"></i>
-                                        <p><strong>Email Us</strong><br>info@kingscastle.lk</p>
+                                        <p><strong>Email Us</strong><br>reservations@kingscastle.com</p>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-12">
                                     <div class="contact-item">
                                         <i class="fas fa-map-marker-alt text-theme mb-10"
                                             style="font-size: 1.5rem;"></i>
-                                        <p><strong>Visit Us</strong><br>Nuwara Eliya, Sri Lanka</p>
+                                        <p><strong>Visit Us</strong><br>No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</p>
                                     </div>
                                 </div>
                             </div>

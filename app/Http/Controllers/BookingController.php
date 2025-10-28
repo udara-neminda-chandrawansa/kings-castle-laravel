@@ -27,17 +27,21 @@ class BookingController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        $tourBookings = \App\Models\TourPayment::with(['tourPackage'])
+        $tourBookings = \App\Models\TourBooking::with(['tourPackage', 'tourPayment'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         // Calculate tour booking stats
-        $allTourBookings = \App\Models\TourPayment::all();
+        $allTourBookings = \App\Models\TourBooking::with('tourPayment')->get();
         $tourStats = [
             'total' => $allTourBookings->count(),
-            'pending' => $allTourBookings->where('payment_status', 'pending')->count(),
-            'paid' => $allTourBookings->where('payment_status', 'paid')->count(),
-            'revenue' => $allTourBookings->where('payment_status', 'paid')->sum('total_amount')
+            'pending' => $allTourBookings->where('status', 'pending')->count(),
+            'confirmed' => $allTourBookings->where('status', 'confirmed')->count(),
+            'revenue' => $allTourBookings->filter(function($booking) {
+                return $booking->tourPayment && $booking->tourPayment->payment_status === 'paid';
+            })->sum(function($booking) {
+                return $booking->tourPayment->total_amount;
+            })
         ];
 
         return view('admin-dashboard.bookings', compact('bookings', 'tourBookings', 'tourStats'));

@@ -181,8 +181,15 @@
                                     <div class="form-group col-12">
                                         <div class="form-item">
                                             <label class="text-white">Address</label>
-                                            <textarea class="form-control" name="guest_address" rows="3"
+                                            <textarea class="form-control" name="guest_address" rows="2"
                                                 required>{{ old('guest_address') }}</textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12">
+                                        <div class="form-item">
+                                            <label class="text-white">Address Line 2 (Optional)</label>
+                                            <input type="text" class="form-control" name="guest_address_2"
+                                                value="{{ old('guest_address_2') }}" />
                                         </div>
                                     </div>
                                     <div class="form-group col-12">
