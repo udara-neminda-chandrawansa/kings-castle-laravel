@@ -38,7 +38,7 @@ class RoomTypeController extends Controller
             'max_occupancy' => 'required|integer|min:1|max:20',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:100',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:10240', // 10MB max (will be compressed)
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:51200', // 50MB max (will be compressed)
             'is_active' => 'boolean'
         ]);
 
@@ -124,7 +124,7 @@ class RoomTypeController extends Controller
             'max_occupancy' => 'required|integer|min:1|max:20',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string|max:100',
-            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:10240', // 10MB max (will be compressed)
+            'image_file' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:51200', // 50MB max (will be compressed)
             'is_active' => 'boolean'
         ]);
 
