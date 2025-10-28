@@ -543,7 +543,7 @@ function viewTourBooking(id) {
                                     <tr><td class="text-start"><strong>Email:</strong></td><td>${booking.guest_email}</td></tr>
                                     <tr><td class="text-start"><strong>Phone:</strong></td><td>${booking.guest_phone}</td></tr>
                                     <tr><td class="text-start"><strong>Address:</strong></td><td>${booking.guest_address}</td></tr>
-                                    ${booking.guest_address_2 ? `<tr><td><strong>Address 2:</strong></td><td>${booking.guest_address_2}</td></tr>` : ''}
+                                    ${booking.guest_address_2 ? `<tr><td><strong class="text-start">Address 2:</strong></td><td>${booking.guest_address_2}</td></tr>` : ''}
                                 </table>
                                 
                                 <h5 class="mb-3 mt-4"><i class="fas fa-calendar-alt text-info me-2"></i>Booking Details</h5>
@@ -563,7 +563,7 @@ function viewTourBooking(id) {
                                     <tr><td class="text-start"><strong>Payment Ref:</strong></td><td>#${tourPayment.payment_reference || 'N/A'}</td></tr>
                                     <tr><td class="text-start"><strong>Total Amount:</strong></td><td><strong class="text-success">$${tourPayment.total_amount ? new Intl.NumberFormat().format(tourPayment.total_amount) : 'N/A'}</strong></td></tr>
                                     <tr><td class="text-start"><strong>Payment Status:</strong></td><td>${paymentStatusBadge}</td></tr>
-                                    ${tourPayment.payment_details && tourPayment.payment_details.payment_id ? `<tr><td><strong>Payment ID:</strong></td><td>${tourPayment.payment_details.payment_id}</td></tr>` : ''}
+                                    ${tourPayment.payment_details && tourPayment.payment_details.payment_id ? `<tr><td class="text-start"><strong>Payment ID:</strong></td><td>${tourPayment.payment_details.payment_id}</td></tr>` : ''}
                                     ` : '<tr><td colspan="2" class="text-center text-muted">No payment record found</td></tr>'}
                                 </table>
                             </div>
