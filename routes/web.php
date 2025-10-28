@@ -63,6 +63,19 @@ Route::get('/room-details/{id}', function ($id) {
     return view('public-site.room-details', compact('roomType'));
 });
 
+Route::get('/privacy-policy', function () {
+    return view('public-site.policies.privacy-policy');
+})->name('privacy.policy');
+
+Route::get('/return-policy', function () {
+    return view('public-site.policies.return-policy');
+})->name('return.policy');
+
+Route::get('/terms-conditions', function () {
+    return view('public-site.policies.terms-conditions');
+})->name('terms.conditions');
+
+
 // Booking routes (public)
 Route::post('/check-availability', [BookingController::class, 'checkAvailability'])->name('booking.check-availability');
 Route::get('/book-room', [BookingController::class, 'create'])->name('booking.create');
