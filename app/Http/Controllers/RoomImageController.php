@@ -28,7 +28,7 @@ class RoomImageController extends Controller
     {
         $request->validate([
             'images' => 'required|array|min:1|max:10',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:10240', // 10MB max (will be compressed)
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:51200', // 50MB max (will be compressed)
             'alt_texts' => 'nullable|array',
             'alt_texts.*' => 'nullable|string|max:255'
         ]);
