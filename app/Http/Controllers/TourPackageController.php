@@ -261,7 +261,10 @@ class TourPackageController extends Controller
                 }
             }
 
-            return response('Payment successful', 200);
+            $tourPackages = TourPackage::paginate(10);
+            return view('admin-dashboard.tour-packages.index', compact('tourPackages'));
+
+            // return response('Payment successful', 200);
         } else {
             // Payment failed or invalid
             $tourPayment = \App\Models\TourPayment::find($request->order_id);
@@ -269,8 +272,11 @@ class TourPackageController extends Controller
             if ($tourPayment) {
                 $tourPayment->update(['payment_status' => 'failed']);
             }
+
+            $tourPackages = TourPackage::paginate(10);
+            return view('admin-dashboard.tour-packages.index', compact('tourPackages'));
             
-            return response('Payment verification failed', 400);
+            // return response('Payment verification failed', 400);
         }
     }
 
