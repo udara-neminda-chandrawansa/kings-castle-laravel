@@ -543,7 +543,7 @@ function viewTourBooking(id) {
                                     <tr><td class="text-start"><strong>Email:</strong></td><td>${booking.guest_email}</td></tr>
                                     <tr><td class="text-start"><strong>Phone:</strong></td><td>${booking.guest_phone}</td></tr>
                                     <tr><td class="text-start"><strong>Address:</strong></td><td>${booking.guest_address}</td></tr>
-                                    ${booking.guest_address_2 ? `<tr><td><strong class="text-start">Address 2:</strong></td><td>${booking.guest_address_2}</td></tr>` : ''}
+                                    ${booking.guest_address_2 ? `<tr><td class="text-start"><strong>Address 2:</strong></td><td>${booking.guest_address_2}</td></tr>` : ''}
                                 </table>
                                 
                                 <h5 class="mb-3 mt-4"><i class="fas fa-calendar-alt text-info me-2"></i>Booking Details</h5>
