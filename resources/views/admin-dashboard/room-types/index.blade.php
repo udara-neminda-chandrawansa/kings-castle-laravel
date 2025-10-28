@@ -163,8 +163,14 @@
                                                 </td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        <a href="{{ route('room-types.edit', $roomType) }}" class="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <a href="{{ route('room-types.edit', $roomType) }}" class="btn btn-primary shadow btn-xs sharp me-1"
+                                                           title="Edit Room Type">
                                                             <i class="fas fa-pencil-alt"></i>
+                                                        </a>
+                                                        
+                                                        <a href="{{ route('room-images.index', $roomType) }}" class="btn btn-info shadow btn-xs sharp me-1"
+                                                           title="Manage Gallery Images">
+                                                            <i class="fas fa-images"></i>
                                                         </a>
                                                         
                                                         <form action="{{ route('room-types.toggle-status', $roomType) }}" method="POST" class="d-inline me-1">

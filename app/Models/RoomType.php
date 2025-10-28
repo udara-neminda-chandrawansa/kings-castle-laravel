@@ -35,8 +35,59 @@ class RoomType extends Model
         return $this->hasMany(BookingRoom::class);
     }
 
+    public function roomImages()
+    {
+        return $this->hasMany(RoomImage::class)->ordered();
+    }
+
     public function getFormattedPriceAttribute()
     {
         return 'Rs ' . number_format($this->price_per_night, 2);
+    }
+
+    /**
+     * Get all images for this room type (main + gallery)
+     */
+    public function getAllImagesAttribute()
+    {
+        $images = collect();
+        
+        // Add main image if exists
+        if ($this->image_path) {
+            $images->push((object)[
+                'id' => 'main',
+                'image_path' => $this->image_path,
+                'alt_text' => $this->name . ' - Main Image',
+                'is_main' => true
+            ]);
+        }
+        
+        // Add gallery images
+        $this->roomImages->each(function($image) use ($images) {
+            $images->push((object)[
+                'id' => $image->id,
+                'image_path' => $image->image_path,
+                'alt_text' => $image->alt_text ?: $this->name,
+                'is_main' => false
+            ]);
+        });
+        
+        return $images;
+    }
+
+    /**
+     * Get display images (limited for performance)
+     */
+    public function getDisplayImagesAttribute()
+    {
+        return $this->getAllImages->take(5); // Limit to 5 images for display
+    }
+
+    /**
+     * Check if room type has gallery images
+     */
+    public function hasGallery()
+    {
+        return $this->roomImages()->count() > 0;
     }
 }

@@ -262,8 +262,11 @@
                                 </div>
                             </div>
 
-                            <div class="text-center mt-4">
-                                <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">
+                            <div class="text-end">
+                                <button type="reset" class="th-btn2 border btn-lg" id="resetBtn">
+                                    <i class="fas fa-times me-2"></i>Reset
+                                </button>
+                                <button type="submit" class="th-btn2 border btn-lg" id="submitBtn">
                                     <i class="fas fa-calendar-check me-2"></i>Book Now
                                 </button>
                             </div>

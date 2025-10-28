@@ -88,7 +88,7 @@ class RoomTypeController extends Controller
      */
     public function show(RoomType $roomType)
     {
-        $roomType->load('bookings');
+        $roomType->load(['bookings', 'roomImages']);
         return view('admin-dashboard.room-types.show', compact('roomType'));
     }
 
@@ -177,7 +177,9 @@ class RoomTypeController extends Controller
                 return back()->with('error', 'Cannot delete room type with existing bookings. Set it as inactive instead.');
             }
 
-            // Delete uploaded image if it exists
+            DB::beginTransaction();
+
+            // Delete main image if it exists
             if ($roomType->image_path && str_starts_with($roomType->image_path, 'upload/rooms/')) {
                 $imagePath = public_path($roomType->image_path);
                 if (file_exists($imagePath)) {
@@ -185,11 +187,26 @@ class RoomTypeController extends Controller
                 }
             }
 
+            // Delete all gallery images
+            foreach ($roomType->roomImages as $roomImage) {
+                if ($roomImage->image_path && str_starts_with($roomImage->image_path, 'upload/room-gallery/')) {
+                    $imagePath = public_path($roomImage->image_path);
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
+                }
+            }
+
+            // Delete room type (cascade will handle room images)
             $roomType->delete();
+
+            DB::commit();
+
             return redirect()->route('room-types.index')
                            ->with('success', 'Room type deleted successfully!');
 
         } catch (\Exception $e) {
+            DB::rollBack();
             return back()->with('error', 'Failed to delete room type. Please try again.');
         }
     }
