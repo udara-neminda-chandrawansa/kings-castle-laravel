@@ -28,12 +28,12 @@
               <h3 class="widget_title">Useful Links</h3>
               <div class="menu-all-pages-container">
                 <ul class="menu">
+                  <li><a href="/">Home</a></li>
                   <li><a href="/about">About Us</a></li>
-                  <li><a href="#">Featured Rooms</a></li>
-                  <li><a href="#">Our Best Services</a></li>
-                  <li><a href="#">Rquest a Booking</a></li>
-                  <li><a href="#">Career</a></li>
-                  <li><a href="#">FAQ</a></li>
+                  <li><a href="/services">Our Rooms</a></li>
+                  <li><a href="/privacy-policy">Privacy Policy</a></li>
+                  <li><a href="/return-policy">Return Policy</a></li>
+                  <li><a href="/terms-conditions">Terms & Conditions</a></li>
                 </ul>
               </div>
             </div>

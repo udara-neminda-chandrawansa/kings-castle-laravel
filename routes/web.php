@@ -4,6 +4,9 @@ use App\Http\Controllers\BookingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoomTypeController;
+use App\Http\Controllers\RoomImageController;
+use App\Http\Controllers\TourPackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,8 +59,22 @@ Route::get('/contact', function () {
     return view('public-site.contact');
 });
 Route::get('/room-details/{id}', function ($id) {
-    return view('public-site.room-details', ['id' => $id]);
+    $roomType = App\Models\RoomType::with('roomImages')->findOrFail($id);
+    return view('public-site.room-details', compact('roomType'));
 });
+
+Route::get('/privacy-policy', function () {
+    return view('public-site.policies.privacy-policy');
+})->name('privacy.policy');
+
+Route::get('/return-policy', function () {
+    return view('public-site.policies.return-policy');
+})->name('return.policy');
+
+Route::get('/terms-conditions', function () {
+    return view('public-site.policies.terms-conditions');
+})->name('terms.conditions');
+
 
 // Booking routes (public)
 Route::post('/check-availability', [BookingController::class, 'checkAvailability'])->name('booking.check-availability');
@@ -89,12 +106,24 @@ Route::middleware([
     Route::post('/booking/{id}/send-status-update', [BookingController::class, 'sendStatusUpdate'])->name('booking.send-status-update');
 
     // Room type management
-    Route::resource('room-types', App\Http\Controllers\RoomTypeController::class);
-    Route::patch('/room-types/{roomType}/toggle-status', [App\Http\Controllers\RoomTypeController::class, 'toggleStatus'])->name('room-types.toggle-status');
+    Route::resource('room-types', RoomTypeController::class);
+    Route::patch('/room-types/{roomType}/toggle-status', [RoomTypeController::class, 'toggleStatus'])->name('room-types.toggle-status');
+    
+    // Room image management
+    Route::get('/room-types/{roomType}/images', [RoomImageController::class, 'index'])->name('room-images.index');
+    Route::post('/room-types/{roomType}/images', [RoomImageController::class, 'store'])->name('room-images.store');
+    Route::put('/room-types/{roomType}/images/{roomImage}', [RoomImageController::class, 'update'])->name('room-images.update');
+    Route::delete('/room-types/{roomType}/images/{roomImage}', [RoomImageController::class, 'destroy'])->name('room-images.destroy');
+    Route::post('/room-types/{roomType}/images/sort-order', [RoomImageController::class, 'updateSortOrder'])->name('room-images.sort-order');
+    
+    // Debug route for testing
+    Route::post('/debug/test-json', function() {
+        return response()->json(['success' => true, 'message' => 'Test successful']);
+    })->name('debug.test');
 
     // Tour package management
-    Route::resource('tour-packages', App\Http\Controllers\TourPackageController::class);
-    Route::patch('/tour-packages/{tourPackage}/toggle-status', [App\Http\Controllers\TourPackageController::class, 'toggleStatus'])->name('tour-packages.toggle-status');
+    Route::resource('tour-packages', TourPackageController::class);
+    Route::patch('/tour-packages/{tourPackage}/toggle-status', [TourPackageController::class, 'toggleStatus'])->name('tour-packages.toggle-status');
 
     Route::get('/account', function () {
         return view('admin-dashboard.new-admin-account');

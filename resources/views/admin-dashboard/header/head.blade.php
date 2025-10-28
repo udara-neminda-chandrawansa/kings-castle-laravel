@@ -25,6 +25,7 @@
 	<meta name="twitter:description" content="">
 	<meta name="twitter:image" content="social-image.png">
 	<meta name="twitter:card" content="summary_large_image">
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- MOBILE SPECIFIC -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
