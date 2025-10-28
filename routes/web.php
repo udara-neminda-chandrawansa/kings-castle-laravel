@@ -88,6 +88,17 @@ Route::get('/booking/{id}/payment-redirect', [BookingController::class, 'payment
 Route::get('/payment/return', [BookingController::class, 'handleReturn'])->name('payment.return');
 Route::get('/payment/cancel', [BookingController::class, 'handleCancel'])->name('payment.cancel');
 
+// Tour booking routes (public)
+Route::get('/package/{tourPackage}', [TourPackageController::class, 'viewPackage'])->name('view-package');
+Route::post('/tour-booking', [TourPackageController::class, 'storeBooking'])->name('tour-booking.store');
+Route::get('/tour-booking/{tourPayment}', [TourPackageController::class, 'showBooking'])->name('tour-booking.show');
+Route::post('/tour-booking/{id}/payment', [TourPackageController::class, 'processPayment'])->name('tour-booking.payment');
+
+// Tour payment handling routes
+Route::post('/tour-payment/notify', [TourPackageController::class, 'handlePaymentNotify'])->name('tour-payment.notify');
+Route::get('/tour-payment/return', [TourPackageController::class, 'handlePaymentReturn'])->name('tour-payment.return');
+Route::get('/tour-payment/cancel', [TourPackageController::class, 'handlePaymentCancel'])->name('tour-payment.cancel');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
