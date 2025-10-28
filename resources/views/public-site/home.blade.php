@@ -345,7 +345,7 @@
 
             <div>
               <!-- Alternate button style for odd/even -->
-              <a href="#"
+              <a href="{{ route('room-details', $roomType->id) }}"
                  class="th-btn2 border">
                 VIEW DETAILS
               </a>
