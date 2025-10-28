@@ -28,7 +28,7 @@ class RoomImageController extends Controller
     {
         $request->validate([
             'images' => 'required|array|min:1|max:10',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // 5MB max
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,webp,bmp,tiff|max:10240', // 10MB max (will be compressed)
             'alt_texts' => 'nullable|array',
             'alt_texts.*' => 'nullable|string|max:255'
         ]);
@@ -40,10 +40,24 @@ class RoomImageController extends Controller
             $nextSortOrder = RoomImage::where('room_type_id', $roomType->id)->max('sort_order') + 1;
 
             foreach ($request->file('images') as $index => $image) {
-                // Generate unique filename
-                $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
-                $image->move(public_path('upload/room-gallery'), $imageName);
+                // Generate unique filename - prefer WebP but fallback to JPG
+                $webpSupported = function_exists('imagewebp');
+                $extension = $webpSupported ? '.webp' : '.jpg';
+                $imageName = time() . '_' . uniqid() . $extension;
                 $imagePath = 'upload/room-gallery/' . $imageName;
+                $fullImagePath = public_path($imagePath);
+
+                // Ensure directory exists
+                if (!file_exists(public_path('upload/room-gallery'))) {
+                    mkdir(public_path('upload/room-gallery'), 0755, true);
+                }
+
+                // Convert and compress image
+                $actualOutputPath = $this->convertToWebP($image, $fullImagePath);
+                
+                // Update imagePath with actual saved file path
+                $imagePath = str_replace(public_path(), '', $actualOutputPath);
+                $imagePath = ltrim($imagePath, '/');
 
                 // Get alt text for this image
                 $altText = $request->alt_texts[$index] ?? $roomType->name . ' - Gallery Image';
@@ -220,5 +234,112 @@ class RoomImageController extends Controller
                 'message' => 'Failed to update sort order. Please try again.'
             ], 500);
         }
+    }
+
+    /**
+     * Convert uploaded image to WebP format with compression (with fallback to JPEG)
+     */
+    private function convertToWebP($uploadedFile, $outputPath, $quality = 80)
+    {
+        // Check if WebP support is available
+        $webpSupported = function_exists('imagewebp');
+        
+        // If WebP not supported, change output to JPEG
+        if (!$webpSupported) {
+            $outputPath = str_replace('.webp', '.jpg', $outputPath);
+        }
+        
+        // Get the mime type of the uploaded file
+        $mimeType = $uploadedFile->getMimeType();
+        
+        // Create image resource based on file type
+        switch ($mimeType) {
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($uploadedFile->getPathname());
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($uploadedFile->getPathname());
+                // Preserve transparency for PNG
+                imagealphablending($image, false);
+                imagesavealpha($image, true);
+                break;
+            case 'image/gif':
+                $image = imagecreatefromgif($uploadedFile->getPathname());
+                break;
+            case 'image/webp':
+                if (function_exists('imagecreatefromwebp')) {
+                    $image = imagecreatefromwebp($uploadedFile->getPathname());
+                } else {
+                    throw new \Exception('WebP format not supported by this server');
+                }
+                break;
+            default:
+                throw new \Exception('Unsupported image format: ' . $mimeType);
+        }
+
+        if (!$image) {
+            throw new \Exception('Failed to create image resource from uploaded file');
+        }
+
+        // Get original dimensions
+        $originalWidth = imagesx($image);
+        $originalHeight = imagesy($image);
+
+        // Calculate new dimensions (max width/height: 1920px)
+        $maxDimension = 1920;
+        if ($originalWidth > $maxDimension || $originalHeight > $maxDimension) {
+            if ($originalWidth > $originalHeight) {
+                $newWidth = $maxDimension;
+                $newHeight = intval(($originalHeight / $originalWidth) * $maxDimension);
+            } else {
+                $newHeight = $maxDimension;
+                $newWidth = intval(($originalWidth / $originalHeight) * $maxDimension);
+            }
+        } else {
+            $newWidth = $originalWidth;
+            $newHeight = $originalHeight;
+        }
+
+        // Create new image with calculated dimensions
+        $resizedImage = imagecreatetruecolor($newWidth, $newHeight);
+        
+        // Preserve transparency for PNG/GIF (only if saving as WebP or PNG)
+        if (($mimeType === 'image/png' || $mimeType === 'image/gif') && $webpSupported) {
+            imagealphablending($resizedImage, false);
+            imagesavealpha($resizedImage, true);
+            $transparent = imagecolorallocatealpha($resizedImage, 255, 255, 255, 127);
+            imagefill($resizedImage, 0, 0, $transparent);
+        } elseif (!$webpSupported) {
+            // For JPEG fallback, fill with white background
+            $white = imagecolorallocate($resizedImage, 255, 255, 255);
+            imagefill($resizedImage, 0, 0, $white);
+        }
+
+        // Resize the image
+        imagecopyresampled(
+            $resizedImage, $image, 
+            0, 0, 0, 0, 
+            $newWidth, $newHeight, 
+            $originalWidth, $originalHeight
+        );
+
+        // Save in the best available format
+        if ($webpSupported) {
+            $result = imagewebp($resizedImage, $outputPath, $quality);
+        } else {
+            // Fallback to JPEG with high quality
+            $result = imagejpeg($resizedImage, $outputPath, $quality);
+        }
+
+        // Clean up memory
+        imagedestroy($image);
+        imagedestroy($resizedImage);
+
+        if (!$result) {
+            $format = $webpSupported ? 'WebP' : 'JPEG';
+            throw new \Exception("Failed to save {$format} image");
+        }
+
+        return $outputPath;
     }
 }
