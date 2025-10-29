@@ -160,13 +160,13 @@
                                 <div class="col-md-6">
                                     <div class="contact-item">
                                         <i class="fas fa-phone text-theme mb-10" style="font-size: 1.5rem;"></i>
-                                        <p><strong>Call Us</strong><br>+94 76 779 9721</p>
+                                        <p><strong>Call Us</strong><br>+94 777 611 290</p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="contact-item">
                                         <i class="fas fa-envelope text-theme mb-10" style="font-size: 1.5rem;"></i>
-                                        <p><strong>Email Us</strong><br>reservations@kingscastle.com</p>
+                                        <p><strong>Email Us</strong><br>reservation@kingcastle.com</p>
                                     </div>
                                 </div>
                                 <div class="col-md-12">

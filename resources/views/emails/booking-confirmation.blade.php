@@ -223,19 +223,19 @@
                 @else
                 <p>Your booking is confirmed! We look forward to welcoming you to Kings Castle Hotel.</p>
                 @endif
-                
+
                 <p><strong>Check-in:</strong> 2:00 PM<br>
                 <strong>Check-out:</strong> 12:00 PM</p>
-                
-                <p>If you have any questions or need to make changes to your booking, please contact us at <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> or call us at +94 76 779 9721.</p>
+
+                <p>If you have any questions or need to make changes to your booking, please contact us at <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a> or call us at +94 777 611 290.</p>
             </div>
         </div>
 
         <div class="footer">
             <p>&copy; {{ date('Y') }} Kings Castle Hotel. All rights reserved.</p>
             <p>
-                <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> | 
-                <a href="tel:+94123456789">+94 76 779 9721</a>
+                <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a> |
+                <a href="tel:+94777611290">+94 777 611 290</a>
             </p>
             <p>No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</p>
         </div>

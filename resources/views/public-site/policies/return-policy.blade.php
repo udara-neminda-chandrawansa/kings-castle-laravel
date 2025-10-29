@@ -31,7 +31,7 @@
                         </div>
 
                         <p class="mt-3 wow fadeInUp" data-wow-delay=".4s">
-                            At <strong>Kings Castle Hotels</strong>, we value your trust and are committed to providing a smooth and transparent booking experience. 
+                            At <strong>Kings Castle Hotels</strong>, we value your trust and are committed to providing a smooth and transparent booking experience.
                             This policy outlines the terms for cancellations, refunds, and booking amendments for guests staying with us.
                         </p>
 
@@ -51,20 +51,20 @@
 
                         <h4 class="mt-4 wow fadeInUp" data-wow-delay=".8s">2. Modifications to Reservations</h4>
                         <p class="wow fadeInUp" data-wow-delay=".9s">
-                            Guests may request date changes or booking modifications up to <strong>5 days before arrival</strong>, 
-                            subject to room availability and applicable rate differences. 
+                            Guests may request date changes or booking modifications up to <strong>5 days before arrival</strong>,
+                            subject to room availability and applicable rate differences.
                             Modification requests made after this period will be treated as cancellations.
                         </p>
 
                         <h4 class="mt-4 wow fadeInUp" data-wow-delay="1s">3. Early Departures</h4>
                         <p class="wow fadeInUp" data-wow-delay="1.1s">
-                            Guests who check out earlier than the confirmed departure date are not entitled to refunds for unused nights, 
+                            Guests who check out earlier than the confirmed departure date are not entitled to refunds for unused nights,
                             unless otherwise approved by hotel management under special circumstances.
                         </p>
 
                         <h4 class="mt-4 wow fadeInUp" data-wow-delay="1.2s">4. Refund Process</h4>
                         <p class="wow fadeInUp" data-wow-delay="1.3s">
-                            Once a cancellation or refund is approved, refunds will be processed within <strong>7–10 business days</strong> 
+                            Once a cancellation or refund is approved, refunds will be processed within <strong>7–10 business days</strong>
                             using the same payment method used for the booking.
                         </p>
                         <p class="wow fadeInUp" data-wow-delay="1.4s">
@@ -73,13 +73,13 @@
 
                         <h4 class="mt-4 wow fadeInUp" data-wow-delay="1.5s">5. Non-Refundable Bookings</h4>
                         <p class="wow fadeInUp" data-wow-delay="1.6s">
-                            Some discounted or promotional bookings are offered as <strong>non-refundable</strong>. 
+                            Some discounted or promotional bookings are offered as <strong>non-refundable</strong>.
                             Once confirmed, these bookings cannot be modified, canceled, or refunded under any circumstances.
                         </p>
 
                         <h4 class="mt-4 wow fadeInUp" data-wow-delay="1.7s">6. Force Majeure Conditions</h4>
                         <p class="wow fadeInUp" data-wow-delay="1.8s">
-                            In cases of natural disasters, government restrictions, or other unforeseen circumstances beyond the hotel’s control, 
+                            In cases of natural disasters, government restrictions, or other unforeseen circumstances beyond the hotel’s control,
                             the management reserves the right to modify or waive cancellation charges based on the situation.
                         </p>
 
@@ -91,12 +91,12 @@
                         <ul class="wow fadeInUp" data-wow-delay="2s">
                             <li><strong>Kings Castle Hotels</strong></li>
                             <li>Address: No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</li>
-                            <li>Email: <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a></li>
-                            <li>Phone: <a href="tel:+94767799721">+94 76 779 9721</a></li>
+                            <li>Email: <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a></li>
+                            <li>Phone: <a href="tel:+94767799721">+94 777 611 290</a></li>
                         </ul>
 
                         <p class="mt-4 wow fadeInUp" data-wow-delay="2.1s">
-                            Thank you for choosing <strong>Kings Castle Hotels</strong>. 
+                            Thank you for choosing <strong>Kings Castle Hotels</strong>.
                             We appreciate your understanding and cooperation in ensuring a fair and pleasant booking experience for all our guests.
                         </p>
                     </div>

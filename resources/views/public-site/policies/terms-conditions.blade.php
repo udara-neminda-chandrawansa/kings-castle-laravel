@@ -132,8 +132,8 @@
                         <ul class="wow fadeInUp" data-wow-delay="2.9s">
                             <li><strong>Kings Castle Hotels</strong></li>
                             <li>Address: No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</li>
-                            <li>Email: <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a></li>
-                            <li>Phone: <a href="tel:+94767799721">+94 76 779 9721</a></li>
+                            <li>Email: <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a></li>
+                            <li>Phone: <a href="tel:+94767799721">+94 777 611 290</a></li>
                         </ul>
 
                         <p class="mt-4 wow fadeInUp" data-wow-delay="3s">

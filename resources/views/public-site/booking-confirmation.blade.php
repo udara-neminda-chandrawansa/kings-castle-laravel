@@ -87,7 +87,7 @@
                         <div class="col-md-6 mb-4">
                             <h5><i class="fas fa-bed me-2"></i>Room Details</h5>
                             <div class="ps-3">
-                                <p class="mb-1"><strong>Room Types:</strong> 
+                                <p class="mb-1"><strong>Room Types:</strong>
                                     @if($booking->roomTypes->count() > 0)
                                         {{ $booking->room_type_names }}
                                     @else
@@ -207,10 +207,10 @@
                     <p class="mb-2">Contact us for any questions about your booking:</p>
                     <p class="mb-0">
                         <i class="fas fa-phone me-2"></i>
-                        <a href="tel:+94767799721">+94 76 779 9721</a>
+                        <a href="tel:+94767799721">+94 777 611 290</a>
                         <span class="mx-3">|</span>
                         <i class="fas fa-envelope me-2"></i>
-                        <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a>
+                        <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a>
                     </p>
                 </div>
             </div>

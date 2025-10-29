@@ -79,12 +79,12 @@ class TourBookingController extends Controller
             DB::commit();
 
             $tourBookingN = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($tourBooking->id);
-            
+
             // Send confirmation email to guest
             Mail::to($tourBookingN->guest_email)->send(new TourBookingConfirmation($tourBookingN));
-            
+
             // Send notification email to admin
-            Mail::to('reservations@kingscastle.com')->send(new AdminTourBookingNotification($tourBookingN));
+            Mail::to('reservation@kingcastle.com')->send(new AdminTourBookingNotification($tourBookingN));
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -128,7 +128,7 @@ class TourBookingController extends Controller
     public function processPayment($id)
     {
         $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
-        
+
         if (!$tourBooking->tourPackage->is_active) {
             return back()->with('error', 'This tour package is no longer available.');
         }
@@ -178,7 +178,7 @@ class TourBookingController extends Controller
     {
         try {
             $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
-            
+
             return response()->json([
                 'success' => true,
                 'booking' => [
@@ -229,9 +229,9 @@ class TourBookingController extends Controller
     {
         try {
             $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
-            
+
             Mail::to($tourBooking->guest_email)->send(new TourBookingConfirmation($tourBooking));
-            
+
             Log::info('Manual tour booking confirmation email sent', [
                 'tour_booking_id' => $tourBooking->id,
                 'email' => $tourBooking->guest_email,
@@ -244,7 +244,7 @@ class TourBookingController extends Controller
                 'tour_booking_id' => $id,
                 'error' => $e->getMessage()
             ]);
-            
+
             return back()->with('error', 'Failed to send email. Please try again.');
         }
     }
@@ -256,13 +256,13 @@ class TourBookingController extends Controller
     {
         try {
             $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
-            
+
             if (!$tourBooking->tourPayment || $tourBooking->tourPayment->payment_status !== 'paid') {
                 return back()->with('error', 'Payment must be completed before sending payment confirmation.');
             }
-            
+
             Mail::to($tourBooking->guest_email)->send(new TourPaymentConfirmation($tourBooking));
-            
+
             Log::info('Manual tour payment confirmation email sent', [
                 'tour_booking_id' => $tourBooking->id,
                 'email' => $tourBooking->guest_email,
@@ -275,7 +275,7 @@ class TourBookingController extends Controller
                 'tour_booking_id' => $id,
                 'error' => $e->getMessage()
             ]);
-            
+
             return back()->with('error', 'Failed to send email. Please try again.');
         }
     }
@@ -287,9 +287,9 @@ class TourBookingController extends Controller
     {
         try {
             $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
-            
+
             Mail::to($tourBooking->guest_email)->send(new TourBookingStatusUpdate($tourBooking, $tourBooking->status));
-            
+
             Log::info('Manual tour status update email sent', [
                 'tour_booking_id' => $tourBooking->id,
                 'email' => $tourBooking->guest_email,
@@ -303,7 +303,7 @@ class TourBookingController extends Controller
                 'tour_booking_id' => $id,
                 'error' => $e->getMessage()
             ]);
-            
+
             return back()->with('error', 'Failed to send email. Please try again.');
         }
     }
@@ -344,7 +344,7 @@ class TourBookingController extends Controller
         if ($generatedHash == $request->md5sig && $request->status_code == 2) {
             // Payment is successful
             $tourPayment = \App\Models\TourPayment::with(['tourBooking.tourPackage'])->find($request->order_id);
-            
+
             if ($tourPayment) {
                 $tourPayment->update([
                     'payment_status' => 'paid',
@@ -363,7 +363,7 @@ class TourBookingController extends Controller
                 }
 
                 $tourBooking = $tourPayment->tourBooking;
-            
+
                 Mail::to($tourBooking->guest_email)->send(new TourPaymentConfirmation($tourBooking));
             }
 
@@ -371,11 +371,11 @@ class TourBookingController extends Controller
         } else {
             // Payment failed or invalid
             $tourPayment = \App\Models\TourPayment::find($request->order_id);
-            
+
             if ($tourPayment) {
                 $tourPayment->update(['payment_status' => 'failed']);
             }
-            
+
             return response('Payment verification failed', 400);
         }
     }

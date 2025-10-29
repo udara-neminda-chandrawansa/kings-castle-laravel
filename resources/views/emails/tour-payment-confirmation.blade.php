@@ -227,11 +227,11 @@
             <div style="margin-top: 30px; padding: 20px; background: #e8f5e8; border-radius: 8px;">
                 <h4 style="color: #155724; margin-top: 0;">Your Tour is Confirmed!</h4>
                 <p>Your payment has been successfully processed and your tour is now fully confirmed. Here are the important details for your tour:</p>
-                
+
                 <p><strong>Meeting Point:</strong> Hotel Lobby<br>
                 <strong>Departure Time:</strong> 8:00 AM (Please arrive 15 minutes early)<br>
                 <strong>Tour Date:</strong> {{ $tourBooking->tour_date->format('l, F j, Y') }}</p>
-                
+
                 <p><strong>Important Reminders:</strong></p>
                 <ul style="margin: 10px 0; padding-left: 20px;">
                     <li>Bring comfortable walking shoes</li>
@@ -239,7 +239,7 @@
                     <li>Carry a water bottle to stay hydrated</li>
                     <li>Bring your camera for memorable moments</li>
                 </ul>
-                
+
                 <p>A confirmation email with all tour details has been sent separately. If you need to make any changes or have questions, please contact us immediately.</p>
             </div>
         </div>
@@ -247,8 +247,8 @@
         <div class="footer">
             <p>Thank you for choosing Kings Castle Hotel!</p>
             <p>
-                <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> | 
-                <a href="tel:+94767799721">+94 76 779 9721</a>
+                <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a> |
+                <a href="tel:+94767799721">+94 777 611 290</a>
             </p>
             <p>No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</p>
             <p>&copy; {{ date('Y') }} Kings Castle Hotel. All rights reserved.</p>

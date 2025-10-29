@@ -90,7 +90,7 @@
             <div class="media-body">
               <span class="call-label">For Reservation</span>
               <p class="call-link">
-                <a href="tel:+94767799721">+94 76 779 9721</a>
+                <a href="tel:+94767799721">+94 777 611 290</a>
               </p>
             </div>
           </div>

@@ -175,7 +175,7 @@
 
         <div class="content">
             <h2>Dear {{ $tourBooking->guest_name }},</h2>
-            
+
             @if($tourBooking->status === 'confirmed')
                 <p>Great news! Your tour booking has been confirmed. We're excited to provide you with an amazing tour experience.</p>
             @elseif($tourBooking->status === 'cancelled')
@@ -188,7 +188,7 @@
 
             <div class="status-info status-{{ $tourBooking->status }}">
                 <h3>Current Status: <span class="status-badge {{ $tourBooking->status }}">{{ ucfirst($tourBooking->status) }}</span></h3>
-                
+
                 @if($tourBooking->status === 'confirmed')
                     <p><strong>Your tour is now confirmed!</strong> Please make sure to arrive at the meeting point on time.</p>
                 @elseif($tourBooking->status === 'cancelled')
@@ -253,7 +253,7 @@
                     <h4 style="color: #155724; margin-top: 0;">Important Information</h4>
                     <p><strong>Meeting Point:</strong> Hotel Lobby<br>
                     <strong>Departure Time:</strong> 8:00 AM (Please arrive 15 minutes early)</p>
-                    
+
                     <p><strong>What to Bring:</strong></p>
                     <ul style="margin: 10px 0; padding-left: 20px;">
                         <li>Comfortable walking shoes</li>
@@ -271,16 +271,16 @@
                     <h4 style="margin-top: 0;">Need Assistance?</h4>
                     <p>If you have any questions about this status update, please don't hesitate to contact us.</p>
                 @endif
-                
-                <p>For any questions or assistance, please contact us at <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> or call us at +94 76 779 9721.</p>
+
+                <p>For any questions or assistance, please contact us at <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a> or call us at +94 777 611 290.</p>
             </div>
         </div>
 
         <div class="footer">
             <p>&copy; {{ date('Y') }} Kings Castle Hotel. All rights reserved.</p>
             <p>
-                <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> | 
-                <a href="tel:+94767799721">+94 76 779 9721</a>
+                <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a> |
+                <a href="tel:+94767799721">+94 777 611 290</a>
             </p>
             <p>No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</p>
         </div>

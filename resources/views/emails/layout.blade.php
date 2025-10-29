@@ -85,7 +85,7 @@
 <body>
     <div class="container">
         @yield('header')
-        
+
         <div class="content">
             @yield('content')
         </div>
@@ -93,8 +93,8 @@
         <div class="footer">
             <p>&copy; {{ date('Y') }} Kings Castle Hotel. All rights reserved.</p>
             <p>
-                <a href="mailto:reservations@kingscastle.com">reservations@kingscastle.com</a> | 
-                <a href="tel:+94123456789">+94 76 779 9721</a>
+                <a href="mailto:reservation@kingcastle.com">reservation@kingcastle.com</a> |
+                <a href="tel:+94777611290">+94 777 611 290</a>
             </p>
             <p>No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka</p>
         </div>

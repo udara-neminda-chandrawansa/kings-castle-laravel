@@ -224,7 +224,7 @@
       <div class="col-lg-6 col-xxl-4">
         <div class="img-box1">
           <div class="img1">
-            <img src="assets/img/drive-images-2-webp/kc28-se.webp" alt="About"
+            <img src="assets/img/drive-images-2-webp/kc28-se.jpg" alt="About"
               style="height: 700px;aspect-ratio: 9/16; object-fit: cover;" />
           </div>
           <div class="about-wrapp">
@@ -586,7 +586,7 @@
                 <div class="signature">
                   <img src="assets/img/normal/signature.svg" alt="signature" />
                 </div>
-                <span class="text">Andrew Karlex</span>
+                <span class="text">Dr Saman Edirisinghe - Chairmen</span>
               </div>
             </div>
           </div>
@@ -736,7 +736,7 @@
     <div class="row justify-content-center">
       <div class="col-xxl-4">
         <div class="title-area text-center">
-          <span class="sub-title">INSTAGRAM FEED</span>
+          {{-- <span class="sub-title">INSTAGRAM FEED</span> --}}
           <h2 class="sec-title">Relax In The Comfort Of Our Hotel</h2>
           <div class="title-img">
             <img src="assets/img/theme-img/title_icon.svg" alt="Icon" />

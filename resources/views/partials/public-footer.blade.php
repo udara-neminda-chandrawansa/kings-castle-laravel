@@ -68,7 +68,7 @@
                 <div class="info-box">
                   <div class="box-icon"><i class="fal fa-phone"></i></div>
                   <p class="box-text">
-                    <a href="tel:+94767799721" class="box-link">+94 76 779 9721</a>
+                    <a href="tel:+94767799721" class="box-link">+94 777 611 290</a>
 
 
                   </p>
@@ -76,7 +76,7 @@
                 <div class="info-box">
                   <div class="box-icon"><i class="fal fa-envelope"></i></div>
                   <p class="box-text">
-                    <a href="mailto:reservations@kingscastle.com" class="box-link">reservations@kingscastle.com</a>
+                    <a href="mailto:reservation@kingcastle.com" class="box-link">reservation@kingcastle.com</a>
                   </p>
                 </div>
               </div>

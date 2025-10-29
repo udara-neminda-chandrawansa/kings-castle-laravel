@@ -108,7 +108,7 @@
             <div class="media-body">
               <span class="call-label text-white">Booking Now</span>
               <p class="call-link text-white">
-                <a href="tel:+94767799721">+94 76 779 9721</a>
+                <a href="tel:+94767799721">+94 777 611 290</a>
               </p>
             </div>
           </div>
