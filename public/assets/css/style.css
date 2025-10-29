@@ -5654,7 +5654,7 @@ ol.wp-block-rss {
   margin-bottom: 50px;
   position: relative;
 }
-.footer-widget.footer-line:before {
+/* .footer-widget.footer-line:before {
   content: "";
   position: absolute;
   top: 0;
@@ -5662,7 +5662,7 @@ ol.wp-block-rss {
   background-color: #333333;
   width: 1px;
   height: 300px;
-}
+} */
 @media (max-width: 1399px) {
   .footer-widget.footer-line:before {
     display: none;
@@ -6907,7 +6907,9 @@ ol.wp-block-rss {
   margin: 0 30px 0 0;
 }
 .widget-area {
-  padding-top: 100px;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 30px;
   padding-bottom: 0px;
 }
 .sticky-footer {
@@ -7253,7 +7255,7 @@ ol.wp-block-rss {
 .footer-layout1 .footer-logo {
   position: relative;
   text-align: center;
-  padding-top: 80px;
+  padding-top: 30px;
 }
 @media (max-width: 991px) {
   .footer-layout1 .footer-logo {
@@ -7712,6 +7714,7 @@ ol.wp-block-rss {
   line-height: 1.5;
 }
 .info-box .box-link {
+  font-family: serif;
   display: inline-block;
   color: var(--body-color);
 }
@@ -25471,4 +25474,8 @@ span.select2-selection.select2-selection--single:focus {
 
 .room-card.style2.style-flex .box-text, .newsletter-title, .room-box .box-title, .testi-grid .box-text, .testi-grid .box-title, .testi-grid .box-desig, .testi-card .box-desig{
   color: var(--white-color);
+}
+
+.font-serif{
+  font-family: serif;
 }

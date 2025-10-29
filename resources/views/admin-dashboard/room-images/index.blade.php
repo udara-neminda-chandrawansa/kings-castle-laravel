@@ -36,6 +36,21 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
+                
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show">
+                        {{ session('success') }}
+                        <button type="button" class="btn-close p-0" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close p-0" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
+                
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <div>
@@ -52,20 +67,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if(session('success'))
-                            <div class="alert alert-success alert-dismissible fade show">
-                                {{ session('success') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
-                        @if(session('error'))
-                            <div class="alert alert-danger alert-dismissible fade show">
-                                {{ session('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        @endif
-
                         <!-- Room Type Info -->
                         <div class="row mb-4">
                             <div class="col-md-3">
@@ -91,7 +92,7 @@
                         @if($roomType->roomImages->count() > 0)
                         <div class="row" id="gallery-container">
                             @foreach($roomType->roomImages as $image)
-                            <div class="col-lg-3 col-md-4 col-sm-6 mb-4" data-image-id="{{ $image->id }}">
+                            <div class="col-lg-3 col-md-4 col-sm-6" data-image-id="{{ $image->id }}">
                                 <div class="card gallery-item">
                                     <div class="position-relative">
                                         <img src="{{ asset($image->image_path) }}" alt="{{ $image->alt_text }}" 
@@ -99,7 +100,7 @@
                                         
                                         <!-- Overlay with actions -->
                                         <div class="position-absolute top-0 end-0 p-2">
-                                            <div class="btn-group-vertical">
+                                            <div class="">
                                                 <button class="btn btn-sm btn-warning edit-image-btn" 
                                                         data-image-id="{{ $image->id }}"
                                                         data-alt-text="{{ $image->alt_text }}"
@@ -107,11 +108,22 @@
                                                         title="Edit">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
-                                                <button class="btn btn-sm btn-danger delete-image-btn" 
+                                                {{-- <button class="btn btn-sm btn-danger delete-image-btn" 
                                                         data-image-id="{{ $image->id }}"
                                                         title="Delete">
                                                     <i class="fas fa-trash"></i>
-                                                </button>
+                                                </button> --}}
+
+                                                <form action="{{ route('room-images.destroy', [$roomType, $image]) }}" method="POST"
+                                                    class="d-inline delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-danger delete-btn"
+                                                        title="Delete Booking">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
 
@@ -441,6 +453,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
         }
+    });
+
+    // Handle delete confirmation with SweetAlert2
+    document.querySelectorAll('.delete-btn').forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const form = this.closest('.delete-form');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete this booking? This action cannot be undone!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
     });
 });
 </script>
