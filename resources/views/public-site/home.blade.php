@@ -586,7 +586,7 @@
                 <div class="signature">
                   <img src="assets/img/normal/signature.svg" alt="signature" />
                 </div>
-                <span class="text">Dr Saman Edirisinghe - Chairmen</span>
+                <span class="text" style="color: white">Dr Saman Edirisinghe - Chairmen</span>
               </div>
             </div>
           </div>
