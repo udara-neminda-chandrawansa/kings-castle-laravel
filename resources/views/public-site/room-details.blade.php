@@ -4,7 +4,7 @@
 
 <!--breadcrumb-->
 <div class="breadcumb-banner">
-  <div class="breadcumb-wrapper" data-bg-src="/assets/img/drive-images-2-webp/kc5.webp">
+  <div class="breadcumb-wrapper" data-bg-src="/assets/img/drive-images-2-webp/kc5.jpg">
     <div
       style="position: absolute; width: 100%; height: 100%; left: 0%; top: 0%; background-color: black; opacity: .6;">
     </div>
@@ -247,22 +247,22 @@
   document.addEventListener('DOMContentLoaded', function() {
     const checkInInput = document.getElementById('check_in');
     const checkOutInput = document.getElementById('check_out');
-    
+
     // Update check-out minimum date when check-in changes
     checkInInput.addEventListener('change', function() {
         const checkInDate = new Date(this.value);
         const nextDay = new Date(checkInDate);
         nextDay.setDate(checkInDate.getDate() + 1);
-        
+
         const minCheckOut = nextDay.toISOString().split('T')[0];
         checkOutInput.setAttribute('min', minCheckOut);
-        
+
         // If current check-out is before new minimum, update it
         if (checkOutInput.value && checkOutInput.value <= this.value) {
             checkOutInput.value = minCheckOut;
         }
     });
-    
+
     // Validate that check-out is after check-in
     checkOutInput.addEventListener('change', function() {
         if (checkInInput.value && this.value <= checkInInput.value) {

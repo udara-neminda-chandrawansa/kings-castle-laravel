@@ -772,7 +772,7 @@
       <div class="col-md-6 col-xxl-3">
         <div class="gallery-insta">
           <a target="_blank" href="#" class="box-btn"><i class="fab fa-instagram hidden"></i></a>
-          <img src="assets/img/drive-images-2-webp/kc5.webp" alt="Image" style="aspect-ratio: 9/16;" />
+          <img src="assets/img/drive-images-2-webp/kc5.jpg" alt="Image" style="aspect-ratio: 9/16;" />
         </div>
       </div>
       <div class="col-md-6 col-xxl-3">

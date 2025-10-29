@@ -3,7 +3,7 @@
 @section('content')
 <!--breadcrumb-->
 <div class="breadcumb-banner">
-    <div class="breadcumb-wrapper" data-bg-src="assets/img/drive-images-2-webp/kc5.webp">
+    <div class="breadcumb-wrapper" data-bg-src="assets/img/drive-images-2-webp/kc5.jpg">
         <div
             style="position: absolute; width: 100%; height: 100%; left: 0%; top: 0%; background-color: black; opacity: .6;">
         </div>
