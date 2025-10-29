@@ -8,7 +8,7 @@
     King's Castle, Lake Front By Laksam
   </title>
   <meta name="author" content="King's Castle" />
-  <meta name="description" content="Experience luxury and comfort at King's Castle, Lake Front By Laksam." />
+  <meta name="description" content="Experience luxury and comfort at King's Castle, Lake Front By Laksam" />
   <meta name="keywords" content="King's Castle" />
   <meta name="robots" content="INDEX,FOLLOW" />
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
