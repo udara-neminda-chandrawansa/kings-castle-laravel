@@ -549,21 +549,21 @@
       <div class="col-xl-5 mb-35 mb-xl-0">
         <div class="img-box2">
           <div class="img1 th-parallax">
-            <img src="assets/img/places/nuwa-eliya.webp" alt="Image" />
+            {{-- <img src="assets/img/places/nuwa-eliya.webp" alt="Image" /> --}}
           </div>
         </div>
       </div>
       <div class="col-xl-6">
         <div class="ps-xl-5 space-extra2">
           <div class="title-area mb-37">
-            <span class="sub-title">MANAGER</span>
+            {{-- <span class="sub-title">MANAGER</span --}}
             <h2 class="sec-title text-white">
-              The King Castle In The <span>Heart of Nuwara Eliya</span>
+              King Castle Lake Front by LAKSAM <span> Nuwara Eliya</span>
             </h2>
             <img src="assets/img/theme-img/title_icon2.svg" alt="shape" />
           </div>
           <p class="fs-18 text-white">
-            King Castle is a modern, upscale hospitality company that
+            King Castle Lake Front by LAKSAM is a modern, upscale hospitality company that
             is passionate about ‘making moments’, recognising that small
             gestures make a big difference to our guests, our owners and our
             people. We do ordinary things in an extraordinary way – a
