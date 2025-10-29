@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Mail\TourBookingConfirmation;
 use App\Mail\TourPaymentConfirmation;
 use App\Mail\TourBookingStatusUpdate;
+use App\Mail\AdminTourBookingNotification;
 
 class TourBookingController extends Controller
 {
@@ -79,7 +80,11 @@ class TourBookingController extends Controller
 
             $tourBookingN = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($tourBooking->id);
             
+            // Send confirmation email to guest
             Mail::to($tourBookingN->guest_email)->send(new TourBookingConfirmation($tourBookingN));
+            
+            // Send notification email to admin
+            Mail::to('udaraneminda@gmail.com')->send(new AdminTourBookingNotification($tourBookingN));
 
             if ($request->expectsJson()) {
                 return response()->json([

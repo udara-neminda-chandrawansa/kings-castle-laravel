@@ -371,7 +371,7 @@
                                 <tbody>
                                     @foreach($tourBookings as $tourBooking)
                                     <tr>
-                                        <td><strong class="text-secondary">#{{ $tourBooking->booking_reference }}</strong></td>
+                                        <td><strong class="text-primary">#{{ $tourBooking->booking_reference }}</strong></td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="ms-2">
@@ -398,7 +398,7 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge badge-outline-secondary">
+                                            <span class="badge badge-outline-primary">
                                                 {{ $tourBooking->participants }} Participants
                                             </span>
                                         </td>

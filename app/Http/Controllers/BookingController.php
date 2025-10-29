@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\BookingConfirmation;
 use App\Mail\PaymentConfirmation;
 use App\Mail\BookingStatusUpdate;
+use App\Mail\AdminRoomBookingNotification;
 
 class BookingController extends Controller
 {
@@ -250,8 +251,15 @@ class BookingController extends Controller
             try {
                 // Load relationships for email
                 $booking->load(['roomTypes', 'payment']);
+                
+                // Send confirmation email to guest
                 Mail::to($booking->guest_email)->send(new BookingConfirmation($booking));
                 Log::info('Booking confirmation email sent', ['booking_id' => $booking->id, 'email' => $booking->guest_email]);
+                
+                // Send notification email to admin
+                Mail::to('udaraneminda@gmail.com')->send(new AdminRoomBookingNotification($booking));
+                Log::info('Admin room booking notification sent', ['booking_id' => $booking->id, 'admin_email' => 'udaraneminda@gmail.com']);
+                
             } catch (\Exception $emailException) {
                 Log::error('Failed to send booking confirmation email', [
                     'booking_id' => $booking->id,
@@ -425,6 +433,8 @@ class BookingController extends Controller
 
         // Update booking status
         $booking->update(['status' => 'confirmed']);
+
+        Mail::to($booking->guest_email)->send(new BookingStatusUpdate($booking, $booking->status));
 
         return view('public-site.payhere-redirect', compact('paymentData'));
 
