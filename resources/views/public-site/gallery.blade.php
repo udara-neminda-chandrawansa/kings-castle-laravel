@@ -95,8 +95,8 @@
       <div class="col-lg-4 filter-item cat1 cat2">
         <div class="gallery-card2 style2">
           <div class="box-img">
-            <img src="assets/img/drive-images-2-webp/kc7.webp" alt="gallery image" />
-            <a href="assets/img/drive-images-2-webp/kc7.webp" class="simple-btn popup-image"><i
+            <img src="assets/img/drive-images-2-webp/kc7.jpg" alt="gallery image" />
+            <a href="assets/img/drive-images-2-webp/kc7.jpg" class="simple-btn popup-image"><i
                 class="fa-sharp fa-light fa-plus"></i></a>
           </div>
         </div>
