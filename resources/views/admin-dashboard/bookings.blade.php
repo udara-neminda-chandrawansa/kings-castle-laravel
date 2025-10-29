@@ -426,6 +426,43 @@
                                                     <i class="fas fa-eye"></i>
                                                 </button>
                                                 
+                                                {{-- <!-- Email Actions Dropdown -->
+                                                <div class="dropdown">
+                                                    <button class="btn btn-warning shadow btn-xs sharp me-1 dropdown-toggle" 
+                                                            type="button" 
+                                                            id="tourEmailDropdown{{ $tourBooking->id }}" 
+                                                            data-bs-toggle="dropdown" 
+                                                            aria-expanded="false"
+                                                            title="Send Email">
+                                                        <i class="fas fa-envelope"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu" aria-labelledby="tourEmailDropdown{{ $tourBooking->id }}">
+                                                        <li>
+                                                            <a class="dropdown-item" href="#" 
+                                                               onclick="sendTourEmail({{ $tourBooking->id }}, 'confirmation')">
+                                                                <i class="fas fa-check-circle text-primary me-2"></i>
+                                                                Booking Confirmation
+                                                            </a>
+                                                        </li>
+                                                        @if($tourBooking->tourPayment && $tourBooking->tourPayment->payment_status === 'paid')
+                                                        <li>
+                                                            <a class="dropdown-item" href="#" 
+                                                               onclick="sendTourEmail({{ $tourBooking->id }}, 'payment')">
+                                                                <i class="fas fa-credit-card text-success me-2"></i>
+                                                                Payment Confirmation
+                                                            </a>
+                                                        </li>
+                                                        @endif
+                                                        <li>
+                                                            <a class="dropdown-item" href="#" 
+                                                               onclick="sendTourEmail({{ $tourBooking->id }}, 'status')">
+                                                                <i class="fas fa-info-circle text-info me-2"></i>
+                                                                Status Update
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div> --}}
+                                                
                                                 <form action="{{ route('tour-bookings.destroy', $tourBooking->id) }}" method="POST"
                                                     class="d-inline delete-form">
                                                     @csrf
@@ -612,6 +649,91 @@ function viewTourBooking(id) {
             });
         });
 }
+
+// Tour Email Sending Function
+// function sendTourEmail(bookingId, emailType) {
+//     let route = '';
+//     let emailTitle = '';
+//     let confirmText = '';
+    
+//     switch(emailType) {
+//         case 'confirmation':
+//             route = `{{ url('/tour-bookings') }}/${bookingId}/send-confirmation`;
+//             emailTitle = 'Send Booking Confirmation';
+//             confirmText = 'Are you sure you want to send the booking confirmation email?';
+//             break;
+//         case 'payment':
+//             route = `{{ url('/tour-bookings') }}/${bookingId}/send-payment-confirmation`;
+//             emailTitle = 'Send Payment Confirmation';
+//             confirmText = 'Are you sure you want to send the payment confirmation email?';
+//             break;
+//         case 'status':
+//             route = `{{ url('/tour-bookings') }}/${bookingId}/send-status-update`;
+//             emailTitle = 'Send Status Update';
+//             confirmText = 'Are you sure you want to send the status update email?';
+//             break;
+//         default:
+//             return;
+//     }
+
+//     Swal.fire({
+//         title: emailTitle,
+//         text: confirmText,
+//         icon: 'question',
+//         showCancelButton: true,
+//         confirmButtonColor: '#3085d6',
+//         cancelButtonColor: '#d33',
+//         confirmButtonText: 'Yes, Send Email',
+//         cancelButtonText: 'Cancel'
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             // Show loading
+//             Swal.fire({
+//                 title: 'Sending Email...',
+//                 text: 'Please wait while we send the email.',
+//                 allowOutsideClick: false,
+//                 allowEscapeKey: false,
+//                 showConfirmButton: false,
+//                 willOpen: () => {
+//                     Swal.showLoading();
+//                 }
+//             });
+
+//             // Send email request
+//             fetch(route, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+//                 }
+//             })
+//             .then(response => response.json())
+//             .then(data => {
+//                 Swal.close();
+//                 if (data.success) {
+//                     Swal.fire({
+//                         title: 'Email Sent!',
+//                         text: data.message || 'Email has been sent successfully.',
+//                         icon: 'success',
+//                         confirmButtonText: 'OK'
+//                     });
+//                 } else {
+//                     throw new Error(data.message || 'Failed to send email');
+//                 }
+//             })
+//             .catch(error => {
+//                 Swal.close();
+//                 console.error('Error:', error);
+//                 Swal.fire({
+//                     title: 'Error',
+//                     text: 'Failed to send email. Please try again.',
+//                     icon: 'error',
+//                     confirmButtonText: 'Close'
+//                 });
+//             });
+//         }
+//     });
+// }
 </script>
 
 @endsection
