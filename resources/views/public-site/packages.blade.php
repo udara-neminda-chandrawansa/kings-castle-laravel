@@ -186,8 +186,8 @@
 <section class="space-top overflow-hidden bg-shape">
     <div class="container">
         <div class="title-area text-center">
-            <span class="sub-title">EXPLORE SRI LANKA</span>
-            <h2 class="sec-title">Things To Do</h2>
+            <span class="sub-title">KING CASTLE LAKE FRONT BY LAKSAM</span>
+            <h2 class="sec-title">Tour Plan</h2>
             <p>
                 Discover luxury, adventure, and breathtaking beauty
                 in Nuwara Eliya with King Kastle Lake Front. 
