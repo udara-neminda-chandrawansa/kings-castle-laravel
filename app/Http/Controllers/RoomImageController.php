@@ -186,17 +186,18 @@ class RoomImageController extends Controller
 
             $roomImage->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Image deleted successfully!'
-            ]);
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Image deleted successfully!'
+            // ]);
+
+            return redirect()->route('room-images.index', $roomType)
+                           ->with('success', 'Room image deleted successfully.');
 
         } catch (\Exception $e) {
             Log::error('Room image delete error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete image. Please try again.'
-            ], 500);
+            return redirect()->route('room-images.index', $roomType)
+                           ->with('error', 'Failed to delete room image. Please try again.');
         }
     }
 

@@ -43,10 +43,10 @@
               <h3 class="widget_title">Explore</h3>
               <div class="menu-all-pages-container">
                 <ul class="menu">
-                  <li><a href="#">All Offers</a></li>
-                  <li><a href="#">Our Rooms</a></li>
-                  <li><a href="#">Our Gallery</a></li>
-                  <li><a href="#">Client Reviews</a></li>
+                  <li><a href="/packages">Tour Packages</a></li>
+                  <li><a href="/services">Room Check In</a></li>
+                  <li><a href="/gallery">Our Gallery</a></li>
+                  <li><a href="/contact">Contact Us</a></li>
                   <li><a href="#">Neighborhood</a></li>
                   <li><a href="#">Resort Passeirer</a></li>
                 </ul>
@@ -61,7 +61,7 @@
                   <div class="box-icon">
                     <i class="fal fa-location-dot"></i>
                   </div>
-                  <p class="box-text">
+                  <p class="box-text font-serif">
                     No:30, Gemunu Pura, Magasthota, Nuwara Eliya, Sri Lanka
                   </p>
                 </div>
