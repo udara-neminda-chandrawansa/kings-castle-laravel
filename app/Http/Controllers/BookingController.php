@@ -257,8 +257,8 @@ class BookingController extends Controller
                 Log::info('Booking confirmation email sent', ['booking_id' => $booking->id, 'email' => $booking->guest_email]);
                 
                 // Send notification email to admin
-                Mail::to('udaraneminda@gmail.com')->send(new AdminRoomBookingNotification($booking));
-                Log::info('Admin room booking notification sent', ['booking_id' => $booking->id, 'admin_email' => 'udaraneminda@gmail.com']);
+                Mail::to('reservations@kingscastle.com')->send(new AdminRoomBookingNotification($booking));
+                Log::info('Admin room booking notification sent', ['booking_id' => $booking->id, 'admin_email' => 'reservations@kingscastle.com']);
                 
             } catch (\Exception $emailException) {
                 Log::error('Failed to send booking confirmation email', [

@@ -174,7 +174,7 @@
               <input type="hidden" name="room_type_id" value="{{ $roomType->id }}">
               <div class="input-wrap">
                 <div class="title-area mb-40">
-                  <span class="sub-title2 style1 mb-15">RESERVATION</span>
+                  <span class="sub-title2 style1 mb-15 text-white">RESERVATION</span>
                   <h2 class="box-title text-white">{{ $roomType->name }}</h2>
                   <p class="text-white mb-0">{{ $roomType->formatted_price }} per night</p>
                   <p class="text-white small mb-0">Max {{ $roomType->max_occupancy }} {{ $roomType->max_occupancy == 1 ?

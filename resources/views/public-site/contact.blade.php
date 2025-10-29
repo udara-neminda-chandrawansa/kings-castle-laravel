@@ -82,7 +82,7 @@
       <div class="col-xl-6">
         <form action="#" method="POST" class="contact-form ajax-contact">
           <div class="title-area mb-45 text-center text-lg-start">
-            <span class="sub-title2 style1">CONTACT US</span>
+            <span class="sub-title2 style1 text-white">CONTACT US</span>
             <h2 class="sec-title text-white">Do you have questions?</h2>
           </div>
           <div class="row">
