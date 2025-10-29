@@ -153,7 +153,7 @@
                             <input type="hidden" name="tour_package_id" value="{{ $tourPackage->id }}">
                             <div class="input-wrap">
                                 <div class="title-area mb-40">
-                                    <span class="sub-title2 style1 mb-15">BOOK THIS TOUR</span>
+                                    <span class="sub-title2 style1 mb-15 text-white">BOOK THIS TOUR</span>
                                     <h2 class="box-title text-white">{{ $tourPackage->name }}</h2>
                                 </div>
                                 <div class="row gx-24 align-items-center justify-content-between">

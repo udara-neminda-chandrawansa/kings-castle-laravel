@@ -123,7 +123,7 @@
 <section class="service-area3 overflow-hidden space">
   <div class="container">
     <div class="title-area text-center">
-      <span class="sub-title2 style1">HOTEL AMENITIES</span>
+      <span class="sub-title2 style1 text-white">HOTEL AMENITIES</span>
       <h2 class="sec-title text-white">All Facilities at King's Castle</h2>
     </div>
     <div class="row gy-4">
@@ -306,7 +306,7 @@
 <section class="overflow-hidden testi-area4 space bg-black2" id="testi-sec">
   <div class="container">
     <div class="title-area text-center">
-      <span class="sub-title2 style1">TESTIMONIALS</span>
+      <span class="sub-title2 style1 text-white">TESTIMONIALS</span>
       <h2 class="sec-title text-white">what Guests think about us</h2>
     </div>
     <div class="slider-wrap">

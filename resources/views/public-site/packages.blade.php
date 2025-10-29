@@ -188,31 +188,43 @@
         <div class="title-area text-center">
             <span class="sub-title">EXPLORE SRI LANKA</span>
             <h2 class="sec-title">Things To Do</h2>
+            <p>
+                Discover luxury, adventure, and breathtaking beauty
+                in Nuwara Eliya with King Kastle Lake Front. 
+                <br> Each
+                experience is designed to give you unforgettable
+                memories, from serene lake views to thrilling adventures.
+            </p>
         </div>
         <div class="row gy-2">
 
             @foreach($tourPackages as $package)
             <div class="col-md-6 col-lg-4">
-                <div class="tour-card" style="cursor: pointer;" onclick="window.location.href='{{ route('view-package', $package) }}'">
-                    <div class="tour-image"><img src="{{ asset($package->image_path) }}" alt="{{ $package->name }}"></div>
+                <div class="tour-card" style="cursor: pointer;"
+                    onclick="window.location.href='{{ route('view-package', $package) }}'">
+                    <div class="tour-image"><img src="{{ asset($package->image_path) }}" alt="{{ $package->name }}">
+                    </div>
                     <div class="tour-overlay">
                         <h3 class="tour-title">{{ $package->name }}</h3>
                         <p class="tour-subtitle">"{{ $package->subtitle }}"</p>
                         <p class="tour-desc">
                             {{ Str::limit($package->description, 100) }}
                             @if($package->includes && count($package->includes) > 0)
-                                <br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 2)) }}{{ count($package->includes) > 2 ? ' & more' : '' }}.
+                            <br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 2)) }}{{
+                            count($package->includes) > 2 ? ' & more' : '' }}.
                             @endif
                         </p>
                         @if($package->price)
-                            <div class="tour-price">${{ number_format($package->price) }} <span>{{ $package->price_unit }}</span></div>
+                        <div class="tour-price">${{ number_format($package->price) }} <span>{{ $package->price_unit
+                                }}</span></div>
                         @endif
 
                         @if($package->notes)
-                            <p class="tour-note mt-2">{{ Str::limit($package->notes, 80) }}</p>
+                        <p class="tour-note mt-2">{{ Str::limit($package->notes, 80) }}</p>
                         @endif
                         <div class="tour-actions">
-                            <a href="{{ route('view-package', $package) }}" class="th-btn2 border btn-sm me-2" onclick="event.stopPropagation();">
+                            <a href="{{ route('view-package', $package) }}" class="th-btn2 border btn-sm me-2"
+                                onclick="event.stopPropagation();">
                                 View Details
                             </a>
                         </div>
@@ -220,8 +232,9 @@
                 </div>
             </div>
             @endforeach
-            
-            {{-- <!-- 1) Helicopter Tour -->
+
+            {{--
+            <!-- 1) Helicopter Tour -->
             <div class="col-md-6 col-lg-4">
                 <div class="tour-card">
                     <div class="tour-image"><img src="assets/img/tours/helicopter1.jpg" alt="Helicopter Tour"></div>

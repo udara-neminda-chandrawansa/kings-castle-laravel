@@ -37,7 +37,7 @@
             id="availabilityForm">
             <div class="hero-wrap">
               <div class="title-area mb-40">
-                <span class="sub-title2 style1 mb-15">ROOMS RESERVATION</span>
+                <span class="sub-title2 style1 mb-15 text-white">ROOMS RESERVATION</span>
                 <h2 class="sec-title text-white">Check availablility</h2>
               </div>
               <div class="row gx-24 align-items-center justify-content-between">
