@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TourPaymentConfirmation;
 use Illuminate\Http\Request;
 use App\Models\TourPackage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TourPackageController extends Controller
 {
@@ -220,77 +222,5 @@ class TourPackageController extends Controller
     public function viewPackage(TourPackage $tourPackage)
     {
         return view('public-site.view-package', compact('tourPackage'));
-    }
-
-
-
-    /**
-     * Handle tour payment notification
-     */
-    public function handlePaymentNotify(Request $request)
-    {
-        $merchant_secret = env('PAYHERE_MERCHANT_SECRET');
-        $generatedHash = strtoupper(md5(
-            $request->merchant_id .
-            $request->order_id .
-            $request->payhere_amount .
-            $request->payhere_currency .
-            $request->status_code .
-            strtoupper(md5($merchant_secret))
-        ));
-
-        if ($generatedHash == $request->md5sig && $request->status_code == 2) {
-            // Payment is successful
-            $tourPayment = \App\Models\TourPayment::with(['tourBooking.tourPackage'])->find($request->order_id);
-            
-            if ($tourPayment) {
-                $tourPayment->update([
-                    'payment_status' => 'paid',
-                    'payment_details' => [
-                        'payment_id' => $request->payment_id,
-                        'payhere_amount' => $request->payhere_amount,
-                        'payhere_currency' => $request->payhere_currency,
-                        'card_holder_name' => $request->card_holder_name ?? null,
-                        'card_no' => $request->card_no ?? null,
-                    ]
-                ]);
-
-                // Update booking status
-                if ($tourPayment->tourBooking) {
-                    $tourPayment->tourBooking->update(['status' => 'confirmed']);
-                }
-            }
-
-            return response('Payment successful', 200);
-        } else {
-            // Payment failed or invalid
-            $tourPayment = \App\Models\TourPayment::find($request->order_id);
-            
-            if ($tourPayment) {
-                $tourPayment->update(['payment_status' => 'failed']);
-            }
-            
-            return response('Payment verification failed', 400);
-        }
-    }
-
-    /**
-     * Handle tour payment return
-     */
-    public function handlePaymentReturn(Request $request)
-    {
-        $tourPackages = TourPackage::paginate(10);
-        $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
-        return view('public-site.packages', compact('tourPackages'))->with('booking', $tourPayment->tourBooking ?? null);
-    }
-
-    /**
-     * Handle tour payment cancel
-     */
-    public function handlePaymentCancel(Request $request)
-    {
-        $tourPackages = TourPackage::paginate(10);
-        $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
-        return view('public-site.packages', compact('tourPackages'))->with('booking', $tourPayment->tourBooking ?? null);
     }
 }

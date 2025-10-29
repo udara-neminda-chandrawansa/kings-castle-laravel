@@ -7,6 +7,12 @@ use App\Models\TourBooking;
 use App\Models\TourPayment;
 use App\Models\TourPackage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use App\Mail\TourBookingConfirmation;
+use App\Mail\TourPaymentConfirmation;
+use App\Mail\TourBookingStatusUpdate;
 
 class TourBookingController extends Controller
 {
@@ -70,6 +76,10 @@ class TourBookingController extends Controller
             ]);
 
             DB::commit();
+
+            $tourBookingN = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($tourBooking->id);
+            
+            Mail::to($tourBookingN->guest_email)->send(new TourBookingConfirmation($tourBookingN));
 
             if ($request->expectsJson()) {
                 return response()->json([
@@ -151,6 +161,8 @@ class TourBookingController extends Controller
         // Update booking and payment status
         $tourBooking->update(['status' => 'confirmed']);
 
+        Mail::to($tourBooking->guest_email)->send(new TourBookingStatusUpdate($tourBooking, $tourBooking->status));
+
         return view('public-site.payhere-redirect', compact('paymentData'));
     }
 
@@ -206,6 +218,92 @@ class TourBookingController extends Controller
     }
 
     /**
+     * Send tour booking confirmation email manually (Admin)
+     */
+    public function sendTourBookingConfirmation($id)
+    {
+        try {
+            $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
+            
+            Mail::to($tourBooking->guest_email)->send(new TourBookingConfirmation($tourBooking));
+            
+            Log::info('Manual tour booking confirmation email sent', [
+                'tour_booking_id' => $tourBooking->id,
+                'email' => $tourBooking->guest_email,
+                'sent_by' => Auth::user()->name ?? 'Admin'
+            ]);
+
+            return back()->with('success', 'Tour booking confirmation email sent successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send manual tour booking confirmation email', [
+                'tour_booking_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
+    }
+
+    /**
+     * Send tour payment confirmation email manually (Admin)
+     */
+    public function sendTourPaymentConfirmation($id)
+    {
+        try {
+            $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
+            
+            if (!$tourBooking->tourPayment || $tourBooking->tourPayment->payment_status !== 'paid') {
+                return back()->with('error', 'Payment must be completed before sending payment confirmation.');
+            }
+            
+            Mail::to($tourBooking->guest_email)->send(new TourPaymentConfirmation($tourBooking));
+            
+            Log::info('Manual tour payment confirmation email sent', [
+                'tour_booking_id' => $tourBooking->id,
+                'email' => $tourBooking->guest_email,
+                'sent_by' => Auth::user()->name ?? 'Admin'
+            ]);
+
+            return back()->with('success', 'Tour payment confirmation email sent successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send manual tour payment confirmation email', [
+                'tour_booking_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
+    }
+
+    /**
+     * Send tour status update email manually (Admin)
+     */
+    public function sendTourStatusUpdate($id)
+    {
+        try {
+            $tourBooking = TourBooking::with(['tourPackage', 'tourPayment'])->findOrFail($id);
+            
+            Mail::to($tourBooking->guest_email)->send(new TourBookingStatusUpdate($tourBooking, $tourBooking->status));
+            
+            Log::info('Manual tour status update email sent', [
+                'tour_booking_id' => $tourBooking->id,
+                'email' => $tourBooking->guest_email,
+                'status' => $tourBooking->status,
+                'sent_by' => Auth::user()->name ?? 'Admin'
+            ]);
+
+            return back()->with('success', 'Tour status update email sent successfully!');
+        } catch (\Exception $e) {
+            Log::error('Failed to send manual tour status update email', [
+                'tour_booking_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Failed to send email. Please try again.');
+        }
+    }
+
+    /**
      * Delete a tour booking (Admin)
      */
     public function destroy($id)
@@ -220,5 +318,80 @@ class TourBookingController extends Controller
             return redirect()->route('dashboard')
                            ->with('error', 'Failed to delete tour booking.');
         }
+    }
+
+
+    /**
+     * Handle tour payment notification
+     */
+    public function handlePaymentNotify(Request $request)
+    {
+        $merchant_secret = env('PAYHERE_MERCHANT_SECRET');
+        $generatedHash = strtoupper(md5(
+            $request->merchant_id .
+            $request->order_id .
+            $request->payhere_amount .
+            $request->payhere_currency .
+            $request->status_code .
+            strtoupper(md5($merchant_secret))
+        ));
+
+        if ($generatedHash == $request->md5sig && $request->status_code == 2) {
+            // Payment is successful
+            $tourPayment = \App\Models\TourPayment::with(['tourBooking.tourPackage'])->find($request->order_id);
+            
+            if ($tourPayment) {
+                $tourPayment->update([
+                    'payment_status' => 'paid',
+                    'payment_details' => [
+                        'payment_id' => $request->payment_id,
+                        'payhere_amount' => $request->payhere_amount,
+                        'payhere_currency' => $request->payhere_currency,
+                        'card_holder_name' => $request->card_holder_name ?? null,
+                        'card_no' => $request->card_no ?? null,
+                    ]
+                ]);
+
+                // Update booking status
+                if ($tourPayment->tourBooking) {
+                    $tourPayment->tourBooking->update(['status' => 'confirmed']);
+                }
+
+                $tourBooking = $tourPayment->tourBooking;
+            
+                Mail::to($tourBooking->guest_email)->send(new TourPaymentConfirmation($tourBooking));
+            }
+
+            return response('Payment successful', 200);
+        } else {
+            // Payment failed or invalid
+            $tourPayment = \App\Models\TourPayment::find($request->order_id);
+            
+            if ($tourPayment) {
+                $tourPayment->update(['payment_status' => 'failed']);
+            }
+            
+            return response('Payment verification failed', 400);
+        }
+    }
+
+    /**
+     * Handle tour payment return
+     */
+    public function handlePaymentReturn(Request $request)
+    {
+        $tourPackages = TourPackage::paginate(10);
+        $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
+        return view('public-site.packages', compact('tourPackages'))->with('booking', $tourPayment->tourBooking ?? null);
+    }
+
+    /**
+     * Handle tour payment cancel
+     */
+    public function handlePaymentCancel(Request $request)
+    {
+        $tourPackages = TourPackage::paginate(10);
+        $tourPayment = \App\Models\TourPayment::with('tourBooking')->find($request->order_id);
+        return view('public-site.packages', compact('tourPackages'))->with('booking', $tourPayment->tourBooking ?? null);
     }
 }

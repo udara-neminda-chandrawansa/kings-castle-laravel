@@ -96,8 +96,8 @@ Route::get('/tour-booking/{tourBooking}', [TourBookingController::class, 'show']
 Route::post('/tour-booking/{id}/payment', [TourBookingController::class, 'processPayment'])->name('tour-booking.payment');
 
 // Tour payment handling routes
-Route::get('/tour-payment/return', [TourPackageController::class, 'handlePaymentReturn'])->name('tour-payment.return');
-Route::get('/tour-payment/cancel', [TourPackageController::class, 'handlePaymentCancel'])->name('tour-payment.cancel');
+Route::get('/tour-payment/return', [TourBookingController::class, 'handlePaymentReturn'])->name('tour-payment.return');
+Route::get('/tour-payment/cancel', [TourBookingController::class, 'handlePaymentCancel'])->name('tour-payment.cancel');
 
 Route::middleware([
     'auth:sanctum',
@@ -120,6 +120,11 @@ Route::middleware([
     // Tour booking management
     Route::get('/tour-bookings/{id}/details', [TourBookingController::class, 'getDetails'])->name('tour-bookings.details');
     Route::delete('/tour-bookings/{id}', [TourBookingController::class, 'destroy'])->name('tour-bookings.destroy');
+    
+    // Tour email management routes
+    Route::post('/tour-bookings/{id}/send-confirmation', [TourBookingController::class, 'sendTourBookingConfirmation'])->name('tour-bookings.send-confirmation');
+    Route::post('/tour-bookings/{id}/send-payment-confirmation', [TourBookingController::class, 'sendTourPaymentConfirmation'])->name('tour-bookings.send-payment-confirmation');
+    Route::post('/tour-bookings/{id}/send-status-update', [TourBookingController::class, 'sendTourStatusUpdate'])->name('tour-bookings.send-status-update');
 
     // Room type management
     Route::resource('room-types', RoomTypeController::class);
