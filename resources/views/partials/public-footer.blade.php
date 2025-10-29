@@ -69,8 +69,8 @@
                   <div class="box-icon"><i class="fal fa-phone"></i></div>
                   <p class="box-text">
                     <a href="tel:+94767799721" class="box-link">+94 76 779 9721</a>
-                    
-                    
+
+
                   </p>
                 </div>
                 <div class="info-box">
@@ -95,7 +95,7 @@
         <div class="row gy-2 align-items-center">
           <div class="col-lg-12">
             <p class="copyright-text text-center">
-              2025 © All Rights Reserved | King's Castle | Designed & Developed by Silicon Radon Networks (Pvt) Ltd.
+              2025 © All Rights Reserved | King Castle | Designed & Developed by Silicon Radon Networks (Pvt) Ltd.
             </p>
           </div>
           <!--

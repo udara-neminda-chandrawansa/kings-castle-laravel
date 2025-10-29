@@ -16,10 +16,10 @@
     </div>
     <div class="container relative" style="z-index: 10;">
       <div class="breadcumb-content">
-        <h1 class="breadcumb-title">King's Castle rooms & suits</h1>
+        <h1 class="breadcumb-title">King Castle rooms & suits</h1>
         <ul class="breadcumb-menu">
           <li><a href="/">Home</a></li>
-          <li>King's Castle rooms & suits</li>
+          <li>King Castle rooms & suits</li>
         </ul>
       </div>
     </div>
@@ -132,14 +132,14 @@
 
 document.getElementById('availabilityForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  
+
   const formData = new FormData(this);
   const submitBtn = this.querySelector('button[type="submit"]');
   const originalText = submitBtn.innerHTML;
-  
+
   submitBtn.innerHTML = 'Checking...';
   submitBtn.disabled = true;
-  
+
   fetch(this.action, {
     method: 'POST',
     body: formData,

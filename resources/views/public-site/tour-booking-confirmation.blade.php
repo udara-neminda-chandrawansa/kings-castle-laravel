@@ -39,7 +39,7 @@
                             <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
                         </div>
                         <h2 class="box-title">Tour Booking Confirmed!</h2>
-                        <p class="text-muted">Thank you for booking with King's Castle. Your tour reservation has been
+                        <p class="text-muted">Thank you for booking with King Castle. Your tour reservation has been
                             confirmed.</p>
                     </div>
 

@@ -175,7 +175,7 @@
       <div class="col-lg-6 col-xxl-4">
         <div class="title-area mb-30 pe-xxl-5">
           <img src="assets/img/logo.png" style="width: 250px;" alt="shape" />
-          <h2 class="sec-title">About King's Castle</h2>
+          <h2 class="sec-title">About King Castle</h2>
           <img src="assets/img/theme-img/title_icon2.svg" alt="shape" />
           <p class="text-body fs-18 mt-25 mb-40">
             Planning a holiday escape to an ideal destination along with breathtaking nature setup? Looking for a
@@ -184,7 +184,7 @@
             renowned cultural pinnacle of all the time, Sri Lanka?
           </p>
           <p class="text-body fs-18 mb-60">
-            That’s exactly why you should make a choice of staying at King's Castle five star boutique resort.
+            That’s exactly why you should make a choice of staying at King Castle five star boutique resort.
           </p>
         </div>
         <!--counter-->
@@ -229,7 +229,7 @@
           </div>
           <div class="about-wrapp">
             <div class="curve-text">
-              <div class="circle-text" data-text="* welcome to King's Castle hotel* welcome to King's Castle hotel*">
+              <div class="circle-text" data-text="* welcome to King Castle hotel* welcome to King Castle hotel*">
               </div>
             </div>
           </div>
@@ -558,12 +558,12 @@
           <div class="title-area mb-37">
             <span class="sub-title">MANAGER</span>
             <h2 class="sec-title text-white">
-              The King's Castle In The <span>Heart of Nuwara Eliya</span>
+              The King Castle In The <span>Heart of Nuwara Eliya</span>
             </h2>
             <img src="assets/img/theme-img/title_icon2.svg" alt="shape" />
           </div>
           <p class="fs-18 text-white">
-            King's Castle is a modern, upscale hospitality company that
+            King Castle is a modern, upscale hospitality company that
             is passionate about ‘making moments’, recognising that small
             gestures make a big difference to our guests, our owners and our
             people. We do ordinary things in an extraordinary way – a
@@ -825,7 +825,7 @@
                       class="fa-sharp fa-solid fa-star"></i>
                   </div>
                   <p class="box-text">
-                    “We loved our stay at King's Castle! The room was
+                    “We loved our stay at King Castle! The room was
                     spotless, the staff was incredibly attentive, and the
                     view from our balcony was breathtaking!.”
                   </p>
@@ -863,7 +863,7 @@
                   <p class="box-text">
                     Home is where love resides, memories are created, and
                     dreams are nurtured. I've found my sanctuary in this
-                    beautiful King's Castle.
+                    beautiful King Castle.
                   </p>
                   <div class="box-profile">
                     <div class="box-avater">
@@ -897,7 +897,7 @@
                       class="fa-sharp fa-solid fa-star"></i>
                   </div>
                   <p class="box-text">
-                    “We loved our stay at King's Castle! The room was
+                    “We loved our stay at King Castle! The room was
                     spotless, the staff was incredibly attentive, and the
                     view from our balcony was breathtaking!.”
                   </p>
@@ -935,7 +935,7 @@
                   <p class="box-text">
                     Home is where love resides, memories are created, and
                     dreams are nurtured. I've found my sanctuary in this
-                    beautiful King's Castle.
+                    beautiful King Castle.
                   </p>
                   <div class="box-profile">
                     <div class="box-avater">
@@ -977,14 +977,14 @@ document.getElementById('check_in').addEventListener('change', function() {
 
 document.getElementById('availabilityForm').addEventListener('submit', function(e) {
   e.preventDefault();
-  
+
   const formData = new FormData(this);
   const submitBtn = this.querySelector('button[type="submit"]');
   const originalText = submitBtn.innerHTML;
-  
+
   submitBtn.innerHTML = 'Checking...';
   submitBtn.disabled = true;
-  
+
   fetch(this.action, {
     method: 'POST',
     body: formData,

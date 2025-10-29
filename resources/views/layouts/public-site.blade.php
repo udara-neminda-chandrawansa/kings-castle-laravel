@@ -5,11 +5,11 @@
   <meta charset="utf-8" />
   <meta http-equiv="x-ua-compatible" content="ie=edge" />
   <title>
-    King's Castle, Lake Front By Laksam
+    King Castle, Lake Front By Laksam
   </title>
-  <meta name="author" content="King's Castle" />
-  <meta name="description" content="Experience luxury and comfort at King's Castle, Lake Front By Laksam" />
-  <meta name="keywords" content="King's Castle" />
+  <meta name="author" content="King Castle" />
+  <meta name="description" content="Experience luxury and comfort at King Castle, Lake Front By Laksam" />
+  <meta name="keywords" content="King Castle" />
   <meta name="robots" content="INDEX,FOLLOW" />
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no" />
   <meta name="msapplication-TileColor" content="#ffffff" />

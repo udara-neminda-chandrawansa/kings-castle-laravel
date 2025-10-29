@@ -35,9 +35,9 @@
           <div class="d-flex justify-content-center">
             <img src="assets/img/logo.png" style="width: 230px;" alt="shape" />
           </div>
-          <h2 class="sec-title text-center">About King's Castle</h2>
+          <h2 class="sec-title text-center">About King Castle</h2>
           <p class="text-body fs-18 mt-25 mb-40" style="text-align: justify;">
-            Located in the heart of the beautiful city Nuwara Eliya, King's Castle offers the best cozy and comfortable
+            Located in the heart of the beautiful city Nuwara Eliya, King Castle offers the best cozy and comfortable
             rooms for a
             remarkable stay. Guests will make an easy access for Horton Plains, Tea Plantations and other
             numerous prominent traveling attractions in Nuwara Eliya, from the retreat.
@@ -48,7 +48,7 @@
             breathe inside the exquisite arrangements of regal colonial era. Frequent facilities such as free Wi-Fi,
             express check in and check out services, 24 hour front desk have made this place perfect and subtle for
             your next vacation destination. Indulge in this blissful serenity and make your best mesmerizing memory at
-            King's Castle.
+            King Castle.
           </p>
         </div>
         <!--counter-->
@@ -124,7 +124,7 @@
   <div class="container">
     <div class="title-area text-center">
       <span class="sub-title2 style1 text-white">HOTEL AMENITIES</span>
-      <h2 class="sec-title text-white">All Facilities at King's Castle</h2>
+      <h2 class="sec-title text-white">All Facilities at King Castle</h2>
     </div>
     <div class="row gy-4">
       <div class="col-md-6 col-xl-4 col-xxl-3">
@@ -321,7 +321,7 @@
                   <img src="assets/img/testimonial/testi_4_1.jpg" alt="Avater" />
                 </div>
                 <p class="box-text">
-                  Our week-long stay at King's Castle was nothing short of exceptional. The attentive staff anticipated
+                  Our week-long stay at King Castle was nothing short of exceptional. The attentive staff anticipated
                   our every need, while the elegantly appointed suite provided breathtaking city views. The rooftop
                   restaurant served culinary masterpieces that rivaled the best local establishments. The concierge's
                   recommendations for local attractions were spot-on, making our first visit to the city truly
@@ -349,7 +349,7 @@
                   <img src="assets/img/testimonial/testi_4_2.jpg" alt="Avater" />
                 </div>
                 <p class="box-text">
-                  King's Castle has become my exclusive choice for business travel in the region. The seamless check-in
+                  King Castle has become my exclusive choice for business travel in the region. The seamless check-in
                   process, spacious workstations, and reliable high-speed internet make productivity effortless. The
                   executive lounge provides a perfect environment for impromptu meetings, while the well-equipped
                   fitness center helps maintain my routine while traveling. The convenient location near the business
@@ -377,7 +377,7 @@
                   <img src="assets/img/testimonial/testi_4_1.jpg" alt="Avater" />
                 </div>
                 <p class="box-text">
-                  Our family celebration at King's Castle exceeded all expectations from the moment we arrived. The
+                  Our family celebration at King Castle exceeded all expectations from the moment we arrived. The
                   interconnecting rooms provided both togetherness and privacy for our multi-generational gathering.
                   The children's program kept our little ones entertained while adults enjoyed the spa facilities. The
                   banquet team executed our anniversary dinner flawlessly, with personalized menus and impeccable
@@ -405,7 +405,7 @@
                   <img src="assets/img/testimonial/testi_4_2.jpg" alt="Avater" />
                 </div>
                 <p class="box-text">
-                  King's Castle offered the perfect balance of luxury and comfort during my recent conference stay. The
+                  King Castle offered the perfect balance of luxury and comfort during my recent conference stay. The
                   pillow menu ensured restful sleep, while the in-room coffee station provided necessary morning fuel.
                   The hotel's central location made exploring the city during breaks convenient and enjoyable. The
                   responsive housekeeping staff maintained immaculate surroundings, and the diverse breakfast buffet
