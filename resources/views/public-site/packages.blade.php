@@ -210,7 +210,7 @@
                         <p class="tour-desc">
                             {{ Str::limit($package->description, 100) }}
                             @if($package->includes && count($package->includes) > 0)
-                            <br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 2)) }}{{
+                            <br><br><strong>Includes:</strong> {{ implode(', ', array_slice($package->includes, 0, 2)) }}{{
                             count($package->includes) > 2 ? ' & more' : '' }}.
                             @endif
                         </p>
