@@ -10,7 +10,7 @@
         font-family: "Cinzel", sans-serif;
     }
 
-    .row.gy-2 .col-md-6.col-lg-4 {
+    .row.gy-2 .col-lg-6.col-xl-4 {
         padding: 0px 3px;
         margin-top: 6px;
         aspect-ratio: 16/9;
@@ -56,7 +56,7 @@
         position: relative;
         overflow: hidden;
         border-radius: 16px;
-        height: 320px;
+        height: 420px;
         cursor: pointer;
         box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
         transition: transform 0.3s ease;
@@ -199,7 +199,7 @@
         <div class="row gy-2">
 
             @foreach($tourPackages as $package)
-            <div class="col-md-6 col-lg-4">
+            <div class="col-lg-6 col-xl-4">
                 <div class="tour-card" style="cursor: pointer;"
                     onclick="window.location.href='{{ route('view-package', $package) }}'">
                     <div class="tour-image"><img src="{{ asset($package->image_path) }}" alt="{{ $package->name }}">
