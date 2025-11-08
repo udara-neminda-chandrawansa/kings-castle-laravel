@@ -138,12 +138,12 @@
 
             <h2 class="box-title mb-20">Hotel Amenities</h2>
             <ul class="hotel-grid-list">
-              <li>
+              {{-- <li>
                 <div class="hotel-grid-list-icon"><img src="/assets/img/icon/hotel-icon1-1.svg" alt="img" /></div>
                 <div class="hotel-grid-list-details">
                   <p class="box-text">Swimming Pool</p>
                 </div>
-              </li>
+              </li> --}}
               <li>
                 <div class="hotel-grid-list-icon"><img src="/assets/img/icon/hotel-icon1-2.svg" alt="img" /></div>
                 <div class="hotel-grid-list-details">
