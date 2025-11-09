@@ -290,6 +290,16 @@
     </div>
   </div>
 </div>
+
+<!--video-->
+<section class="video-section">
+  <video src="{{ asset('assets/videos/add1.mp4') }}" autoplay muted loop playsinline></video>
+  {{-- <div class="video-content">
+    <h2 class="text-white">Welcome to King Castle</h2>
+    <p class="text-white">Experience the moment</p>
+  </div> --}}
+</section>
+
 <!--rooms section-->
 <section class="overflow-hidden bg-shape space-top">
   <div class="container">

@@ -25479,3 +25479,57 @@ span.select2-selection.select2-selection--single:focus {
 .font-serif{
   font-family: serif;
 }
+
+section.video-section {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: block;
+
+  margin-top: 60px;
+}
+
+section.video-section video {
+  width: 100%;
+  height: auto; /* Keep the video’s natural aspect ratio */
+  display: block;
+}
+
+/* Optional: text overlay */
+.video-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  font-size: 2rem;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Optional overlay for readability */
+section.video-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 0;
+}
+
+/* Optional text inside the section */
+/* .video-content {
+  position: relative;
+  z-index: 1;
+  color: white;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+}
+
+@media (max-width: 767px) {
+  .video-content {
+    display: none;
+  }
+} */
