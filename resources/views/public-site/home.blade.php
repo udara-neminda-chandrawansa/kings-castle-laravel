@@ -10,7 +10,7 @@
       <div class="swiper-wrapper">
         <div class="swiper-slide">
           <div class="hero-inner">
-            <div class="th-hero-bg" data-bg-src="assets/img/drive-images-2-webp/kc2.webp"></div>
+            <div class="th-hero-bg" data-bg-src="{{ asset('assets/img/drive-images-3/room-1/3.jpg') }}"></div>
             <div class="container">
               <div class="hero-style1">
                 <div class="hero-logo" data-ani="slideinup" data-ani-delay="0.2s">
@@ -38,7 +38,7 @@
         </div>
         <div class="swiper-slide">
           <div class="hero-inner">
-            <div class="th-hero-bg" data-bg-src="assets/img/drive-images-2-webp/kc3.webp"></div>
+            <div class="th-hero-bg" data-bg-src="{{ asset('assets/img/drive-images-3/room-1/5.jpg') }}"></div>
             <div class="container">
               <div class="hero-style1">
                 <div class="hero-logo" data-ani="slideinup" data-ani-delay="0.2s">
@@ -66,7 +66,7 @@
         </div>
         <div class="swiper-slide">
           <div class="hero-inner">
-            <div class="th-hero-bg" data-bg-src="{{ asset('assets/img/drive-images-2-webp/kc21.webp') }}"></div>
+            <div class="th-hero-bg" data-bg-src="{{ asset('assets/img/drive-images-3/room-1/7.jpg') }}"></div>
             <div class="container">
               <div class="hero-style1">
                 <div class="hero-logo" data-ani="slideinup" data-ani-delay="0.2s">
@@ -100,19 +100,19 @@
         <div class="swiper-wrapper">
           <div class="swiper-slide">
             <div class="box-img">
-              <img src="assets/img/drive-images-2-webp/kc2.webp" alt="Image" />
+              <img src="{{ asset('assets/img/drive-images-3/room-1/3.jpg') }}" alt="Image" />
               <span class="slider-number">01</span>
             </div>
           </div>
           <div class="swiper-slide">
             <div class="box-img">
-              <img src="assets/img/drive-images-2-webp/kc3.webp" alt="Image" />
+              <img src="{{ asset('assets/img/drive-images-3/room-1/5.jpg') }}" alt="Image" />
               <span class="slider-number">02</span>
             </div>
           </div>
           <div class="swiper-slide">
             <div class="box-img">
-              <img src="{{ asset('assets/img/drive-images-2-webp/kc21.webp') }}" alt="Image" />
+              <img src="{{ asset('assets/img/drive-images-3/room-1/7.jpg') }}" alt="Image" />
               <span class="slider-number">03</span>
             </div>
           </div>
@@ -758,13 +758,13 @@
       <div class="col-md-6 col-xxl-3">
         <div class="gallery-insta">
           <a target="_blank" href="#" class="box-btn"><i class="fab fa-instagram hidden"></i></a>
-          <img src="assets/img/drive-images-2-webp/kc1.webp" alt="Image" style="aspect-ratio: 9/16;" />
+          <img src="{{ asset('assets/img/drive-images-3/room-1/1.jpg') }}" alt="Image" style="aspect-ratio: 9/16;" />
         </div>
       </div>
       <div class="col-md-6 col-xxl-3">
         <div class="gallery-insta">
           <a target="_blank" href="#" class="box-btn"><i class="fab fa-instagram hidden"></i></a>
-          <img src="assets/img/drive-images-2-webp/kc2.webp" alt="Image" style="aspect-ratio: 9/16;" />
+          <img src="{{ asset('assets/img/drive-images-3/suite-1/8.jpg') }}" alt="Image" style="aspect-ratio: 9/16;" />
         </div>
       </div>
       <div class="col-md-6 col-xxl-3">
@@ -800,7 +800,7 @@
       <div class="col-md-6 col-xxl-3">
         <div class="gallery-insta">
           <a target="_blank" href="#" class="box-btn"><i class="fab fa-instagram hidden"></i></a>
-          <img src="assets/img/drive-images-2-webp/kc8.webp" alt="Image" style="aspect-ratio: 9/16;" />
+          <img src="{{ asset('assets/img/drive-images-3/suite-1/3.jpg') }}" alt="Image" style="aspect-ratio: 9/16;" />
         </div>
       </div>
     </div>
@@ -822,7 +822,7 @@
           <div class="swiper-slide">
             <div class="testi-card">
               <div class="box-img th-parallax">
-                <img src="assets/img/drive-images-2-webp/kc11.webp" alt="Image" />
+                <img src="{{ asset('assets/img/drive-images-3/room-1/4.jpg') }}" alt="Image" />
               </div>
               <div class="box-wrapp">
                 <div class="box-left">
@@ -858,7 +858,7 @@
           <div class="swiper-slide">
             <div class="testi-card">
               <div class="box-img th-parallax">
-                <img src="assets/img/drive-images-2-webp/kc17.webp" alt="Image" />
+                <img src="{{ asset('assets/img/drive-images-3/room-1/5.jpg') }}" alt="Image" />
               </div>
               <div class="box-wrapp">
                 <div class="box-left">
@@ -894,7 +894,7 @@
           <div class="swiper-slide">
             <div class="testi-card">
               <div class="box-img th-parallax">
-                <img src="assets/img/drive-images-2-webp/kc19.webp" alt="Image" />
+                <img src="{{ asset('assets/img/drive-images-3/room-1/6.jpg') }}" alt="Image" />
               </div>
               <div class="box-wrapp">
                 <div class="box-left">
@@ -930,7 +930,7 @@
           <div class="swiper-slide">
             <div class="testi-card">
               <div class="box-img th-parallax">
-                <img src="assets/img/drive-images-2-webp/kc23.webp" alt="Image" />
+                <img src="{{ asset('assets/img/drive-images-3/room-1/7.jpg') }}" alt="Image" />
               </div>
               <div class="box-wrapp">
                 <div class="box-left">
